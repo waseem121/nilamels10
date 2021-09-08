@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Compare in layout -->
+	<template id="clarico_compare_layout_icon" inherit_id="clarico_layout.clarico_header_main">
+		<xpath expr="//div[@id='header-social']/li[@id='header-compare']" position="inside">
+			<a class="compare" href="/compare" title="Add to Compare">
+				<svg x="0px" y="0px" width="16px" height="16px" viewBox="-454 256 50 50">
+				<style type="text/css">
+					.st0{fill:#030403;stroke:#000000;stroke-width:4;stroke-miterlimit:10;}
+				</style>
+				<path id="XMLID_10_" class="st0" d="M-409.8,282.3h-3.3l1.6-2.8L-409.8,282.3z M-412.3,277.1l-3.3,5.7c-0.2,0.3-0.2,0.7,0,0.9
+					c0.2,0.3,0.5,0.5,0.8,0.5h1.8c-1.7,7.7-8.4,13.1-16.4,13.1c-3.8,0-7.4-1.2-10.4-3.6c-1.1-0.9-2.1-1.9-3-3.1
+					c-0.3-0.4-0.9-0.5-1.3-0.2c-0.4,0.3-0.5,0.9-0.2,1.3c1,1.3,2.1,2.4,3.4,3.4c3.3,2.6,7.3,4,11.6,4c4.4,0,8.8-1.6,12.1-4.5
+					c3.2-2.7,5.4-6.4,6.2-10.5h2.8c0.3,0,0.6-0.2,0.8-0.5c0.1-0.1,0.1-0.3,0.1-0.5c0-0.2,0-0.3-0.1-0.5l-3.3-5.7
+					c-0.2-0.3-0.5-0.5-0.8-0.5C-411.8,276.6-412.1,276.8-412.3,277.1L-412.3,277.1z"/>
+				<path id="XMLID_7_" class="st0" d="M-444.9,279.8l-1.6,2.8l-1.6-2.8H-444.9z M-428.7,262.9L-428.7,262.9c-4.5,0-8.8,1.6-12.1,4.5
+					c-3.2,2.7-5.4,6.5-6.2,10.5h-2.8c-0.3,0-0.6,0.2-0.8,0.5c-0.2,0.3-0.2,0.7,0,0.9l3.3,5.7c0.1,0.3,0.4,0.5,0.8,0.5
+					c0.3,0,0.6-0.2,0.8-0.5l3.3-5.7c0.1-0.1,0.1-0.3,0.1-0.5c0-0.2,0-0.3-0.1-0.5c-0.2-0.3-0.5-0.5-0.8-0.5h-1.9
+					c1.7-7.7,8.5-13.1,16.4-13.1c3.8,0,7.4,1.2,10.4,3.6c1.1,0.9,2.1,1.9,3,3.1c0.3,0.4,0.9,0.5,1.3,0.2c0.2-0.2,0.4-0.5,0.4-0.8
+					c0-0.2-0.1-0.4-0.2-0.6c-1-1.3-2.1-2.4-3.4-3.4C-420.5,264.3-424.5,262.9-428.7,262.9L-428.7,262.9z"/>
+				</svg>
+				<sup class="product_count"></sup>
+			</a>
+		</xpath>
+	</template>
+	<!-- Compare in category page -->
+	<template id="clarico_compare_category_shop" inherit_id="clarico_shop.clarico_shop_products_item">
+		<xpath expr="//div[@id='compare_shop']" position="inside">
+			<div class="comparelist">
+				<input type="checkbox" class="add2compare" t-att-data-id="'%s' % product.id ">
+					<i class="fa fa-refresh" aria-hidden="true" t-att-data-id="'%s' % product.id "></i>
+				</input>
+			</div>
+		</xpath>
+	</template>
+	<!-- Compare in Product page -->
+	<template id="clarico_compare_category_product" inherit_id="clarico_product.clarico_product_product">
+		<xpath expr="//div[@id='compare_div']" position="inside">
+			<div class="comparelist">
+				<input type="checkbox" class="add2compare" t-att-data-id="'%s' % product.id ">
+					<i class="fa fa-refresh" aria-hidden="true" t-att-data-id="'%s' % product.id "></i>
+				</input>
+			</div>
+		</xpath>
+	</template>
+	<!-- compare link in shoppage for view product in shop page -->
+	<template id="clarico_compare_link" inherit_id="clarico_shop.clarico_shop_products">
+		<xpath expr="//div[@class='view-as']/div/div/div" position="inside">
+			<a class="apply-compare apply-filter-in-page shop_view_popup_link_btn">View Compare<span class="compare_no_count">(<span class="product_count">0</span>)</span></a>
+		</xpath>
+	</template>
+	<!-- For Display Error Message -->
+	<template id="clarico_compare_category_shop_error" inherit_id="website.layout">
+		<xpath expr="//div[last()]" position="after">
+			<div class="comparelist_error" style="">
+				       
+			</div>
+		</xpath>
+	</template>
+</odoo>

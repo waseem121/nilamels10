@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    	<template id="external_layout_custom_generalledger">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+
+            <t t-call="ledgers_filter_custom.external_layout_header_custom_generalledger" />
+            <t t-raw="0" />
+            <t t-call="ledgers_filter_custom.external_layout_footer_custom_generalledger" />
+        </template>
+
+        <template id="external_layout_header_custom_generalledger">
+		    <div class="header">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img t-if="res_company.header_image_qweb" t-att-src="'data:image/png;base64,%s' % res_company.header_image_qweb" />
+                            </div>
+                    <center>
+                        <h3 t-if="data['portrait_wo_header']">
+                            <span>Statement of Accounts</span>
+                        </h3>
+                    </center>
+                    <div class="col-xs-12" t-if="data['portrait_wo_header']">
+                        <center>
+                            <h4 class="text-center">
+                                <strong>From date :</strong>
+                                <strong t-esc="datetime.datetime.strptime(data['date_from'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                <strong>To date :</strong>
+                                <strong t-esc="datetime.datetime.strptime(data['date_to'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                            </h4>
+                        </center>
+                    </div>
+                        </div>
+		    </div>
+		</template>
+
+        <template id="external_layout_footer_custom_generalledger">
+            <div class="footer">
+                <div class="col-xs-12">
+                    <img t-if="res_company.footer_image_qweb" t-att-src="'data:image/png;base64,%s' % res_company.footer_image_qweb" />
+                </div>
+            </div>
+        </template>
+
+</odoo>

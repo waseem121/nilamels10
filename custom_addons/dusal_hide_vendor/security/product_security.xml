@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+    <record id="base.group_dusal_show_vendor" model="res.groups">
+        <field name="name">Show product vendors</field>
+    </record>
+</data>
+</openerp>

@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+
+        <record id="custom_stock_report_van_view" model="ir.ui.view">
+            <field name="name">custom.stock.report.van.view</field>
+            <field name="model">stock.report.van</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="location_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="generate_stock_report_van"/>
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    
+        <record id="custom_stock_report_van_action" model="ir.actions.act_window">
+            <field name="name">Stock Report Van</field>
+            <field name="res_model">stock.report.van</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_stock_report_van_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="custom_stock_report_van_action" id="custom_stock_report_van_menu"
+                  sequence="5"/>
+        
+    </data>
+</odoo>

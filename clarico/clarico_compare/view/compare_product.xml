@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<!-- List / Tree View -->
+		<record id="compareproduct_tree_view" model="ir.ui.view">
+			<field name="name">compareproduct.tree.view</field>
+			<field name="model">compare.product</field>
+			<field name="arch" type="xml">
+				<tree string="compare Product">
+					<field name="id" />
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		
+		<record id="compareproductt_form_view" model="ir.ui.view">
+			<field name="name">compareproduct.form.view</field>
+			<field name="model">compare.product</field>
+			<field name="arch" type="xml">
+				<form string="List">
+					<sheet>
+						<label for="name" string="Name" />
+						<field name="name" />
+						<group string="Attribute Information">
+							<group colspan="4">
+								<field name="compare_attr_id" nolabel="1">
+								<tree string="Variants" editable="bottom">
+									<field name="name" />
+									<field name="attribute_id" string="Attribute" />
+								</tree>
+								</field>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- For Action Window -->
+		<record id="action_compareproduct" model="ir.actions.act_window">
+			<field name="name">Compare Product</field>
+			<field name="res_model">compare.product</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<!-- Action Menu Item Related To Above Action Window -->
+		
+	</data>
+</odoo>

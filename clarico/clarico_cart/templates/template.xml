@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <template id="clarico_cart_header_icon" inherit_id="clarico_layout.clarico_header_main">
+		<xpath expr="//div[@id='header-social']/li[@id='header-cart']"
+			position="inside">
+			<t t-set="website_sale_order" t-value="website.sale_get_order()" />
+			<a href="/shop/cart">
+				<svg x="0px" y="0px" width="16px" height="16px" aria-hidden="true" focusable="false" role="presentation" class="icon icon-cart" viewBox="0 0 37 40">
+				<path d="M36.5 34.8L33.3 8h-5.9C26.7 3.9 23 .8 18.5.8S10.3 3.9 9.6 8H3.7L.5 34.8c-.2 1.5.4 2.4.9 3 .5.5 1.4 1.2 3.1 1.2h28c1.3 0 2.4-.4 3.1-1.3.7-.7 1-1.8.9-2.9zm-18-30c2.2 0 4.1 1.4 4.7 3.2h-9.5c.7-1.9 2.6-3.2 4.8-3.2zM4.5 35l2.8-23h2.2v3c0 1.1.9 2 2 2s2-.9 2-2v-3h10v3c0 1.1.9 2 2 2s2-.9 2-2v-3h2.2l2.8 23h-28z">
+				 </path>
+				 </svg>
+				<sup t-attf-class="my_cart_quantity label label-primary"
+					t-esc="website_sale_order and website_sale_order.cart_quantity or ''" />
+				<input type="hidden" id="hiddencount" t-att-value="website_sale_order and website_sale_order.cart_quantity or '0'" />
+			</a>
+		</xpath>
+	</template> 
+	
+	<!-- Cart -->
+	<template id="clarico_cart" inherit_id="website_sale.cart">
+		<xpath expr="//div[@class='container oe_website_sale']"
+			position="before">
+			<div class="cart-cover-img-div">
+			<section><img class="cart-cover-img" src="/clarico_cart/static/src/img/cart_cover.jpg"></img></section>
+			</div>
+		</xpath>
+		<xpath expr="//h1[@class='mb32']" position="attributes">
+			<attribute name="class">chs_heading shopping-cart</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-8 col-sm-9 oe_cart']" position="attributes">
+			<attribute name="class">cart-main-div-full oe_cart</attribute>
+		</xpath>
+		<xpath expr="//a[@href='/shop/checkout']" position="attributes">
+			<attribute name="class">btn btn-primary pull-right mb32 common-btn</attribute>
+		</xpath>
+		<xpath expr="//div[@id='right_column']" position="attributes">
+			<attribute name="class">coupon-code-div</attribute>
+		</xpath>
+		<xpath expr="//div[@id='right_column']/ul" position="replace"></xpath>
+		<xpath expr="//div[@id='right_column']/ul" position="replace"></xpath>
+		<xpath expr="//div[@id='right_column']/h4" position="replace"></xpath>
+		<xpath expr="//div[@id='right_column']/h4" position="replace"></xpath>
+	</template>	
+	
+	<!-- Cart Lines -->
+	<template id="theme_clarico_cart_lines" inherit_id="website_sale.cart_lines">
+		<xpath expr="//table[@id='cart_products']/thead/tr" position="attributes">
+			<attribute name="class">cart-thead-tr</attribute>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/thead/tr/th[1]" position="replace">
+			<th width="100">Image</th>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/thead/tr/th[2]" position="replace">
+			<th width="144">Product</th>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/thead/tr/th[4]" position="after">
+			<th width="100">Subtotal</th>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/thead/tr/th[5]" position="after">
+			<th width="100">Remove</th>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/tbody/t/tr" position="attributes">
+			<attribute name="class">cart-tbody-tr</attribute>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/tbody/t/tr/td[3]" position="replace">
+			<td t-if="line.product_id.product_tmpl_id">
+                 <div>
+                     <a t-attf-href="/shop/product/#{ slug(line.product_id.product_tmpl_id) }">
+                         <strong t-esc="line.product_id.with_context(display_default_code=False).display_name" />
+                     </a>
+                 </div>
+                 <div>
+					<t t-if="len(line.product_id.attribute_value_ids)">
+						<div class="para_attrib_class_name cart_view_para_attrib_class_name">
+							<div class="attr-bracket">(</div>
+							<t t-set="total_attribute" t-value="0"></t>
+							<t t-foreach="line.product_id.attribute_value_ids"
+								t-as="val_vart">
+								<label class="cart_view_para_class_attrib_name_value product-attr-p">
+									<t t-if="total_attribute">,</t>
+									<span class="cart_view_span_class_atrib_value_cart product-attr-span">
+										<t t-esc="val_vart.attribute_id.name"></t>
+									</span>
+									:
+									<span class="cart_view_span_class_atrib_value_val_cart product-attr-span">
+										<t t-esc="val_vart.name"></t>
+									</span>
+									<t t-set="total_attribute" t-value="total_attribute + 1"></t>
+								</label>
+							</t>
+							<div class="attr-bracket">)</div>
+						</div>
+					</t>
+				</div>
+             </td>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/tbody/t/tr/td[@id='td-price']" position="after">
+			<td>
+				<a href='#' class='js_delete_product no-decoration'> 
+					<i class="fa fa-times" aria-hidden="true"></i>
+				</a>
+			</td>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/tbody/t/tr/td[5]" position="after">
+			<td class="table-content-td text-center" id="td-price" name="totalprice">
+				<t t-if="(compute_currency(line.product_id.lst_price) - line.price_reduce ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+                  <del t-attf-class="#{'text-danger mr8'}" style="white-space: nowrap;" t-esc="compute_currency(line.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+              	</t>
+              	<span t-field="line.price_subtotal" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'from_currency': website_sale_order.pricelist_id.currency_id, 'display_currency': website.currency_id}" />
+            </td>
+		</xpath>
+		<xpath expr="//div[@class='js_cart_lines row']" position="attributes">
+			<attribute name="class">js_cart_lines</attribute>
+		</xpath>
+		<xpath expr="//div[@class='js_cart_lines well well-lg']" position="attributes">
+			<attribute name="class">js_cart_lines well well-lg cart-empty-msg</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Continue Shopping Button-->
+	<template id="clarico_cart_continue_shopping" inherit_id="website_sale.continue_shopping">
+		<xpath expr="//a[@href='/shop']" position="attributes">
+			<attribute name="class">btn btn-default mb32 common-btn</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Total -->
+	<template id="clarico_total" inherit_id="website_sale.total">
+		<xpath expr="//div[@id='order_total']/span[1]" position="attributes">
+			<attribute name="class">col-xs-6 text-right</attribute>
+		</xpath>
+		<xpath expr="//div[@id='order_total']/span[2]" position="attributes">
+			<attribute name="class">col-xs-6 text-left</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Checkout -->
+	<template id="clarico_cart_checkout" inherit_id="website_sale.checkout">
+		<xpath expr="//h3[@class='page-header mt16']" position="attributes">
+			<attribute name="class">chs_heading mt16</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']" position="attributes">
+			<attribute name="class">checkout-row-main</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/div[@class='col-md-12']" position="attributes">
+			<attribute name="class">bill-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/div[@class='col-md-12']" position="attributes">
+			<attribute name="class">bill-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row all_shipping']" position="attributes">
+			<attribute name="class">row-main-div all_shipping</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row-main-div all_shipping']/div[@class='col-md-12']" position="attributes">
+			<attribute name="class">bill-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row mt8']/div[@class='col-sm-12 col-md-12 one_kanban']" position="attributes">
+			<attribute name="class">one_kanban</attribute>
+		</xpath>
+		<xpath expr="//t[@t-if='not only_services']/div/div/h3" position="attributes">
+			<attribute name="class">chs_heading mt16</attribute>
+		</xpath>
+		
+		<xpath expr="//a[@class='a-submit btn btn-default mb16 btn-block']" position="attributes">
+			<attribute name="class">a-submit btn btn-default mb16  common-btn</attribute>
+		</xpath>
+		<xpath expr="//a[@href='/shop/cart']" position="attributes">
+			<attribute name="class">btn btn-default mb32 common-btn</attribute>
+		</xpath>
+		<xpath expr="//a[@href='/shop/confirm_order']" position="attributes">
+			<attribute name="class">btn btn-default btn-primary pull-right mb32 common-btn</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-6 one_kanban']" position="attributes">
+			<attribute name="class">one_kanban address-main-div</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-8 oe_cart']" position="attributes">
+			<attribute name="class">oe_cart div-full-width</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-sm-12 col-md-6 one_kanban']" position="attributes">
+			<attribute name="class">one_kanban address-main-div</attribute>
+		</xpath>
+<!--
+		<xpath expr="//div[@class='col-lg-offset-1 col-md-3 text-muted']" position="attributes">
+			<attribute name="class">checkout-total</attribute>
+		</xpath>
+		<xpath expr="//div[@class='checkout-total']/h3[@class='page-header mt16']" position="attributes">
+			<attribute name="class">your-order</attribute>
+		</xpath>
+-->
+	</template>
+	
+	<!-- Payment -->
+	<template id="clarico_cart_payment" inherit_id="website_sale.payment">
+		<xpath expr="//h1[@class='mb32']" position="attributes">
+			<attribute name="class">chs_heading mb32</attribute>
+		</xpath>
+		<xpath expr="//table[@class='table table-striped table-condensed']/thead/tr/th[1]" position="replace">
+			<th width="100">Image</th>
+		</xpath>
+		<xpath expr="//table[@class='table table-striped table-condensed']/thead/tr/th[2]" position="replace">
+			<th width="100">Product</th>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']" position="attributes">
+			<attribute name="class">payment-page-table table table-striped table-condensed</attribute>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/thead/tr" position="attributes">
+			<attribute name="class">cart-thead-tr</attribute>
+		</xpath>
+		<xpath expr="//table[@id='cart_products']/tbody/tr" position="attributes">
+			<attribute name="class">cart-tbody-tr</attribute>
+		</xpath>
+		<xpath expr="//td[@t-if='line.product_id.product_tmpl_id']/div[@class='text-muted']" position="replace">
+		</xpath>
+		<xpath expr="//div[@class='js_payment mb64 row']/div/h4" position="attributes">
+			<attribute name="class">sub-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-lg-8 col-sm-9 oe_cart']" position="attributes">
+			<attribute name="class">payment-table-main-div oe_cart</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']" position="attributes">
+			<attribute name="class">row-main-div</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-lg-5 col-sm-6']" position="attributes">
+			<attribute name="class">payment-method-div</attribute>
+		</xpath>
+		
+		<xpath expr="//div[@class='col-lg-5 col-lg-offset-2 col-sm-6 text-right']" position="attributes">
+			<attribute name="class">text-right</attribute>
+		</xpath>
+		<xpath expr="//div[@id='right_column']" position="attributes">
+			<attribute name="class">col-lg-3 col-lg-offset-1 col-sm-3 text-muted pull-right confirmation-bill-ship-div</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Payment Delivery -->
+	<template id="clarico_cart_payment_delivery" inherit_id="website_sale_delivery.payment_delivery">
+		<xpath expr="//div[@class='col-lg-5 col-sm-6']/h4" position="attributes">
+			<attribute name="class">sub-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-lg-5 col-sm-6']" position="attributes">
+			<attribute name="class">delivery-method-div</attribute>
+		</xpath>
+	</template>
+	
+	<!-- BillTo ShipTo -->
+	<template id="clarico_cart_bill_to" inherit_id="website_sale.bill_to">
+		<xpath expr="//div[@class='panel-heading']" position="attributes">
+			<attribute name="class">bill-ship-heading panel-heading</attribute>
+		</xpath>
+		<xpath expr="//t[@t-if='not order.only_services']/div/div[@class='panel-heading']" position="attributes">
+			<attribute name="class">bill-ship-heading panel-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='panel panel-info']" position="attributes">
+			<attribute name="class">panel panel-info bill-panel</attribute>
+		</xpath>
+		<xpath expr="//div[@class='panel panel-info']" position="attributes">
+			<attribute name="class">panel panel-info bill-panel</attribute>
+		</xpath> 
+	</template>
+	
+	<!-- Extra Step -->
+	<template id="clarico_cart_extra_info" inherit_id="website_sale.extra_info">
+		<xpath expr="//h1[@class='mb32']" position="attributes">
+			<attribute name="class">chs_heading mb32</attribute>
+		</xpath>
+		<xpath expr="//div[@class='oe_structure']" position="attributes">
+			<attribute name="class">oe_structure container extra-step-div</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-3 col-sm-4 text-right']" position="attributes">
+			<attribute name="class">col-md-2 col-sm-4 text-right</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-3 col-sm-4 text-right']" position="attributes">
+			<attribute name="class">col-md-2 col-sm-4 text-right</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-3 col-sm-4 text-right']" position="attributes">
+			<attribute name="class">col-md-2 col-sm-4 text-right</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7']" position="attributes">
+			<attribute name="class">col-md-9</attribute>
+		</xpath>
+		<xpath expr="//form[@action='/website_form/']" position="attributes">
+			<attribute name="class">s_website_form form-horizontal container-fluid mt32 extra-step-form</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Confirmation -->
+	<template id="clarico_cart_confirmation"  inherit_id="website_sale.confirmation">
+		<xpath expr="//div[@class='container oe_website_sale']/h1[@class='mb32']" position="attributes">
+			<attribute name="class">chs_heading mb16</attribute>
+		</xpath>
+		<xpath expr="//div[@class='thanks_msg']/h2" position="attributes">
+			<attribute name="class">sub-heading</attribute>
+		</xpath>
+		<xpath expr="//div[@class='oe_cart']/h3[@class='mt32 text-left']" position="replace">
+			<h3 class="sub-heading mt32 text-left">Order Details:</h3>
+		</xpath>
+		<xpath expr="//table[@class='table']" position="attributes">
+			<attribute name="class">order-detail-table table</attribute>
+		</xpath>
+		<xpath expr="//div[@class='oe_cart']/table[@class='order-detail-table table']/thead/tr" position="attributes">
+			<attribute name="class">confirmation-thead-tr</attribute>
+		</xpath>
+		<xpath expr="//div[@class='oe_cart']/table[@class='order-detail-table table']/tbody/tr" position="attributes">
+			<attribute name="class">confirmation-tbody-tr</attribute>
+		</xpath>
+		<xpath expr="//h3[@class='text-left']" position="replace">
+			<h3 class="sub-heading text-left">Payment information:</h3>
+		</xpath>
+		<xpath expr="//table[@class='table']/tbody/tr" position="attributes">
+			<attribute name="class">payment-information-tbody-tr table</attribute>
+		</xpath>
+		<xpath expr="//div[@class='oe_website_sale_tx_status']" position="attributes">
+			<attribute name="class">oe_website_sale_tx_status mt32</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-lg-8 col-sm-9']" position="attributes">
+			<attribute name="class">order-table-main-div</attribute>
+		</xpath>
+		<xpath expr="//div[@class='text-muted']" position="replace"></xpath>
+		<xpath expr="//div[@class='row']" position="attributes">
+			<attribute name="class">row-main-div</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-lg-3 col-lg-offset-1 col-sm-3 text-muted']" position="attributes">
+			<attribute name="class">col-lg-3 col-lg-offset-1 col-sm-3 text-muted pull-right confirmation-bill-ship-div</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Wizard Checkout -->
+	<template id="clarico_cart_wizard_checkout"  inherit_id="website_sale.wizard_checkout">
+		<xpath expr="//ul[@class='wizard pull-right']" position="attributes">
+			<attribute name="class">wizard wizard-main-ul</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Reduction Code -->
+	<template id="clarico_cart_reduction_code"  inherit_id="website_sale.reduction_code">
+		<xpath expr="//h4" position="attributes">
+			<attribute name="class">sub-heading</attribute>
+		</xpath>
+		<xpath expr="//p" position="attributes">
+			<attribute name="class">coupon-code-text</attribute>
+		</xpath>
+		<xpath expr="//input[@class='form-control']" position="attributes">
+			<attribute name="class">coupon-code-textbox form-control</attribute>
+		</xpath>
+		<xpath expr="//a[@class='btn btn-default a-submit']" position="attributes">
+			<attribute name="class">btn btn-default a-submit common-btn</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Clear Cart -->
+	 <template id="clarico_clear_cart" name="Clear Cart" inherit_id="website_sale.cart"> 
+		<xpath expr="//h1" position="after"> 
+			<a class="clear_shopping_cart" t-if="website_sale_order and website_sale_order.website_order_line">( Clear cart )</a> 
+		</xpath> 
+	</template>	
+	
+	<!-- Cart Total-->
+	 <template id="clarico_total" name="Clear Cart" inherit_id="website_sale.total"> 
+		<xpath expr="//div[@id='cart_total']" position="before"> 
+			<h1 class="chs_heading cart-total-heading">Cart Total</h1> 
+		</xpath> 
+		<xpath expr="//div[@id='order_total_untaxed']/span[2]" position="attributes">
+			<attribute name="class">col-xs-6 text-right text-muted</attribute>
+		</xpath>
+		 <xpath expr="//div[@id='order_total_taxes']/span[2]" position="attributes">
+			<attribute name="class">col-xs-6 text-right text-muted</attribute>
+		</xpath>
+		<xpath expr="//div[@id='order_total']/span[2]" position="attributes">
+			<attribute name="class">col-xs-6 text-right final-total</attribute>
+		</xpath>
+		<xpath expr="//div[@id='order_total']/span[1]" position="attributes">
+			<attribute name="class">col-xs-6 text-right final-total</attribute>
+		</xpath>
+	</template>
+	
+	<!-- Delivery Costs -->
+	 <template id="clarico_cart_delivery" inherit_id="website_sale_delivery.cart_delivery"> 
+		<xpath expr="//div[@id='order_delivery']/span[2]" position="attributes">
+			<attribute name="class">col-xs-6 text-right text-muted</attribute>
+		</xpath>
+	</template> 
+	
+	<!-- Address -->
+	<template id="clarico_cart_address" inherit_id="website_sale.address"> 
+		<xpath expr="//div[@class='col-lg-3 col-md-3 text-muted']/h3[@class='page-header mt16 text-center']" position="attributes">
+			<attribute name="class">your-order</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/t/h3[@class='page-header mt16']" position="attributes">
+			<attribute name="class">mt16 chs_heading mb32</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/t/h3[@class='page-header mt16']" position="attributes">
+			<attribute name="class">mt16 chs_heading mb32</attribute>
+		</xpath>
+		<xpath expr="//div[@class='row']/t/h3[@class='page-header mt16']" position="attributes">
+			<attribute name="class">mt16 chs_heading mb32</attribute>
+		</xpath>
+		<xpath expr="//div[@class='col-md-9 oe_cart']" position="attributes">
+			<attribute name="class">oe_cart address-row-main-div</attribute>
+		</xpath>
+		<xpath expr="//a[@class='btn btn-default mb32']" position="attributes">
+			<attribute name="class">btn btn-default mb32 common-btn</attribute>
+		</xpath>
+	
+	</template> 
+	
+	<!-- Suggested Products List -->
+	<template id="clarico_suggested_products_list" inherit_id="website_sale.suggested_products_list"> 
+		<xpath expr="//table[@class='js_cart_lines table table-striped table-condensed']" position="attributes">
+			<attribute name="class">js_cart_lines table table-striped table-condensed suggested-product-table</attribute>
+		</xpath>
+		<xpath expr="//table[@class='js_cart_lines table table-striped table-condensed suggested-product-table']/thead/tr/th" position="attributes">
+			<attribute name="class">chs_heading suggested-product</attribute>
+		</xpath>
+		<xpath expr="//div[@t-field='product.description_sale']" position="replace"></xpath>
+	</template> 
+	
+	<!-- cart_popover -->
+	<template id="clarico_cart_popover" inherit_id="website_sale.cart_popover"> 
+		<xpath expr="//div[@class='row mb8 cart_line']" position="attributes">
+			<attribute name="class">row mb8 cart_line popover-main-div</attribute>
+		</xpath>
+		<xpath expr="//a[@href='/shop/cart']" position="attributes">
+			<attribute name="class">btn btn-primary cart-popover-view-btn</attribute>
+		</xpath>
+	</template>
+	<!-- Recently Viewed for cart -->
+	<template id="cart_recently_viewed" inherit_id="website_sale.cart">
+		<xpath expr="//div[@id='right_column']" position="after">
+			<div id="recently_viewed_for_cart"></div>
+		</xpath>
+	</template>
+</odoo>

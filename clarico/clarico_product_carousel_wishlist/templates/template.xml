@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<!-- Wishlist icon in carousel  -->
+	<template id="clarico_product_carousel_wishlist_in_carousel" inherit_id="clarico_product_carousel.clarico_product_carousel_snippet_product">
+		<xpath expr="//div[@id='wishlist_icon_carousel']" position="inside">
+			<a class="add2wish_SC wishlist-heart" t-att-data-id="'%s' % product.id " title="Add To Wishlist">
+					<i class="fa fa-heart-o" aria-hidden="true"></i>
+			</a>
+			<a class="in2wish wishlist-heart" t-att-data-id="'%s' % product.id " title="In Wishlist">
+				<i class="fa fa-heart" aria-hidden="true"></i>
+			</a>
+	    </xpath>
+	</template>
+	
+	<!-- Wishlist icon in multi carousel  -->
+	<template id="clarico_product_carousel_wishlist_in_multi_carousel" inherit_id="clarico_product_carousel.clarico_product_carousel_static_carousel_snippet_product">
+		<xpath expr="//div[@id='wishlist_icon_multi_carousel']" position="inside">
+			<a class="add2wish_MC wishlist-heart" t-att-data-id="'%s' % product.id " title="Add To Wishlist">
+					<i class="fa fa-heart-o" aria-hidden="true"></i>
+			</a>
+			<a class="in2wish wishlist-heart" t-att-data-id="'%s' % product.id " title="In Wishlist">
+				<i class="fa fa-heart" aria-hidden="true"></i>
+			</a>
+	    </xpath>
+	</template>
+</odoo>

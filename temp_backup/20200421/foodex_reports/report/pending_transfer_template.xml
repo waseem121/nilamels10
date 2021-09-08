@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="pending_transfer_report_template_doc">
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 75px;"/>
+                        </div>
+                        <div style="text-align:center">
+                            <h3><b style="border-bottom:2px solid black">Pending Transfer Report</b></h3>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:15px">
+                    <div class="col-md-6" style="text-align:center">
+                        <span style="border-bottom:2px solid black; font-size:15px">
+                        <span><b> From : <span style="margin-left:10px" t-field="o.date_from"/></b></span>
+                        <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-field="o.date_to"/></b></span>
+                        </span>
+                    </div>
+                </div>
+                </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Serial.</th>
+                                <th>Scheduled Date</th>
+                                <th>Trasfer No.</th>
+                                <th style="border-bottom:1px solid black">Customer</th>
+                                <th>Picking Type</th>
+                                <th>Source Location</th>
+                                <th>Destination Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <t t-if="data">
+                                    <t t-set="count" t-value="1"/>
+                                    <t t-foreach="data" t-as="picking">
+                                        <tr>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="count"></span>
+                                                <t t-set="count" t-value="count + 1"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="context_timestamp(datetime.datetime.strptime(picking.min_date, '%Y-%m-%d %H:%M:%S')).strftime('%d-%m-%Y')"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="picking.name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <t t-if="picking.partner_id">
+                                                    <span t-esc="picking.partner_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="picking.picking_type_id.name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="picking.location_id.display_name"></span>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="picking.location_dest_id.display_name"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tr>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="pending_transfer_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.pending_transfer_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="pending_transfer_paper_formate" model="report.paperformat">
+            <field name="name">Pending Trasfer Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_pending_transfer"
+            string="pending_transfer"
+            model="pending.transfer"
+            name="foodex_reports.pending_transfer_report_template"
+            file="foodex_reports.pending_transfer_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="pending_transfer_paper_formate"
+            />
+    </data>
+</openerp>

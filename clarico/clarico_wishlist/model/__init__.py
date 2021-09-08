@@ -1,0 +1,2 @@
+import wishlist_wishlist
+import wishlist_wishlist_line

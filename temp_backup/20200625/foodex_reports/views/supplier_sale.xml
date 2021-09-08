@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="supplier_register_report_form_view" model="ir.ui.view">
+            <field name="name">supplier.register</field>
+            <field name="model">supplier.register</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="vendor_id" domain = "[('supplier','=',True)]"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_supplier_register_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_supplier_register" model="ir.actions.act_window">
+            <field name="name">Supplier Wise Sale Register</field>
+            <field name="res_model">supplier.register</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="supplier_register_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="purchase.purchase_report" action="action_supplier_register"
+            id="menu_supplier_register" sequence="19"/>
+
+    </data>
+</odoo>

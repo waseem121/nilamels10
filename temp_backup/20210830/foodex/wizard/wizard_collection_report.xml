@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+
+        <record id="collection_report_view" model="ir.ui.view">
+            <field name="name">Collection Report</field>
+            <field name="model">wizard.collection.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="user_id" required="1" options="{'no_create': True}"/>
+                        <field name="show_details"/>
+                        <!--<field name="include_receipts"/>-->
+                        <field name="print_date" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="generate_collection_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    
+        <record id="action_collection_report" model="ir.actions.act_window">
+            <field name="name">Collection Report</field>
+            <field name="res_model">wizard.collection.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="collection_report_view"/>
+            <field name="target">new</field>
+        </record>
+        <!--<menuitem id="menu_collection_report" name="Collection Report" action="action_collection_report" parent="account.menu_finance_legal_statement"/>-->
+        <menuitem id="menu_collection_report" name="Collection Report" action="action_collection_report" parent="account_reports.account_reports_legal_statements_menu"/>
+        
+    </data>
+</odoo>

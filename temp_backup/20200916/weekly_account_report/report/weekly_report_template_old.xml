@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="weekly_report_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Weekly Report</span>
+                        </h2>
+                            <strong>Date From:</strong>
+                            <span t-field="o.date_from"/>
+                            <strong>-        Date To:</strong>
+                            <span t-field="o.date_to"/>
+                    </center>
+                    <t t-set="sales_res" t-value="get_sales_res(o)" />
+                    <t t-set="private_sales_res" t-value="get_private_sales_res(o)" />
+                    <t t-set="sales_res_staff" t-value="get_sales_res_staff(o)" />
+                    <t t-set="delivered_invoices_res" t-value="get_delivered_invoices(o)" />
+                    <t t-set="cash_collection_res" t-value="get_cash_collection(o)" />
+                    
+                    <span style="font-weight:bold;font-size:18px;">Sales</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>MOH / Institutes</th>
+                                <th>Amount</th>
+                                <th>Inv Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="sales_res" t-as="sales_res_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="sales_res_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sales_res_line['amount']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sales_res_line['inv_qty']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <span style="font-weight:bold;font-size:18px;">Sales</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Private</th>
+                                <th>Amount</th>
+                                <th>Inv Qty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="private_sales_res" t-as="private_sales_res_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="private_sales_res_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="private_sales_res_line['amount']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="private_sales_res_line['inv_qty']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <span style="font-weight:bold;font-size:18px;">Weekly Sale Report by Staff</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Staff Name</th>
+                                <th>Number of Invoice</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="sales_res_staff" t-as="sales_staff_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="sales_staff_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sales_staff_line['no_of_inv']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sales_staff_line['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                    
+                    
+                    <span style="font-weight:bold;font-size:18px;">Delivered Invoices</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Invoice Number</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="delivered_invoices_res" t-as="delivered_invoices_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="delivered_invoices_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="delivered_invoices_line['inv_number']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="delivered_invoices_line['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <span style="font-weight:bold;font-size:18px;">Cash Collection</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date From</th>
+                                <th>Date Upto</th>
+                                <th>Amount KD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="cash_collection_res" t-as="cash_collection_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="cash_collection_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['date_from']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['date_to']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['amount']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                </div>
+            </t>
+        </template>
+
+        <template id="weekly_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="weekly_account_report.weekly_report_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

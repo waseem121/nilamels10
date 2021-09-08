@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>	
+	<!-- Compare in Quick View -->
+	<template id="clarico_quick_view_compare_category_Quickview" inherit_id="clarico_quick_view.clarico_quick_view_fetch-record">
+		<xpath expr="//div[@id='compare_icon_div_quick_view']" position="inside">
+			<div class="comparelist">
+				<input type="checkbox" class="add2compare" t-att-data-id="'%s' % product.id ">
+					<i class="fa fa-refresh" aria-hidden="true" t-att-data-id="'%s' % product.id "></i>
+				</input>
+			</div>
+		</xpath>
+	</template>
+</odoo>

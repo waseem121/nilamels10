@@ -1,0 +1,12 @@
+1. type: discount % theo so luong sp nao do hoac theo tong gia tri don hang
+2. type: discount money theo so luong sp nao do hoac theo tong gia tri don hang
+3. type: free new product if enough min quantity product old
+4. type: promotion for category
+5. type: discount from product list --> theo phan tram va giam theo tien
+6. discount theo thoi gian
+
+
+discount total order: free % money or discount money ( min total order ??)
+discount quantity product: min quantity --> check add new product free (product list discount)
+discount category product --> down money or % total order (product list and
+

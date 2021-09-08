@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="inherit_view_picking_type_form">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form" />
+        <field name="arch" type="xml">
+            <field name="use_existing_lots" position="after">
+                <field name="reserve_batches_automatically" groups="stock.group_production_lot" />
+                <field name="group_by_account" attrs="{'invisible':['|',('code','=','internal'),('code','=',False)]}"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="inherit_stock_move_form_view">
+        <field name="name">Stock Move</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="account_invoice_line_id" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+    <record id="direct_sale_view_stock_production_lot_form_inherit" model="ir.ui.view">
+        <field name="name">stock.production.lot.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
+        <field name="arch" type="xml">
+            <field name="ref" position="before">
+                <field name="active" />
+            </field>
+        </field>
+    </record>
+
+    <record id="aspl_inherit_view_move_picking_tree" model="ir.ui.view">
+        <field name="name">stock.move.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_picking_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit':True}</attribute>
+            </xpath>
+            <field name="product_uom_qty" position="before">
+                <field name="from_location_qty" tabindex="-1"/>
+                <field name="to_location_qty" tabindex="-1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="direct_sale_inherit_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pack_operation_product_ids']//tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit':True}</attribute>
+            </xpath>
+            <field name="priority" position="after">
+                <field name="account_move_id" attrs="{'invisible': [('account_move_id', '=', False)]}" />
+            </field>
+        </field>
+    </record>
+
+    <record id="inherit_change_product_quantity_form_view" model="ir.ui.view">
+        <field name="name">Change Product Quantity</field>
+        <field name="model">stock.change.product.qty</field>
+        <field name="inherit_id" ref="stock.view_change_product_quantity" />
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="product_tracking" invisible="1"/>
+            </field>
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="attrs">{'required':[('product_tracking','!=','none')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherited_view_inventory_form" model="ir.ui.view">
+        <field name="name">stock.inventory.form</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <field name="exhausted" position="after">
+                <field name="group_by_account" attrs="{'readonly':[('state','!=','draft')]}"/>
+            </field>
+            
+            <field name="state" position="before">
+                <button name="recalculate_qty" states="confirm" string="Recalculate Qty" type="object" class="oe_highlight"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

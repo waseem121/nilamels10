@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="clarico_compare_popover" inherit_id="website.layout">
+		<xpath expr="//div[last()]" position="after">
+			<div class="common-main-div" style="display:none">
+				<div class="filter-div-maxW">
+					<p class="common-close-btn"><span>X</span></p>
+					<div class="common-continer"></div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+	<template id="clarico_compare_popover_data">
+		<div class="popover_common_wrap">
+			<div class="popover_common_container">
+				<t t-foreach="object" t-as="p">
+					<div class="popover_each_product_div">
+						<div class="product_img_popover">
+							<img t-att-src="'data:image/png;base64,%s' % p.image_small"></img>
+						</div>
+						<div class="name_price_comb_popover">
+							<div class="product_name_popover">
+								<a t-att-href="'/shop/product/%s' %slug(p)" class="compare-product-name"
+									t-field="p.name" />
+							</div>
+							<div class="product_price_popover">
+
+								<div class="common_price">
+									<t t-if="(compute_currency(p.lst_price) - p.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+										<del class="text-danger mr8 " style="white-space: nowrap;"
+											t-esc="compute_currency(p.website_public_price)"
+											t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+									</t>
+									<span class="wishlist-price-p" t-esc="p.website_price"
+										t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+									<span itemprop="price" style="display:none;" t-esc="p.website_price" />
+									<span itemprop="priceCurrency" style="display:none;"
+										t-esc="website.currency_id.name" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</t>
+			</div>
+			<div class="view_common">
+				<a class="btn common-btn" href="/compare">View Compare</a>
+			</div>
+		</div>
+	</template>
+</odoo>

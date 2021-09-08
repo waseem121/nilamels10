@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="salesman_report_form_view" model="ir.ui.view">
+            <field name="name">salesman.report</field>
+            <field name="model">salesman.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="salesman_id"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        <field name="location_ids" widget="many2many_tags"/>
+                        <field name="invoice_type"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_get_salesman_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_salesman_report" model="ir.actions.act_window">
+            <field name="name">Salesman Report</field>
+            <field name="res_model">salesman.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="salesman_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_salesman_report"
+            id="menu_sale_man_report" sequence="20"/>
+
+    </data>
+</odoo>

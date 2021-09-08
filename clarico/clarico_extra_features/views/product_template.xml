@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<!-- Form View -->
+		<record id="producttemp_form_view" model="ir.ui.view">
+			<field name="name">productemp.form.view</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_only_form_view" />
+			<field name="arch" type="xml">
+				<xpath expr="//page[@name='sales']" position="after">
+					<page name="extra_features" string="Extra Freatures" groups="product.group_product_variant">
+                        <separator string="Short Description for Extra Features" colspan="4"/>
+                        <field name="extra_features_sort_description" colspan="4" nolabel="1"
+                                        placeholder="This note will be displayed on the product extra features sort description ."/>
+                        <field name="extra_features_id" widget="one2many_list" context="{'show_attribute': False}">
+                            <tree string="Extra Features" editable="bottom">
+								<field name="attribute_id"/>								 
+                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True}" domain="[('attribute_id', '=', attribute_id)]" context="{'default_attribute_id': attribute_id}"/>
+                            </tree>
+                        </field>
+                    </page>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

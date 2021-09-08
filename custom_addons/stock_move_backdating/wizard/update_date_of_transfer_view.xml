@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <act_window name="Update date of transfer" id="act_update_date_transfer"
+        res_model="update.date.transfer"
+        view_mode="form" target="new"/>
+    
+    <record id="view_update_date_transfer" model="ir.ui.view">
+        <field name="name">update.date.transfer.view.form</field>
+        <field name="model">update.date.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Update date of transfer">
+                <group >
+                    <field name="date_done" colspan="2"/>
+                </group>
+                <footer>
+                    <button name="process" string="_Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

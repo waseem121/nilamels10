@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="bank_payment_report_template_doc">
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 70px;"/>
+                        </div>
+                        <div style="text-align:center">
+                            <h3><b style="border-bottom:2px solid black">Bank Payment Report</b></h3>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:20px">
+                        <div class="col-md-6" style="text-align:center">
+                            <span style="border-bottom:2px solid black; font-size:15px">
+                            <span><b> From : <span style="margin-left:10px" t-esc="context_timestamp(datetime.datetime.strptime(o.date_from, '%Y-%m-%d')).strftime('%d-%m-%Y')"/></b></span>
+                            <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-esc="context_timestamp(datetime.datetime.strptime(o.date_to, '%Y-%m-%d')).strftime('%d-%m-%Y')"/></b></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="border-bottom:3px solid black;margin-top:10px">
+                    </div>
+                </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th style="border-bottom:1px solid black">Serial.</th>
+                                <th style="border-bottom:1px solid black">Pv Date</th>
+                                <th style="border-bottom:1px solid black">Account Name</th>
+                                <th style="border-bottom:1px solid black">Label</th>
+                                <th style="border-bottom:1px solid black">Voucher no</th>
+                                <th style="border-bottom:1px solid black">Reference</th>
+                                <th style="border-bottom:1px solid black" class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <t t-if="data">
+                                    <t t-set="count" t-value="1"/>
+                                    <t t-set="total" t-value="0"/>
+                                    <t t-foreach="data" t-as="record">
+                                        <t t-foreach="record.move_line_ids" t-as="payment">
+                                            <t t-if="payment.debit > 0">
+                                                <tr>
+                                                    <td style="border-bottom:1px solid black"><span t-esc="count"></span> </td>
+                                                    <td style="border-bottom:1px solid black">
+                                                        <span t-esc="context_timestamp(datetime.datetime.strptime(record.payment_date, '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                                    </td>
+                                                    <td style="border-bottom:1px solid black">
+                                                        <span t-esc="payment.account_id.name"/>
+                                                    </td>
+                                                    <td style="border-bottom:1px solid black">
+                                                        <span t-esc="payment.name"/>
+                                                    </td>
+                                                    <td style="border-bottom:1px solid black">
+                                                        <span t-esc="payment.move_id.name"/>
+                                                    </td>
+                                                    <td style="border-bottom:1px solid black">
+                                                        <span t-esc="payment.move_id.ref"/>
+                                                    </td>
+                                                    <td class="text-right" style="border-bottom:1px solid black">
+                                                        <span t-esc="'%.3f'%payment.debit"/>
+                                                    </td>
+                                                     <t t-set="total" t-value="total + payment.debit"/>
+                                                    <t t-set="count" t-value="count + 1"/>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td colspan="7" class="text-right" style="border-top:2px solid black;border-bottom:2px solid black">
+                                            <b style="border-bottom:1px solid black">
+                                                <span>
+                                                    Grand Total :
+                                                </span>
+                                                <span t-esc="'%.3f'%total"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tr>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="bankpayment_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.bank_payment_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_bankpayment_report" model="report.paperformat">
+            <field name="name">Bank Payment Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_bank_payment"
+            string="bank_payment_report"
+            model="bank.payment.report"
+            name="foodex_reports.bankpayment_report_template"
+            file="foodex_reports.bankpayment_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="paperformat_bankpayment_report"
+            />
+    </data>
+</openerp>

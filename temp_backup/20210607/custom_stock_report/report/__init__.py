@@ -1,0 +1,2 @@
+import custom_stock_report
+import custom_stock_report_lot

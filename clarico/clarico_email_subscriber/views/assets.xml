@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Include a EmailSubscriber LESS & JS in assets Front -->
+	<template id="assets_frontend" inherit_id="web.assets_frontend" name="Customize theme Frontend Assets">
+		<xpath expr="//link[last()]" position="after">
+			<link rel="stylesheet" type="text/less" href="/clarico_email_subscriber/static/src/less/email_subscriber.less" />
+		</xpath>
+		
+		<xpath expr="//script[last()]" position="after">
+			<script type="text/javascript" src="/clarico_email_subscriber/static/src/js/email_subscriber.js"></script>
+		</xpath>
+	</template>
+</odoo>

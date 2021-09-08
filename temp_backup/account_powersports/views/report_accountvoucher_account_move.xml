@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_accountvoucher_account_move_document">
+            <div class="header">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                    </div>
+                </div>
+            </div>
+            <div class="page">
+                <div class="oe_structure" />
+                <h2 align="center">
+                    <span t-field="o.journal_id.name" />
+                </h2>
+                <br />
+                <br />
+                <div class="row">
+                    <div class="col-xs-3">DOC NO. </div>
+                    <div class="col-xs-9">
+                        :
+                        <span t-field="o.name" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">DOC DATE</div>
+                    <div class="col-xs-9">
+                        :
+                        <span t-field="o.date" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">DOC REF. NO.</div>
+                    <div class="col-xs-9">
+                        :
+                        <span t-field="o.ref" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-3">MR. / MESSRS</div>
+                    <div class="col-xs-9">
+                        :
+                        <span t-field="o.partner_id.name" />
+                    </div>
+                </div>
+
+                <br />
+                <table style="border: 1px solid black" width="100%">
+                    <colgroup>
+                        <col width="10%" />
+                        <col width="10%" />                        
+                        <col width="15%" />
+                        <col width="35%" />
+                        <col width="30%" />
+                    </colgroup>
+                    <tr>
+                        <td style="background: #d3d3d3; border: thin solid black; padding: 5px">DEBIT</td>
+                        <td style="background: #d3d3d3; border: thin solid black; padding: 5px">CREDIT</td>
+                        <td style="background: #d3d3d3; border: thin solid black; padding: 5px">ACCOUNT CODE</td>
+                        <td style="background: #d3d3d3; border: thin solid black; padding: 5px">ACCOUNT NAME</td>
+                        <td style="background: #d3d3d3; border: thin solid black; padding: 5px">Narration</td>
+                    </tr>
+                    <tr t-foreach="o.line_ids" t-as="m">
+                        <td style="border: thin solid black; padding: 5px">
+                            <span t-if="m.debit">
+                                <span t-field="m.debit" />
+                            </span>
+                        </td>
+                        <td style="border: thin solid black; padding: 5px">
+                            <span t-if="m.credit">
+                                <span t-field="m.credit" />
+                            </span>
+                        </td>
+                        <td style="border: thin solid black; padding: 5px">
+                            <span t-field="m.account_id.code" />
+                        </td>
+                        <td style="border: thin solid black; padding: 5px">
+                            <span t-field="m.account_id.name" />
+<!--                            <br />
+                            <span t-field="m.name" /> -->
+
+                        </td>
+                        <td style="border: thin solid black; padding: 5px">
+                                <span t-field="m.name" />
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="background: #d3d3d3; border: thin solid black; padding: 5px">
+                            <t t-if="o.get_amount_word()">
+                                THE SUM OF:
+                                <span t-esc="o.get_amount_word()[0]" />
+                            </t>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+<!--                <p t-if="o.narration">
+                    NARRATION:
+                    <span t-field="o.narration" />
+                </p>-->
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <table width="100%">
+                    <tr>
+                        <td style="padding: 5px;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="border-bottom: thin solid black;"></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="padding: 5px;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="border-bottom: thin solid black;"></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="padding: 5px;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="border-bottom: thin solid black;"></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="padding: 5px;">
+                            <table width="100%">
+                                <tr>
+                                    <td style="border-bottom: thin solid black;"></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            Prepared By
+                            <br />
+                            Accountant
+                        </td>
+                        <td align="center">
+                            Checked By
+                            <br />
+                            Finance Controller
+                        </td>
+                        <td align="center">
+                            Approved By
+                            <br />
+                            Managing Director
+                        </td>
+                        <td align="center">Received By </td>
+                    </tr>
+                </table>
+                <div class="oe_structure" />
+            </div>
+            <div class="footer">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <img t-if="user.company_id.footer_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.footer_image_qweb" />
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="report_accountvoucher_account_move">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_powersports.report_accountvoucher_account_move_document" t-lang="o.partner_id.lang" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

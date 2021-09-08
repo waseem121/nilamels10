@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="account.account.type" id="data_account_type_asset_view">
+          <field name="name">Asset View</field>
+          <field name="type">asset</field>
+        </record>
+
+        <record model="account.account.type" id="data_account_type_leability_view">
+          <field name="name">Liability View</field>
+          <field name="type">liability</field>
+        </record>
+
+        <record model="account.account.type" id="data_account_type_income_view">
+          <field name="name">Income View</field>
+          <field name="type">income</field>
+        </record>
+
+        <record model="account.account.type" id="data_account_type_expense_view">
+          <field name="name">Expense View</field>
+          <field name="type">expense</field>
+        </record>
+
+    </data>
+
+    <data>
+
+        <!-- Accounts -->
+        <record id="account_inherit_form_view" model="ir.ui.view">
+            <field name="name">account.account.form.new</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <field name ="user_type_id" position="after">
+                    <field name="type" required="1"/>
+                    <field name="parent_id" context="{'view_all': True}" />
+                    <field name="level"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name = 'child_parent_ids' invisible="1"/>
+                    <field name="child_id" invisible="1"/>
+
+                </field>
+            </field>
+         </record>
+
+        <record model="account.account.type" id="data_account_type_view">
+          <field name="name">View</field>
+          <field name="type">view</field>
+        </record>
+
+        <record id="account.action_account_form" model="ir.actions.act_window">
+            <field name="name">Chart of Accounts</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="account.view_account_search"/>
+            <field name="view_id" ref="account.view_account_list"/>
+            <field name="context">{'view_all': True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add an account.
+              </p><p>
+                An account is part of a ledger allowing your company
+                to register all kinds of debit and credit transactions.
+                Companies present their annual accounts in two main parts: the
+                balance sheet and the income statement (profit and loss
+                account). The annual accounts of a company are required by law
+                to disclose a certain amount of information.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="account.action_account_form" id="account.menu_action_account_form"
+                  parent="account.menu_finance_entries" sequence="20"
+                  name="Accounts"/>
+        
+        <record id="view_account_tree_chart" model="ir.ui.view">
+            <field name="name">account.account.tree</field>
+            <field name="model">account.account</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:type == 'view';black:type in ('other','receivable','payable','consolidation');gray:type == 'closed'"
+                      string="Chart of accounts" > <!--toolbar="1"-->
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                    <field name="balance"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_account_tree_chart" model="ir.actions.act_window">
+            <field name="name">Chart of Accounts</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_tree_chart"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="context">{'view_all': True}</field>
+        </record>
+        
+        <menuitem id="menu_action_account_form" action="action_account_tree_chart"
+                  parent="account.menu_finance_entries" sequence="21"/>
+
+    </data>
+</openerp>

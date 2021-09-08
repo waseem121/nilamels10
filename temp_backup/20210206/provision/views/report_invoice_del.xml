@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+            <xpath expr="//t[@t-if='subst is True']" position="replace">
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                        var y = document.getElementsByClassName(x[i]);
+                        for (var j=0; j&lt;y.length; ++j)
+                        y[j].textContent = vars[x[i]];
+                        }
+                        var operations = {
+                        'not-first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "hidden" : "visible";
+                        },
+                        'first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "visible" : "hidden";
+                        },
+                        'last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
+                        },
+                        };
+                        for (var klass in operations) {
+                        var y = document.getElementsByClassName(klass);
+                        for (var j=0; j&lt;y.length; ++j)
+                        operations[klass](y[j]);
+                        }
+                        }
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="invoice_external_layout_header_del">
+            <div class="header">
+<!--                <div class="row">
+                    <div class="col-xs-12">
+                        <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                    </div>
+                </div>-->
+                    <center>
+                        <!--<h4 style="border-bottom:1px solid black">-->
+                        <h4>
+                            <strong><span>
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                DELIVERY NOTE</span>
+                            </strong>
+                        </h4>
+                        <h4 style="border-bottom:1px solid black">
+                        </h4>
+                    </center>                
+                    <table>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Customer</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span t-field="o.partner_id"/>
+                        </td>
+                        <th style="width:14%;">&amp;nbsp;Date</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <strong>
+                                <span t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </strong>
+                        </td>
+                    </tr>                        
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                        <span t-field="o.partner_shipping_id.street"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.zip"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.country_id.name"/>
+                        </td>
+                        <th style="width:14%;">&amp;nbsp;DN No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span>DN</span><span t-field="o.number"/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span t-field="o.partner_id.phone"/>
+                        </td>
+                        <th style="width:14%;">&amp;nbsp;LPO No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span t-field="o.lpo_number"/>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                        </td>
+                        <th style="width:14%;">&amp;nbsp;Depot</th>
+                        <td style="width:15%;font-size: 18px;">
+                        </td>
+                    </tr>
+                    </table>                
+                
+            </div>
+<!--            <div class="header" style="height:45mm;width:100%;">
+                <div style="height:39mm;width:100%;"></div>
+                <table style="width:100%;border-top: 1px none black;">
+                    <tr>
+                        <th style="width:15%">
+                            <div class="not-first-page">Delivery Note</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.number"/>
+                            </div>
+                        </td>
+                        <th colspan="3"
+                            style="font-size:20px;text-align: center;border-top: 0px none black;;border-right: 0px none black;border-left: 0px none black;">
+                            <p/>
+                            <span t-if="o.payment_term_id.name == 'CASH'">
+                                Delivery Note
+                            </span>
+                            <span t-if="o.payment_term_id.name != 'CASH'">
+                                Delivery Note
+                            </span>
+                        </th>
+                        <th style="width:15%">
+                            <div class="not-first-page">Date</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>-->
+        </template>
+
+        <template id="invoice_external_layout_footer_del">
+            <div class="footer">
+                <br/>
+                <t t-set="total_qty" t-value="0"/>
+                <tr t-foreach="o.invoice_line_ids" t-as="l">
+                    <t t-set="total_qty" t-value="total_qty+(l.quantity)+int(l.free_qty)"/>
+                </tr>
+                <t t-set="lines" t-value="len(o.invoice_line_ids_two)"/>
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr style="width:60%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <th class="text-right" style="font-size: 15px;">
+                                Total Qty:&amp;nbsp;
+                            </th>
+                            <td style="width:15%;;text-align: center;font-size: 15px;">
+                                <span t-esc="int(total_qty)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                <p>Provision General Trading Co. W.L.L
+                                </p>
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">Receivers Name and Sign:</th>
+                        </tr>
+                        <tr>
+                            <th style="width:60%;padding-top:2%;">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                Store Signature
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">
+                                Mobile:
+                            </th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:20%;padding-top:2px;height:30px;">Billing Signature
+                            </th>
+                            
+                            <th style="width:20%;padding-top:2px;height:30px;">Compnay Seal
+                            </th>
+                        </tr>
+                    </table>
+<!--                <t t-if="lines &lt;= 20">
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr style="width:60%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <th class="text-right" style="font-size: 15px;">
+                                Total Qty:&amp;nbsp;
+                            </th>
+                            <td style="width:15%;;text-align: center;font-size: 15px;">
+                                <span t-esc="int(total_qty)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                <p>Provision General Trading Co. W.L.L
+                                </p>
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">Receivers Name and Sign:</th>
+                        </tr>
+                        <tr>
+                            <th style="width:60%;padding-top:2%;">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                Store Signature
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">
+                                Mobile:
+                            </th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:20%;padding-top:2px;height:30px;">Billing Signature
+                            </th>
+                            
+                            <th style="width:20%;padding-top:2px;height:30px;">Compnay Seal
+                            </th>
+                        </tr>
+
+                    </table>
+                    <br/>
+
+                </t>
+                
+                <div class="not-first-page">
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr style="width:60%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <th class="text-right" style="font-size: 15px;">
+                                Total Qty:&amp;nbsp;
+                            </th>
+                            <td style="width:15%;;text-align: center;font-size: 15px;">
+                                <span t-esc="int(total_qty)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                <p>Provision General Trading Co. W.L.L
+                                </p>
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">Receivers Name and Sign:</th>
+                        </tr>
+                        <tr>
+                            <th style="width:60%;padding-top:2%;">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                Store Signature
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">
+                                Mobile:
+                            </th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width:20%;padding-top:2px;height:30px;">Billing Signature
+                            </th>
+                            
+                            <th style="width:20%;padding-top:2px;height:30px;">Compnay Seal
+                            </th>
+                        </tr>
+                    </table>
+                    
+                    
+                    
+                    <br/>
+                    <ul class="list-inline text-left">
+                        <li>Page:</li>
+                        <li>
+                            <span class="page"/>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>-->
+                <div class="not-last-page">
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                        <li class="text-right">
+                            P.T.O
+                        </li>
+                    </ul>
+                </div>
+                <div class="not-first-page">
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>                
+                
+            </div>
+        </template>
+
+        <template id="invoice_external_layout_del">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+                <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <t t-call="provision.invoice_external_layout_header_del"/>
+            <t t-raw="0"/>
+            <t t-call="provision.invoice_external_layout_footer_del"/>
+        </template>
+
+        <template id="report_invoice_document_del">
+            <t t-call="provision.invoice_external_layout_del">
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page" style="font-size:15px;align:right">
+                    <!--<table style="font-family: sans serif;margin-top:20px;width:100% !important;float:left;font-size: 13px;">-->
+                    <table style="font-family: sans serif;margin-top:5px;width:100% !important;float:left;font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom:1px solid black;border-top:1px solid black;width:100% !important;padding-bottom: 5px !important;">
+                                <td style="width:5% !important;">
+                                    <b>
+                                        Sl.No.
+                                    </b>
+                                </td>
+                                <td style="width:14% !important;">
+                                    <b>PCode</b>
+                                </td>
+                                <td style="width:50% !important;">
+                                    <b>Product Description</b>
+                                </td>
+                                <td style="text-align:left;width:4% !important;">
+                                    <b>Unit</b>
+                                </td>
+                                <td class="text-left" style="width:4% !important;">
+                                    <b>Qty</b>
+                                </td>
+                            </tr>
+                        </thead>
+                        <t t-set="sr_no" t-value="1"/>
+                        <!--<tr t-foreach="o.invoice_line_ids" t-as="line" style="width:100% !important;height:30px">-->
+                        <tr t-foreach="o.invoice_line_ids" t-as="line" style="width:100% !important;height:23px">
+                            <td style="width:5% !important;">
+                                <span t-esc="sr_no"/>
+                            </td>
+                            <td style="width:15% !important;">
+                                <t t-if="line.product_id">
+<!--                                    <t t-if="line.product_id.default_code">
+                                        <span t-field="line.product_id.default_code"/>
+                                        <br/>
+                                    </t>-->
+                                    <t t-if="line.product_id.barcode">
+                                        <span t-field="line.product_id.barcode"/>
+                                    </t>
+                                </t>
+                            </td>
+                            <!--<td style="width:37% !important;">-->
+                            <td style="width:50% !important;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td style="width:5% !important;">
+                                <span t-field="line.uom_id.name"/>
+                            </td>
+                            <td class="text-left" style="width:5% !important;">
+                                <!--<span t-esc="int(line.quantity)"/>-->
+                                <span t-esc="int(line.quantity)+int(line.free_qty)"/>
+                            </td>
+
+                            <t t-set="sr_no" t-value="sr_no+1"/>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_invoice1_del">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="provision.report_invoice_document_del"/>
+                </t>
+            </t>
+        </template>
+    </data>
+
+</odoo>

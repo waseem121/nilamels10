@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<template id="clarico_product_product" inherit_id="website_sale.product">
+		<xpath expr="//div[@id='wrap']" position="replace">
+			<div itemscope="itemscope" itemtype="http://schema.org/Product"
+				id="wrap" class="js_sale">
+				<div id="sub_header_row">
+					<div class="col-sm-4 clarico_product_breadcrumb">
+						<div class="sub_breadcrumb">
+							<ol class="breadcrumb clarico_breadcrumb">
+								<li>
+									<a t-att-href="keep(category=0)">Products</a>
+								</li>
+								<li t-if="category">
+									<a t-att-href="keep('/shop/category/%s' % slug(category), category=0)"
+										t-field="category.name" />
+								</li>
+								<li class="active">
+									<span t-field="product.name" />
+								</li>
+							</ol>
+
+							<div class="product_available">
+								<div t-if="product.availability == 'in_stock'" class="alert alert-success">
+									<span class="instock_text">In Stock</span>
+								</div>
+
+								<div t-if="product.availability == 'warning'" class="alert alert-warning">
+									<span t-field="product.availability_warning" />
+								</div>
+							</div>
+						</div>
+						<div id="website_published_button" class="col-sm-3">
+							<t t-call="website.publish_management" groups="sales_team.group_sale_manager">
+								<t t-set="object" t-value="product" />
+								<t t-set="publish_edit" t-value="True" />
+								<t t-set="action" t-value="'product.product_template_action'" />
+							</t>
+						</div>
+					</div>
+				</div>
+				<section
+					t-attf-class="mt8 oe_website_sale #{(compute_currency(product.lst_price) - product.website_price) &gt; 0.01 and website.get_current_pricelist().discount_policy == 'without_discount'  and 'discount'}"
+					id="product_detail">
+
+					<div class="row" id="div_comb_img_detail">
+						<span itemprop="url" style="display:none;"
+							t-esc="'/shop/product/%s' % slug(product)" />
+						<form action="/shop/cart/update" class="js_add_cart_variants"
+							t-att-data-attribute_value_ids="product.product_variant_ids.ids"
+							method="POST">
+							<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+							<div class="product_details_main">
+								<div class="col-sm-7 res_product_img">
+									<t t-set="image_ids" t-value="product.product_image_ids" />
+									<div id="o-carousel-product" class="carousel slide"
+										data-ride="carousel" data-interval="0">
+										<div class="carousel-outer">
+											<div class="carousel-inner inner-slider">
+												<div class="item active image_zoom" itemprop="image"
+													t-field="product.product_variant_ids[0].image"
+													t-options='{"widget": "image", "class": "product_detail_img js_variant_img", "alt-field": "name", "zoom": "image"}' />
+												<div t-if="variant_img" class="item image_zoom"
+													itemprop="image" t-field="product.image"
+													t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image"}' />
+												<t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
+													<div class="item image_zoom" t-field="pimg.image"
+														t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }' />
+												</t>
+
+											</div>
+											<t t-if="len(image_ids) or variant_img">
+												<a class="carousel-control left" href="#o-carousel-product"
+													role="button" data-slide="prev">
+													<span class="fa fa-chevron-left res_prev_class"
+														aria-hidden="true" />
+													<span class="sr-only">Previous</span>
+												</a>
+												<a class="carousel-control right" href="#o-carousel-product"
+													role="button" data-slide="next">
+													<span class="fa fa-chevron-right res_next_class"
+														aria-hidden="true" />
+													<span class="sr-only">Next</span>
+												</a>
+											</t>
+										</div>
+										<ol class="carousel-indicators mCustomScrollbar" id="indicators"
+											t-if="len(image_ids) or variant_img" data-mcs-theme="dark">
+											<li data-target="#o-carousel-product" data-slide-to="0"
+												class="active">
+												<img class="img img-responsive js_variant_img_small"
+													t-attf-src="/website/image/product.product/{{product.product_variant_ids[0].id}}/image/90x90"
+													t-att-alt="product.name" />
+											</li>
+											<li t-if="variant_img" data-target="#o-carousel-product"
+												data-slide-to="1" class="">
+												<img class="img img-responsive"
+													t-attf-src="/website/image/product.template/{{product.id}}/image/90x90"
+													t-att-alt="product.name" />
+											</li>
+											<t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
+												<li data-target="#o-carousel-product"
+													t-att-data-slide-to="pimg_index + (variant_img and 2 or 1)">
+													<img class="img img-responsive"
+														t-attf-src="/website/image/product.image/{{pimg.id}}/image/90x90"
+														t-att-alt="pimg.name" />
+												</li>
+											</t>
+										</ol>
+										<div t-if="product.p_video_url">
+											<a class="pvideo_link" href="#">
+												<i class="fa fa-video-camera" aria-hidden="true"></i>
+											</a>
+										</div>
+										<!-- <div><a class="p_zoom_link">Click image to zoom product</a></div> -->
+									</div>
+									<div class="zoomed_image_on_screen">
+										<div class="div_cross_zoomed_image">
+											<p class="p_class_cross_image common-close-btn">
+												<span>X</span>
+											</p>
+										</div>
+										<div class="div_parent_zoom_class">
+											<div class="zooming_image_screen_o">
+												<img src="" class="zooming_image_screen"></img>
+											</div>
+											<!-- slider on zoom -->
+											<div class="clarico_slide">
+												<ol class="carousel-indicators mCustomScrollbar" t-if="len(image_ids) or variant_img"
+													data-mcs-theme="dark">
+													<li class="active ref_imgs">
+														<img class="img img-responsive"
+															t-attf-src="/website/image/product.product/{{product.product_variant_ids[0].id}}/image/2000x2000"
+															t-att-alt="product.name" />
+													</li>
+													<li t-if="variant_img" class="ref_imgs">
+														<img class="img img-responsive"
+															t-attf-src="/website/image/product.template/{{product.id}}/image/2000x2000"
+															t-att-alt="product.name" />
+													</li>
+													<t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
+														<li class="ref_imgs">
+															<img class="img img-responsive "
+																t-attf-src="/website/image/product.image/{{pimg.id}}/image/2000x2000"
+																t-att-alt="pimg.name" />
+														</li>
+													</t>
+												</ol>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<div class="col-sm-5 col-lg-4" id="product_details">
+									<div class="product_name_rating">
+										<div itemprop="name" t-field="product.name" class="c_product_name">Product
+											Name
+										</div>
+									</div>
+									<div class="js_product" t-if="product.product_variant_ids">
+
+										<p t-if="product.description_sale" />
+										<div class="prod_des">
+											<p t-field="product.description_sale" class="text-muted res_pera_description" />
+
+										</div>
+										<div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer"
+											class="product_price" t-if="product.product_variant_ids">
+											<h4 class="oe_price_h4 css_editable_mode_hidden">
+												<div class="price_comman_class">
+													<div class="price_comman_sub_class">
+														<t
+															t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='with_discount'">
+															<del class="text-danger mr8 strike-through strike-price"
+																style="white-space: nowrap;" t-esc="compute_currency(product.website_public_price)"
+																t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+														</t>
+														<b>
+															<t
+																t-if="(compute_currency(product.lst_price) - product.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+
+																<del class="text-danger mr8 " style="white-space: nowrap;"
+																	t-esc="compute_currency(product.website_public_price)"
+																	t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+															</t>
+															<span class="text-danger oe_default_price"
+																style="text-decoration: line-through; white-space: nowrap;"
+																t-esc="compute_currency(product.website_public_price)"
+																t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}"
+																t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if (compute_currency(product.lst_price) - product.website_price) &gt; 0.01 and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'" />
+
+															<!-- <span class="p-orignal-price" t-esc="product.website_price" 
+																t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/> -->
+															<b class="oe_price" style="white-space: nowrap;" t-esc="product.website_price"
+																t-options="{'widget': 'monetary', 'display_currency': website.currency_id}" />
+															<span itemprop="price" style="display:none;" t-esc="product.website_price" />
+															<span itemprop="priceCurrency" style="display:none;"
+																t-esc="website.currency_id.name" />
+														</b>
+
+													</div>
+												</div>
+											</h4>
+											<h4 class="css_non_editable_mode_hidden decimal_precision"
+												t-att-data-precision="product.currency_id.decimal_places">
+												<span t-field="product.lst_price"
+													t-options='{
+					                   "widget": "monetary",
+					                   "display_currency": product.currency_id,
+					               }' />
+											</h4>
+											<h4 class="hidden oe_not_available bg-warning">Product not available</h4>
+										</div>
+										<div class="clarico_product_sku" t-if="product.default_code">
+											<p class="sku_label">
+
+												SKU:
+												<t t-esc="product.default_code" />
+											</p>
+										</div>
+										<t t-placeholder="select">
+											<input type="hidden" class="product_id" name="product_id"
+												t-att-value="product.product_variant_id.id if len(product.product_variant_ids) == 1 else '0'" />
+											<t t-call="website_sale.variants">
+												<t t-set="ul_class" t-value="'nav-stacked'" />
+											</t>
+										</t>
+										<!-- <div class="clear_attr_container"> <a class="clear_attr" href="#">Clear</a> 
+											</div> -->
+										<div class="4_btns_combo">
+											<div class="4_btns_combo_sub">
+												<p t-if="len(product.product_variant_ids) &gt; 1" class="css_not_available_msg bg-danger"
+													style="padding: 15px;">Product not available</p>
+												<div class="product_wish_compare">
+													<div class="wishlink" id="wishicon_div"></div>
+													<div class="compare_btn" id="compare_div"></div>
+												</div>
+												<div class="p_ad2cart">
+													<a id="add_to_cart"
+														class="btn btn-primary btn-lg mt8 js_check_product a-submit"
+														href="#">Add to Cart</a>
+												</div>
+											</div>
+										</div>
+									</div>
+
+
+									<div class="ctg_class">
+										<p class="category_label" t-if="category">
+											Category:
+											<span
+												t-att-href="keep('/shop/category/%s' % slug(category), category=0)"
+												t-field="category.name" />
+										</p>
+									</div>
+									<div class="p_static_desc_para">
+										<p class="text-muted">
+											30-day money-back guarantee
+											<br />
+											Free Shipping in U.S.
+											<br />
+											Buy now, get in 2 days
+										</p>
+									</div>
+									<div class="product_share">
+										<div class="oe_share s_share">
+											<a target="_Blank" class="oe_share_facebook"
+												href="https://www.facebook.com/sharer/sharer.php?u={url}">
+												<i class="fa fa-facebook"></i>
+											</a>
+											<a target="_Blank" class="oe_share_twitter"
+												href="https://twitter.com/intent/tweet?text={title}&amp;url={url}">
+												<i class="fa fa-twitter"></i>
+											</a>
+											<a target="_Blank" class="oe_share_linkedin"
+												href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;">
+												<i class="fa fa-linkedin"></i>
+											</a>
+											<a target="_Blank" class="oe_share_google"
+												href="https://plus.google.com/share?url={url}">
+												<i class="fa fa-google-plus"></i>
+											</a>
+											<a href="mailto:?body={url}&amp;subject={title}">
+												<i class="fa fa-envelope-o"></i>
+											</a>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</section>
+
+
+
+				<div itemprop="description" t-field="product.website_description"
+					class="oe_structure mt16 p_des_container" id="product_full_description" />
+
+				<div
+					t-if="product.extra_features_id or product.extra_features_sort_description or product.alternative_product_ids or product.accessory_product_ids"
+					class="div_class_whole_product_features">
+					<div class="div_class_product_features">
+						<div class="div_sub_class_product_features">
+							<t t-call="clarico_extra_features.clarico_extra_features" />
+							<div class="column-right_p_alternative">
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<t t-set="head">
+					<!-- Facebook and linkedin sharing data -->
+					<meta property="og:type" content="website" />
+					<meta property="og:url" t-att-content="request.httprequest.url" />
+					<meta property="og:description" t-att-content="product.description_sale" />
+					<!-- Twitter sharing data -->
+					<meta name="twitter:card" content="summary_large_image" />
+					<meta name="twitter:site" t-attf-content="@#{res_company.name}" />
+					<meta name="twitter:title" t-att-content="product.name" />
+					<meta name="twitter:description" t-att-content="product.description_sale" />
+				</t>
+				<!-- Recently View item -->
+				<div id="product_page_recently_view"></div>
+				<div class="product_video_popup_main">
+					<div class="product_video_popup_wrap">
+						<div class="product_video_subpopup">
+							<div class="item active iframe_product_video" t-if="product.p_video_url">
+								<iframe class="popup_iframe_url" t-attf-src="#{product.p_video_url}"></iframe>
+							</div>
+							<p class="popup-close common-close-btn">X</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+	<template id="clarico_product_product_comment" inherit_id="website_sale.product_comment">
+		<xpath expr="//t[@t-call='rating.rating_card']" position="replace">
+		</xpath>
+		<xpath expr="//div[@class='js_product']" position="before">
+			<div class="product_avg_rating">
+				<t t-call="rating.rating_card">
+					<t t-set="rating_stat" t-value="rating_product" />
+					<t t-set="max_rate" t-value="5" />
+					<t t-set="min_rate" t-value="1" />
+				</t>
+			</div>
+		</xpath>
+		<xpath expr="//section[@class='container']" position="replace">
+		</xpath>
+		<xpath expr="//t[@t-set='head']" position="after">
+
+			<section class="container res_section_width">
+				<div class="comment_heading">
+					<div class="tot_review_heading">
+						<p>
+							Reviews(
+							<t t-esc="len(product.website_message_ids)" />
+							)
+						</p>
+					</div>
+					<h1>
+						<p>
+							<t t-if="len(product.website_message_ids) &lt;= 1">
+								<t t-esc="len(product.website_message_ids)" />
+								review
+							</t>
+							<t t-if="len(product.website_message_ids) > 1">
+								<t t-esc="len(product.website_message_ids)" />
+								reviews
+							</t>
+						</p>
+						<p> for </p>
+						<p>
+							"
+							<t t-esc="product.name" />
+							"
+						</p>
+					</h1>
+				</div>
+				<div class="row col-md-10 col-md-offset-1 res_review_box">
+					<t t-call="website_mail.message_thread">
+						<t t-set="object" t-value="product" />
+						<t t-set="chatter_mode" t-value="'json'" />
+						<t t-set="rating_enable" t-value="True" />
+					</t>
+				</div>
+			</section>
+		</xpath>
+	</template>
+	<template id="clarico_product_product_quantity" inherit_id="website_sale.product_quantity">
+		<xpath expr="//div[@class='css_quantity input-group oe_website_spinner']"
+			position="replace">
+			<div class="css_quantity input-group oe_website_spinner"
+				contenteditable="false">
+			</div>
+		</xpath>
+		<xpath expr="//p[@class='css_not_available_msg bg-danger']"
+			position="after">
+			<div class="product_quantity">
+				<div class="css_quantity input-group oe_website_spinner"
+					contenteditable="false">
+					<a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json">
+						<i class="fa fa-minus"></i>
+					</a>
+					<input type="text" class="form-control" data-min="1" name="add_qty"
+						value="1" />
+					<a t-attf-href="#"
+						class="mb8 input-group-addon float_left js_add_cart_json">
+						<i class="fa fa-plus"></i>
+					</a>
+				</div>
+			</div>
+		</xpath>
+	</template>
+	<template id="clarico_product_message_thread" inherit_id="website_mail.message_thread">
+		<xpath expr="//img[@class='img pull-left img-circle']" position="after">
+			<h3 class="add_cmt_lbl">Add a review</h3>
+		</xpath>
+		<xpath expr="//div[@class='pull-left mb32']" position="before">
+			<div class="text-cmt-heading">
+				<h4 class="ur_rating_lbl">Your review</h4>
+			</div>
+		</xpath>
+	</template>
+
+	<template id="clarico_product_message_thread_rating"
+		inherit_id="clarico_product.clarico_product_message_thread">
+		<xpath expr="//section[contains(@class, 'o_website_mail_thread')]"
+			position="attributes">
+			<attribute name="t-att-data-rating-enabled">rating_message_values and 1 or 0
+			</attribute>
+		</xpath>
+		<!-- <xpath expr="//div[@class='text-cmt-heading']" position="before"> 
+			<t t-if="rating_enable"> <div> <h4 class="ur_rating_lbl">Your rating</h4> 
+			</div> <t t-call="rating.rating_star_card"> <t t-set="rating_input_name" 
+			t-value="'rating'" /> </t> </t> </xpath> -->
+		<!-- <xpath expr="//ul[contains(@class, 'o_website_comments')]//h5" position="after"> 
+			<t t-if="rating_enable"> <div t-if="rating_message_values.get(message.id)"> 
+			<t t-call="rating.rating_star_card"> <t t-set="rating_default_value" t-value="rating_message_values.get(message.id)" 
+			/> <t t-set="rating_disabled" t-value="True" /> </t> </div> </t> </xpath> -->
+	</template>
+
+	<template id="clarico_product_suggested_products" inherit_id="clarico_product.clarico_product_product">
+		<xpath expr="//div[@class='column-right_p_alternative']"
+			position="inside">
+			<t t-if="product.alternative_product_ids">
+				<span style="display:none;" class="acce_count"
+					t-esc="len(product.alternative_product_ids)" />
+				<div class="alternate_recent_product_whole_div_class">
+					<div class="container_class" t-if="product.alternative_product_ids"
+						style="margin-top:0 !important;">
+						<h3 class="alternate_product_heading_para_class">Suggested Items</h3>
+						<div id="suggested_item_product" class="recently_viewed_container">
+							<div class="owl-carousel">
+								<t t-foreach="product.alternative_product_ids" t-as="alt_product">
+									<div class="alternet_common">
+										<div class="parent">
+											<a t-attf-href="/shop/product/#{ slug(alt_product) }">
+												<div t-field="alt_product.image_medium" class="recently_viewed_img_div"
+													t-options="{'widget': 'image'}" />
+											</a>
+											<div class="recently_viwed_details">
+												<div class="recently_view_product_name">
+													<a t-attf-href="/shop/product/#{ slug(alt_product) }"
+														style="display: block">
+														<p t-field="alt_product.name" />
+													</a>
+												</div>
+
+												<div class="recently_view_product_price">
+													<p t-field="alt_product.website_price"
+														t-options='{"widget": "monetary", "display_currency": website.currency_id, }' />
+												</div>
+												<hr class="r_v_deatil_hr" />
+											</div>
+										</div>
+									</div>
+								</t>
+							</div>
+						</div>
+					</div>
+				</div>
+			</t>
+		</xpath>
+	</template>
+
+	<template id="clarico_product_suggested_Accessories"
+		inherit_id="clarico_product.clarico_product_product">
+		<xpath expr="//div[@class='column-right_p_alternative']"
+			position="inside">
+			<t t-if="product.accessory_product_ids">
+				<span style="display:none;" class="suggest_count"
+					t-esc="len(product.accessory_product_ids)" />
+				<div class="alternate_recent_product_whole_div_class">
+					<div class="container_class" t-if="product.accessory_product_ids"
+						style="margin-top:0 !important;">
+						<h3 class="alternate_product_heading_para_class">Accessories</h3>
+						<div id="suggested_item_product" class="recently_viewed_container">
+							<div class="owl-carousel">
+								<t t-foreach="product.accessory_product_ids" t-as="alt_product">
+									<div class="alternet_common">
+										<div class="parent">
+											<a t-attf-href="/shop/product/#{ slug(alt_product.product_tmpl_id) }"
+												style="display: block">
+												<div t-field="alt_product.image_medium" class="recently_viewed_img_div"
+													t-options="{'widget': 'image'}" />
+											</a>
+											<div class="recently_viwed_details">
+												<div class="recently_view_product_name">
+													<a t-attf-href="/shop/product/#{ slug(alt_product.product_tmpl_id) }"
+														style="display: block">
+														<p t-field="alt_product.name" />
+													</a>
+												</div>
+
+												<div class="recently_view_product_price">
+													<p t-field="alt_product.website_price"
+														t-options='{"widget": "monetary", "display_currency": website.currency_id, }' />
+												</div>
+												<hr class="r_v_deatil_hr" />
+											</div>
+										</div>
+									</div>
+								</t>
+							</div>
+						</div>
+					</div>
+				</div>
+			</t>
+		</xpath>
+	</template>
+</odoo>

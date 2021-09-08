@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_manual_reconcilation_lines,access_manual_reconcilation_lines,model_manual_reconcilation_lines,base.group_user,1,1,1,1
+access_job_order_manager,access_job_order_manager,model_job_order,provision.group_job_order_manager,1,1,1,1
+access_job_order_line_manager,access_job_order_line_manager,model_job_order_line,provision.group_job_order_manager,1,1,1,1
+access_job_order_user,access_job_order_user,model_job_order,provision.group_job_order_user,1,0,1,0
+access_job_order_line_user,access_job_order_line_user,model_job_order_line,provision.group_job_order_user,1,0,1,0

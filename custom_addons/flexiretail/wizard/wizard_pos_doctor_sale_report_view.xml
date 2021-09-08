@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="aspl_doctor_sale_report" model="ir.ui.view">
+            <field name="name">wizard.pos.doctor.sale.report.form</field>
+            <field name="model">wizard.pos.doctor.sale.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="state" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <group col="4" states="choose">
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="config_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit':True}"/>
+                    </group>
+                    <div states="get">
+                        <h2>Report Generated</h2>
+                        <p>Here is the Excel Report: <field name="data" readonly="1" filename="name"/></p>
+                    </div>
+                    <footer states="choose">
+                        <button class="oe_highlight" type="object" name="print_pdf_report" string="PDF Report"/>
+                        <button class="oe_highlight" type="object" name="print_excel_report" string="Excel Report"/>
+                        or
+                        <button class="oe_link" type="object" special="cancel" string="Cancel"/>
+                    </footer>
+                    <footer states="get">
+                        <button string="Close" type="object" special="cancel" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_doctor_sale_report" model="ir.actions.act_window">
+            <field name="name">Doctor Sale Report</field>
+            <field name="res_model">wizard.pos.doctor.sale.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_doctor_sale_report" id="menu_action_doctor_sale_report"
+        		groups="point_of_sale.group_pos_user"
+        		parent="point_of_sale.menu_point_rep" sequence="8"/>
+
+    </data>
+</odoo>

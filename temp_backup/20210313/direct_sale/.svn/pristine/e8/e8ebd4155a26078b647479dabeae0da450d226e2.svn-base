@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <data>
+
+        <record id="inherit_view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="stock_restrict_locations.view_users_form" />
+            <field name="arch" type="xml">
+                <field name="allowed_picking_type_ids" position="after">
+                    <field name="allowed_default_location" domain="[('usage','=','internal')]"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

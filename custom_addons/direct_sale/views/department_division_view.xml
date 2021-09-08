@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+        <!--department views-->
+    <record id="view_customer_department_view_search" model="ir.ui.view">
+        <field name="name">view.customer.department.view.search</field>
+        <field name="model">customer.department</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_customer_department_view_tree" model="ir.ui.view">
+        <field name="name">view.customer.department.view.tree</field>
+        <field name="model">customer.department</field>
+        <field name="arch" type="xml">
+            <tree string="Customer Department">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_customer_department_view_form" model="ir.ui.view">
+        <field name="name">view.customer.department.view.form</field>
+        <field name="model">customer.department</field>
+        <field name="arch" type="xml">
+            <form string="Customer Department">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_customer_department">
+        <field name="name">Customer Department</field>
+        <field name="res_model">customer.department</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem
+        name="Customer Department"
+        id="menu_customer_department"
+        action="action_customer_department"
+        parent="sale.prod_config_main"/>
+    
+    
+    <!--Division views-->
+    <record id="view_customer_division_view_search" model="ir.ui.view">
+        <field name="name">view.customer.division.view.search</field>
+        <field name="model">customer.division</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_customer_division_view_tree" model="ir.ui.view">
+        <field name="name">view.customer.division.view.tree</field>
+        <field name="model">customer.division</field>
+        <field name="arch" type="xml">
+            <tree string="Customer Division">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_customer_division_view_form" model="ir.ui.view">
+        <field name="name">view.customer.division.view.form</field>
+        <field name="model">customer.division</field>
+        <field name="arch" type="xml">
+            <form string="Customer Division">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_customer_division">
+        <field name="name">Customer Division</field>
+        <field name="res_model">customer.division</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem
+        name="Customer Division"
+        id="menu_customer_division"
+        action="action_customer_division"
+        parent="sale.prod_config_main"/>
+
+</data>
+</openerp>

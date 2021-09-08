@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+        <menuitem id="pos_promotion"
+              parent="point_of_sale.menu_point_root"
+              sequence="17"
+              name="Promotions"
+              groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+              />
+
+        <record id="view_pos_promotion_form" model="ir.ui.view">
+            <field name="name">pos.promotion.form</field>
+            <field name="model">pos.promotion</field>
+            <field name="arch" type="xml">
+                <form string="Promotion">
+                    <header>
+                        <button name="apply_promotion_for_all_config" string="Apply Now" type="object" icon="fa-arrow-circle-o-right" states="active"/>
+                        <button name="remove_out_all_config" string="Stop" type="object" icon="fa-circle" states="active"/>
+                        <field name="state" widget="statusbar" clickable="True"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="type"/>
+                                <field name="method" attrs="{'required': [('type', 'not in', ['product_discount_money', 'product_detail', 'discount_product','gift_total_order'])], 'invisible': [('type', 'in', ['product_gift', 'product_detail', 'discount_product','gift_total_order'])]}"/>
+<!--                                <field name="start_dt"/>
+                                <field name="end_dt"/>-->
+                            </group>
+                            <group>
+                                <field name="percent_total" attrs="{'invisible': ['|', ('type', 'not in', ['product_category']), ('method', '!=', 'percent')]}"/>
+                                <field name="discount_total" attrs="{'invisible': ['|', ('type', 'not in', ['product_category']), ('method', '!=', 'discount')]}"/>
+                                <field name="product_id" attrs="{'required': [('type', 'not in', ['gift_total_order'])], 'invisible': [('type', 'in', ['gift_total_order'])]}"/>/>
+                                <!--<field name="product_id" required="1"/>-->
+                                <field name="min_total_order" attrs="{'invisible': [('type', 'not in', ['product_discount_money', 'product_category', 'total_order','gift_total_order'])], 'required': [('type', 'in', ['product_gift', 'product_category', 'total_order','gift_total_order'])]}"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible': [('type', '!=', 'total_order')]}">
+                            <field name="line_total_ids" nolabel="1">
+                                <tree string="Rules" editable="top">
+                                    <field name="total_from"/>
+                                    <field name="total_to"/>
+                                    <field name="value"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group attrs="{'invisible': [('type', 'not in', ['product_discount_money','gift_total_order'])]}">
+                            <field name="product_gift_ids" attrs="{'required': [('type', 'in', ['product_discount_money','gift_total_order'])]}">
+                                <tree string="Gift" editable="top">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="price" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group attrs="{'invisible': [('type', '!=', 'discount_product')]}">
+                            <field name="product_discount_ids" attrs="{'required': [('type', '=', 'discount_product')]}">
+                                <tree string="Product Discount" editable="top">
+                                    <field name="product_id"/>
+                                    <field name="qty"/>
+                                    <field name="percent"/>
+                                </tree>
+                            </field>
+                        </group>
+                        
+                        <group attrs="{'required': [('type', '=', 'product_category')], 'invisible': [('type', '!=', 'product_category')]}">
+                            <separator string="Promotion Categories" colspan="4"/>
+                            <field name="categ_ids" colspan="4" nolabel="1">
+                                <tree string="Product Discount" editable="top">
+                                    <field name="category_id"/>
+                                    <field name="type"/>
+                                    <field name="discount"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="promotion_line_ids" colspan="4" nolabel="True" attrs="{'required': [('type', '=', 'product_detail')], 'invisible': [('type', '!=', 'product_detail')]}">
+                                <tree string="Lines" editable="bottom">
+                                    <field name="product_from_id"/>
+                                    <field name="min_qty"/>
+                                    <field name="product_to_id"/>
+                                    <field name="gift_qty"/>
+                                </tree>
+                                <form string="Lines">
+                                    <group>
+                                        <field name="product_from_id"/>
+                                        <field name="min_qty"/>
+                                        <field name="product_to_id"/>
+                                        <field name="gift_qty"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_promotion_tree" model="ir.ui.view">
+            <field name="name">pos.promotion.tree</field>
+            <field name="model">pos.promotion</field>
+            <field name="arch" type="xml">
+                <tree string="Promotions" colors="green: state  == 'active', gray: state  == 'draft'">
+                    <field name="type"/>
+<!--                    <field name="start_dt"/>
+                    <field name="end_dt"/>-->
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_pos_promotion_kanban" model="ir.ui.view">
+            <field name="name">pos.promotion.kanban</field>
+            <field name="model">pos.promotion</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state">
+                    <field name="type"/>
+                    <field name="method"/>
+                    <field name="state" invisible="1"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <div class="oe_kanban_details">
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Type: <field name="type"></field></li>
+                                        <li>Method: <field name="method"></field></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_pos_promotion_search" model="ir.ui.view">
+            <field name="name">pos.promotion.filter</field>
+            <field name="model">pos.promotion</field>
+            <field name="arch" type="xml">
+                <search string="Promotion filter">
+                    <field name="type"/>
+                    <field name="method"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_pos_promotion">
+            <field name="name">Promotions</field>
+            <field name="res_model">pos.promotion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_promotion_service" model="ir.actions.act_window">
+            <field name="name">Promotion service</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                    'default_available_in_pos': True,
+                    'default_type': 'service',
+                }
+            </field>
+            <field name="domain">[('available_in_pos', '=', True), ('type', '=', 'service')]</field>
+        </record>
+
+        <menuitem id="menu_action_promotion_service"
+                  action="action_promotion_service"
+                  parent="pos_promotion"
+                  sequence="0"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+                  />
+
+        <menuitem id="pos_promotion_config"
+                  action="action_pos_promotion"
+                  parent="pos_promotion"
+                  sequence="1"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+                  />
+
+        <record id="view_pos_promotion_pack_form" model="ir.ui.view">
+            <field name="name">pos.promotion.pack.form</field>
+            <field name="model">pos.promotion.pack</field>
+            <field name="arch" type="xml">
+                <form string="Pack">
+                    <header>
+                        <button name="apply_pack_for_all_config" string="Apply" type="object" icon="fa-arrow-circle-o-right" states="draft,reject"/>
+                        <button name="remove_pack_for_all_config" string="Remove" type="object" icon="fa-circle" states="active"/>
+                        <field name="state" widget="statusbar" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="Packs">
+                                <field name="name"/>
+                                <field name="active"/>
+<!--                                <field name="start_dt"/>
+                                <field name="end_dt"/>-->
+                            </group>
+                        </group>
+                        <group string="Products Apply">
+                            <field name="product_apply_ids" nolabel="1">
+                                <tree string="Products Apply" editable="top">
+                                    <field name="product_id"/>
+                                    <field name="qty_apply"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Products Free">
+                            <field name="product_free_ids" nolabel="1">
+                                <tree string="Products Free" editable="top">
+                                    <field name="product_id"/>
+                                    <field name="qty_free"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_promotion_pack_tree" model="ir.ui.view">
+            <field name="name">pos.promotion.pack.tree</field>
+            <field name="model">pos.promotion.pack</field>
+            <field name="arch" type="xml">
+                <tree string="Promotions" colors="green: active  == 'True', gray: active  == 'False'">
+                    <field name="name"/>
+                    <field name="active"/>
+<!--                    <field name="start_dt"/>
+                    <field name="end_dt"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_view_pos_promotion_pack">
+            <field name="name">Promotions Pack</field>
+            <field name="res_model">pos.promotion.pack</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_act_view_pos_promotion_pack"
+                  action="act_view_pos_promotion_pack"
+                  parent="pos_promotion"
+                  sequence="2"
+                  groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"
+                  />
+
+
+    </data>
+</openerp>

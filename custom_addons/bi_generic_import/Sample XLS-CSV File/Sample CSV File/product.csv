@@ -1,0 +1,5 @@
+NAME,INTERNAL REFERANCE,CATEGORY,TYPE,BARCODE,UOM,PURCHASE UOM,SALE PRICE,COST PRICE,WEIGHT,VOLUME,SALE UOM,BRAND,VENDOR
+test6,LTV001,Physical,Consumable,11,Unit(s),Unit(s),100,200,103,44,Unit(s),apple,Agrolait
+test7,LCD001,Physical,Consumable,12,Unit(s),Unit(s),233,240,146,32,Unit(s),apple,Camptocamp
+test8,ST001,Physical,Consumable,13,Unit(s),Unit(s),246,123,532,32,Unit(s),samsung,China Export
+test9,ST0011,Physical,Consumable,14,Unit(s),Unit(s),246,123,532,32,Unit(s),nokia,"My Company, Chicago"

@@ -1,0 +1,264 @@
+/*POS-PRODUCT SCREEN*/
+/*Product List Area*/
+
+ .pos .product-list-scroller {
+    background-color: #E5E2CA;
+}
+.pos .product {
+    box-shadow: 5px 5px 7px #888;
+}
+
+ /*Numpad Area*/
+.pos .leftpane .pads {
+    background: none repeat scroll 0% 0% #E5E2CA;
+}
+.pos button, .pos a.button{
+    background: none repeat scroll 0% 0% #EAB364;
+    box-shadow: 3px 5px 3px #888 !important;
+    border-color:#000 !important;
+}
+.pos .centerpane_button, #menu{
+    background: none repeat scroll 0% 0% #A4CABC;
+}
+.pos .input-button:hover {
+    font-size: 24px;
+    color: #000000;
+    background: #EAB364 none repeat scroll 0 0 !important;
+}
+.pos .payment-numpadcustom .numpadcustom button {
+    margin: 3px;
+}
+.pos .payment-numpadcustom .numpadcustom {
+    width: 291px;
+    border-top: 0px solid #CACACA;
+    border-left: 0px solid #CACACA !important;
+}
+.pos .payment-numpadcustom .numpadcustom button {
+    width: 65px;
+    height: 65px;
+    border-radius: inherit;
+}
+.pos .paypad button:active, 
+.pos .numpad button:active,
+ .pos .numpad button:hover,
+.pos .numpad .selected-mode, 
+.pos .popup  button:active{
+    border: none;
+    color: #000;
+    background: none repeat scroll 0% 0% #A4CABC !important;
+}
+
+/*Add order Area*/
+.pos .order-container, .pos .order-container .order {
+    background: none repeat scroll 0% 0% #E5E2CA !important;
+}
+.pos .order .orderline.selected {
+    background: none repeat scroll 0% 0% #EAB36480 !important;
+}
+
+/*Category List Area*/
+.pos .category-list {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+
+/*Category List Header Area*/
+.pos .rightpane-header {
+    background: none repeat scroll 0% 0% #E5E2CA;
+}
+
+/*Category List Header Home Area*/
+.breadcrumb {
+    background-color: #E5E2CA !important;
+    border-right: none !important;
+    height: 0px !important;
+}
+
+/*Top header Area*/
+.pos .pos-topheader, .pos .pos-searchHeader {
+    background: none repeat scroll 0% 0% #B3DBC0 !important;
+}
+.pos .order-button, .pos .order-button.square {
+    background: none repeat scroll 0% 0% #EAB364 !important;
+    color: #000;
+}
+.pos .pos-branding {
+    border-right: 0px;
+}
+/*.pos .order-button {
+    background: none repeat scroll 0% 0% #F48777 !important;
+}*/
+/*.pos .oe_icon.oe_green {
+    color: #E5E2CA;
+}*/
+.pos .pos-branding .username {
+    font-weight: bold;
+}
+.pos .pos-rightheader .header-button {
+    background-color: #EAB364;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/*CLIENT SCREEN*/
+.pos .clientlist-screen .client-list tr {
+    background: none repeat scroll 0% 0% #D3ECC8;
+}
+.pos .clientlist-screen .client-list tr:nth-child(2n) {
+    background: none repeat scroll 0% 0% #b3dbc0;
+}
+.pos .clientlist-screen .client-list thead > tr {
+    background: none repeat scroll 0% 0% #71b386 !important;
+}
+.pos .clientlist-screen .client-details {
+    padding: 16px;
+    border-bottom: solid 5px #EAB364 !important;
+}
+.screen .top-content .button.highlight {
+    background: none repeat scroll 0% 0% #EAB364 !important;
+    border: 1px solid #EAB364 !important;
+}
+/*ORDER LIST SCREEN*/
+.pos .orderlist-screen .order-list tr {
+    background: none repeat scroll 0% 0% #D3ECC8;
+}
+.pos .orderlist-screen .order-list tr:nth-child(2n) {
+    background: none repeat scroll 0% 0% #E7C3BD;;
+}
+.pos .orderlist-screen .order-list thead > tr {
+    background: none repeat scroll 0% 0% #EAB364 !important;
+}
+
+/*PAYMENT SCREEN*/
+.pos .screen {
+    background-color: #E5E2CA;
+}
+
+.pos .numpadcustom button:hover {
+    background: #EAB364;
+}
+.pos .paymentline.selected {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+.screen .top-content .button {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+.screen .top-content .button.highlight {
+    background: none repeat scroll 0% 0% #EAB364;
+    border: 1px solid #EAB364;
+}
+.pos .paymentline.selected .edit {
+    color: #EAB364;
+    box-shadow: 0px 0px 0px 3px #EAB364;
+}
+.paymentmethods .button {
+    background: none repeat scroll 0% 0% #A4CABC;
+}
+.payment-screen .payment-buttons .button:hover {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+.payment-screen .payment-buttons .button {
+    background: none repeat scroll 0% 0% #A4CABC;
+}
+
+/*RECEIPT SCREEN*/
+.pos .pos-actionbar {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+.pos .pos-actionbar .button {
+    background: none repeat scroll 0% 0% #EAB364;
+}
+
+/*RECEIPT SCREEN*/
+.floor-map {
+    background: none no-repeat scroll 0% 0% #EAB364 !important;
+}
+
+/*Dialog Design*/
+.modal-body {
+    position: relative;
+    padding: 15px;
+    background-color: #E5E2CA;
+}
+.modal-header {
+    min-height: 16.4286px;
+    padding: 15px;
+    border-bottom: 1px solid #EAB364;
+    background-color: #EAB364;
+}
+.modal .modal-footer {
+    text-align: left;
+    background-color: #EAB364;
+}
+.pos .control-button {
+    background-color: #EAB364;
+    color: black;
+    box-shadow: 3px 5px 3px #888;
+}
+
+/*Side Bar*/
+#sidebar-wrapper{
+    background: none !important;
+}
+
+.pos_search_box input, textarea{
+	border: 2px solid #eab364 !important;
+}
+.pos span.breadcrumb{
+	background: #e5e2ca none repeat scroll 0 0 !important;
+}
+.pos .clientlist-screen .client-list tr.highlight{
+    background: #EAB364 !important;
+}
+.popup.pos_popup_background{
+	background: #e5e2ca !important;
+}
+.pos_popup_title_background{
+    background: #b3dbc0 !important;
+}
+.pos_popup_footer_button{
+    background: #EAB364 !important;
+}
+/* all screen */
+.list-screen .list_table tr {
+    background: none repeat scroll 0% 0% #D3ECC8 !important;
+}
+.list-screen .list_table tr:nth-child(2n) {
+    background: none repeat scroll 0% 0% #b3dbc0 !important;
+}
+.list-screen .list_table thead > tr {
+    background: none repeat scroll 0% 0% #71b386 !important;
+}
+.pos .modal-dialog .popup{
+	background: #e5e2ca !important;
+}
+.title{
+	background: #b3dbc0 !important;
+}
+.pos .popup .button{
+	background: #EAB364 !important;
+}
+/* Cart */
+.pos .order-empty{
+    color: #000 !important;
+}
+.orderline.back_color, .orderline.back_color .info-list .info,.orderline.back_color .info-list .info em{
+    color: blue !important;
+}
+.orderline.delivery_charges_color, .orderline.delivery_charges_color .info-list .info,.orderline.delivery_charges_color .info-list .info em{
+    color: blue !important;
+}
+.to_be_deliver{
+    color: blue !important;
+}
+/* Receipt Screen */
+div.button{
+    background: none repeat scroll 0% 0% #A4CABC !important;
+}
+/* Login Screen */
+#close_login, .button.login{
+    background: none repeat scroll 0% 0% #A4CABC !important;
+}
+.pos .paymentline.selected .edit_payment_charge {
+    color: #EAB364 !important;
+    box-shadow: 0px 0px 0px 3px #EAB364 !important;
+}

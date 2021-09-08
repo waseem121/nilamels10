@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        
+        <record model="ir.ui.view" id="aspl_mrp_multiple_mo">
+            <field name="name">multiple.mos.wizard.form</field>
+            <field name="model">multiple.mos.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Multiple MO's">
+                    <group>
+                        <field name="raw_meterial_id"/>
+                    </group>
+                    <button name="find_products" string="Find products" type="object"/>
+                    <field name="mfg_product_ids">
+                        <tree editable="1">
+                            <field name="mos_id" invisible="1"/>
+                            <field name="bom_id" readonly="1"/>
+                            <field name="product_qty"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="product_tmpl_id" readonly="1"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="create_mos" string="Create MO's" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_aspl_mrp_multiple_mo" model="ir.actions.act_window">
+            <field name="name">Multiple MO's</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multiple.mos.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_mrp_multiple_mos"
+                  name="Multiple MO's"
+                  parent="mrp.menu_mrp_manufacturing"
+                  action="action_aspl_mrp_multiple_mo"
+                  sequence="11"/>
+
+    </data>
+</odoo>

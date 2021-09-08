@@ -1,0 +1,5 @@
+Go to point of sale:
+
+1. Add promotions
+2. Go to Point of sale >> Configuration >> Point of Sales
+3. Go to Promotions Apply and choice promotions if you want run

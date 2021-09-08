@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<!-- List / Tree View -->
+		<record id="wishlist_tree_view" model="ir.ui.view">
+			<field name="name">wishlist.tree.view</field>
+			<field name="model">wishlist.wishlist</field>
+			<field name="arch" type="xml">
+				<tree string="Wishlist">
+					<field name="id" />
+					<field name="user_id" />
+					<field name="wishlist_ids" />
+				</tree>
+			</field>
+
+			<!-- Form View -->
+		</record>
+		<!-- <record id="wishlist_form_view" model="ir.ui.view"> <field name="name">wishlist.form.view</field> 
+			<field name="model">event.registion</field> <field name="arch" type="xml"> 
+			<form string="Registration List"> <sheet> <h2> <field name="stud_first_name" 
+			placeholder="Student First Name" /> <field name="stud_last_name" placeholder="Student 
+			Last Name" /> </h2> <group string="Student Information"> <group> <field name="email" 
+			/> <field name="contact" /> <field name="eventid" /> <field name="initid" 
+			/> <field name="is_visible" /> </group> </group> <group string="Area of interest"> 
+			<group> <field name="interest" /> </group> </group> </sheet> </form> </field> 
+			</record> -->
+
+		<!-- For Action Window -->
+		<record id="action_wishlist" model="ir.actions.act_window">
+			<field name="name">wishlist</field>
+			<field name="res_model">wishlist.wishlist</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<!-- Action Menu Item Related To Above Action Window -->
+		<menuitem action="action_wishlist" id="action_wishlist_menu"
+			parent="sales_team.menu_sales" name="Wishlist" sequence="3" />
+
+	</data>
+</odoo>

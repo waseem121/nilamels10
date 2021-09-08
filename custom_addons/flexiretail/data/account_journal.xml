@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="acespritech_retail_redeem_journal" model="account.journal">
+            <field name="name">Redeem Journal</field>
+            <field name="type">bank</field>
+            <field name="journal_user">True</field>
+        </record>
+		<!--<record id="acespritech_retail_coupon_journal" model="account.journal">-->
+            <!--<field name="name">Coupon Journal</field>-->
+            <!--<field name="type">bank</field>-->
+            <!--<field name="journal_user">True</field>-->
+        <!--</record>-->
+		<!--<record id="acespritech_retail_bonus_coupon_journal" model="account.journal">-->
+            <!--<field name="name">Bonus Journal</field>-->
+            <!--<field name="type">bank</field>-->
+            <!--<field name="journal_user">True</field>-->
+        <!--</record>-->
+        <!-- DEBIT -->
+        <record id="acespritech_retail_debit_journal" model="account.journal">
+            <field name="name">Debit Journal</field>
+            <field name="type">bank</field>
+            <field name="journal_user">True</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="weekly_report_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Weekly Report</span>
+                        </h2>
+                            <strong>Date From:</strong>
+                            <span t-field="o.date_from"/>
+                            <strong>-        Date To:</strong>
+                            <span t-field="o.date_to"/>
+                    </center>
+                    <!--<t t-set="customer_divisions" t-value="get_customer_divisions(o)" />-->
+                    <t t-set="division_lines" t-value="get_division_lines(o)" />
+                    <t t-set="sales_res_staff" t-value="get_sales_res_staff(o)" />
+                    <t t-set="delivered_invoices_res" t-value="get_delivered_invoices(o)" />
+                    <t t-set="cash_collection_res" t-value="get_cash_collection(o)" />
+                    <t t-set="account_receivalble_res" t-value="get_account_receivalble_res(o)" />
+                    <t t-set="account_payable_res" t-value="get_account_payable_res(o)" />
+<!--                    <t t-set="quotatoin_received_from_moh_res" t-value="get_quotatoin_received_from_moh_res(o)" />
+                    <t t-set="quotatoin_submitted_res" t-value="get_quotatoin_submitted_res(o)" />-->
+                    <t t-set="purchase_res" t-value="get_purchase_res(o)" />
+                    
+                    <span style="font-weight:bold;font-size:18px;">Sales</span>
+                    <table class="table table-bordered">
+                        <!--<t t-foreach="customer_divisions" t-as="division">-->
+                            <thead>
+                                <tr>
+                                    <th>Division</th>
+                                    <!--<th><span t-esc="division"/></th>-->
+                                    <th>Amount</th>
+                                    <th>Inv Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="division_lines" t-as="division_line">
+                                <!--<t t-foreach="get_departments(o,division)" t-as="department">-->
+                                    <!--<t t-foreach="get_departments_lines(o,division,department)" t-as="departments_lines">-->
+                                        <tr>
+                                            <td>
+                                                <span t-esc="division_line['division']"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'{:,.3f}'.format(division_line['amount'])" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="division_line['qty']"/>
+                                            </td>
+                                        </tr>
+                                    <!--</t>-->
+                                </t>
+                            </tbody>
+                         <!--</t>-->
+                    </table>
+                    
+                    <span style="font-weight:bold;font-size:18px;">Weekly Sale Report by Staff</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Staff Name</th>
+                                <th>Number of Invoice</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="sales_res_staff" t-as="sales_staff_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="sales_staff_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="sales_staff_line['no_of_inv']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(sales_staff_line['amount'])" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                    
+                    
+                    <span style="font-weight:bold;font-size:18px;">Delivered Invoices</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Invoice Number</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="delivered_invoices_res" t-as="delivered_invoices_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="delivered_invoices_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="delivered_invoices_line['inv_number']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(delivered_invoices_line['amount'])" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <span style="font-weight:bold;font-size:18px;">Cash Collection</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date From</th>
+                                <th>Date Upto</th>
+                                <th>Amount KD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="cash_collection_res" t-as="cash_collection_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="cash_collection_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['date_from']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['date_to']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(cash_collection_line['amount'])" />
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Account Receivable</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="account_receivalble_res" t-as="account_receivalble_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="account_receivalble_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="account_receivalble_line['total']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Account Payable</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="account_payable_res" t-as="account_payable_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="account_payable_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="account_payable_line['total']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                    
+                    
+<!--                    <span style="font-weight:bold;font-size:18px;">Quotation Received From M.O.H</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>RFQ Code</th>
+                                <th>Item</th>
+                                <th>Supplier</th>
+                                <th>Closing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="quotatoin_received_from_moh_res" t-as="quotatoin_received_from_moh_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="quotatoin_received_from_moh_line['rfq_code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="quotatoin_received_from_moh_line['item']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="quotatoin_received_from_moh_line['supplier']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(quotatoin_received_from_moh_line['closing'])" />
+                                    </td>                                    
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                                        
+                    <span style="font-weight:bold;font-size:18px;">Quotation Submitted</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Item</th>
+                                <th>Supplier</th>
+                                <th>Closing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="quotatoin_submitted_res" t-as="quotatoin_submitted_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="quotatoin_submitted_line['rfq_code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="quotatoin_submitted_line['item']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="quotatoin_submitted_line['supplier']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(quotatoin_submitted_line['closing'])" />
+                                    </td>                                    
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                                                            -->
+                    <span style="font-weight:bold;font-size:18px;">Purchase</span>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Supplier</th>
+                                <th>Date</th>
+                                <th>Invoice Details</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="purchase_res" t-as="purchase_res_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="purchase_res_line['division']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="purchase_res_line['supplier']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="purchase_res_line['date']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="purchase_res_line['invoice_detail']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(purchase_res_line['closing'])" />
+                                    </td>                                    
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>                                                                                
+                    
+                </div>
+            </t>
+        </template>
+
+        <template id="weekly_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="weekly_account_report.weekly_report_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

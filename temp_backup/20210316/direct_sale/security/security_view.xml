@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_enable_currency_in_invoice" model="res.groups">
+            <field name="name">Enable Currency in Invoice</field>
+            <!--<field name="category_id" ref="base.module_category_hidden"/>-->
+        </record>
+        
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('direct_sale.group_enable_currency_in_invoice'))]"/>
+        </record>
+        
+        <record id="group_hide_menu_tech" model="res.groups">
+            <field name="name">Hide menu(technical)</field>
+        </record>
+
+    </data>
+</odoo>

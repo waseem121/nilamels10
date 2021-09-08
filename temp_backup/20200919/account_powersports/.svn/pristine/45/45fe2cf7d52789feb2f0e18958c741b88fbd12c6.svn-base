@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <report
+            id="report_account_voucher"
+            string="Voucher"
+            model="account.voucher" 
+            report_type="qweb-pdf"
+            file="account_powersports.report_accountvoucher" 
+            name="account_powersports.report_accountvoucher"/>
+
+        <report
+            id="report_account_voucher_account_move"
+            string="Voucher"
+            model="account.move" 
+            report_type="qweb-pdf"
+            file="account_powersports.report_accountvoucher_account_move" 
+            name="account_powersports.report_accountvoucher_account_move"/>
+
+        <record forcecreate="True" id="decimal_credit_debit_amount" model="decimal.precision">
+            <field name="name">Credit Debit Value</field>
+            <field name="digits">3</field>
+        </record>
+
+    </data>
+    
+</odoo>

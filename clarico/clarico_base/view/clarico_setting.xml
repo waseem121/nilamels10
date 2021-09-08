@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="view_clarico_config" model="ir.ui.view">
+		<field name="name">Clarico settings</field>
+		<field name="model">website.config.settings</field>
+		<field name="inherit_id" ref="website.view_website_config_settings" />
+		<field name="arch" type="xml">
+			<xpath expr="//header" position="after">
+				<div id="main" position="inside">
+					<group string="Clarico Settings">
+						<div id="clarico_settings" position="inside">
+							<group>
+								<field name="module_clarico_shop_left" widget="radio"  />
+							
+								<field name="module_clarico_shop_right" widget="radio"  />
+							
+								<field name="module_clarico_shop_list" widget="radio"  />
+							
+								<field name="module_clarico_blog" widget="radio"  />
+							
+								<field name="module_clarico_compare" widget="radio"  />
+							
+								<field name="module_clarico_account" widget="radio"  />
+							</group>
+						</div>
+					</group>
+				</div>
+			</xpath>
+		</field>
+	</record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_account_config_settings_salecommission_inherit" model="ir.ui.view">
+            <field name="name">account settings.salecommission.inherit</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings" />
+            <field name="arch" type="xml">
+                <group name="multi_currency" position="after">
+                    <group string="Commission and Separate Discount Entry">
+                        <group>
+                            <field name="group_enable_separate_discount_entry"/>
+                        </group>
+                        <group>
+                            <field name="group_enable_commission"/>
+                        </group>
+                        <group>
+                            <field name="discount_account_id"/>
+                        </group>
+                    </group>                    
+                </group>
+                    
+            </field>
+        </record>
+        
+    </data>
+</odoo>

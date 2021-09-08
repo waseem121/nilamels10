@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+	<record id="signin_img" model="ir.ui.view">
+	 <field name="name">base.config.settings.inherit.signin</field>
+	 	<field name="model">base.config.settings</field>
+	 	<field name="inherit_id" ref="base_setup.view_general_configuration"/>
+		  <field name="arch" type="xml">
+		 	<xpath expr="//field[@name='module_auth_oauth']/.." position="before">	
+     		  <strong>Sign In Image </strong>
+     		  <field name="signin_bg_image_id" string="Signin background-image" class="oe_inline" domain="[('id','=',False)]" /> 
+		  </xpath>
+		  </field>
+	</record>
+</data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+            <!-- views -->
+            
+            <record id="view_stock_pack_operation_inherit_form" model="ir.ui.view">
+                <field name="name">stock.pack.operation.backdating.form</field>
+                <field name="model">stock.pack.operation</field>
+                <field name="inherit_id" ref="stock.view_pack_operation_details_form" />
+                <field name="arch" type="xml">
+                    <xpath expr="//field[@name='package_id']" position="before">
+                        <field name="date"/>
+                    </xpath>
+                </field>
+            </record>
+
+    </data>
+</odoo>

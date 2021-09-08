@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="paperformat_report_payment" model="report.paperformat">
+            <field name="name">Cash Receipt</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">70</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">66</field>
+            <field name="dpi">90</field>
+        </record>        
+        
+        <report 
+            id="report_payment_root"
+            string="Payment"
+            model="account.payment" 
+            report_type="qweb-pdf"
+            file="provision.report_payment" 
+            name="provision.report_payment" 
+            paperformat="provision.paperformat_report_payment"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,166 @@
+<odoo>
+  <data>
+      
+      
+        <record id="invoice_form_foodex" model="ir.ui.view">
+            <field name="name">invoice.form.foodex</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@name='other_info']/group/group/field[@name='name']" position="replace">
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_account_invoice_filter_foodex" model="ir.ui.view">
+            <field name="name">view.account.invoice.filter.foodex</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <field name="number" position="before">
+                    <field name="name"/>
+                </field>
+            </field>
+        </record>
+      
+         <record id="invoice_line_add_field_foodex" model="ir.ui.view">
+            <field name="name">invoice.line.add.field.foodex</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="direct_sale.invoice_line_add_field"/>
+            <field name="arch" type="xml">
+                <field name="invoice_type" position="replace">
+                    <field name="invoice_type"/>
+                </field>
+                <field name="invoice_type" position="after">
+                    <field name="name"/>
+                </field>
+<!--                <field name="forecast_qty" position="after">
+                    <field name="forecast_qty_tranfer_inv"/>
+                </field>-->
+<!--                <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='forecast_qty']" position="replace">
+                    <field name="invoice_type" invisible="1"/>
+                    <field name="forecast_qty"/>
+                    <field name="forecast_qty_tranfer_inv" attrs="{'invisible': [('invoice_type', '!=', 'transfer_invoice')]}"/>
+                </xpath>-->
+            </field>
+        </record>
+
+        <record id="action_transfer_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Transfer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','in',('out_invoice', 'out_refund')), ('invoice_type', 'in', ['transfer_invoice']),
+                    ('refund_without_invoice','!=',True)]</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale','invoice_type':'transfer_invoice'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a customer invoice.
+              </p><p>
+                Odoo's electronic invoicing allows to ease and fasten the
+                collection of customer payments. Your customer receives the
+                invoice by email and he can pay online and/or import it
+                in his own system.
+              </p><p>
+                The discussions with your customer are automatically displayed at
+                the bottom of each invoice.
+              </p>
+            </field>
+        </record>
+        
+        <record id="action_transfer_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="act_window_id" ref="action_transfer_invoice_tree1"/>
+        </record>
+
+        <record id="action_transfer_invoice_tree1_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_transfer_invoice_tree1"/>
+        </record>
+            
+        <menuitem action="action_transfer_invoice_tree1" id="menu_action_transfer_invoice_tree1" parent="account.menu_finance_receivables" sequence="2"/>
+        
+        <record id="view_move_form_data_entry_foodex_inherit" model="ir.ui.view">
+            <field name="name">view.move.form.data.entry.foodex.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account_powersports.view_move_form_data_entry"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="invoice_type"/>
+                </xpath>
+            </field>
+        </record>        
+        
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="domain">[('type','in',('out_invoice', 'out_refund')),
+                    ('refund_without_invoice','!=',True),
+                ('invoice_type','in',('normal','sample','veg_invoice'))]</field>
+        </record>
+        
+        
+        <!--menus for for readonly user-->
+        <menuitem name="Sales"
+            id="menu_base_partner_readonly"
+            groups="group_invoice_readonly"
+            sequence="1"/>
+        
+        <menuitem name="Customer Invoices"
+            action="account.action_invoice_tree1"
+            id="action_invoice_tree1_sale_readonly"
+            groups="group_invoice_readonly"
+            parent="menu_base_partner_readonly"
+            sequence="1" />        
+        
+        <menuitem action="action_transfer_invoice_tree1" 
+            id="menu_action_transfer_invoice_tree1_readonly"
+            groups="group_invoice_readonly"
+            parent="menu_base_partner_readonly" 
+            sequence="2"/>
+        
+        <menuitem action="direct_sale.action_refund_invoice_without_invoice" 
+            id="menu_refund_invoice_without_invoice_readonly"
+            groups="group_invoice_readonly"
+            parent="menu_base_partner_readonly"
+            sequence="3"/>
+        
+        <record id="invoice_tree_reconcile_foodex" model="ir.ui.view">
+            <field name="name">invoice.tree.reconcile.foodex</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" string="Invoice">
+                    <field name="date_invoice"/>
+                    <field name="number"/>
+                    <field name="partner_id" groups="base.group_user" string="Customer"/>
+                    <field name="amount_total_signed" string="Total" sum="Total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_invoice_reconcile_foodex" model="ir.actions.act_window">
+            <field name="name">Invoice Reconcile</field>
+            <field name="res_model">account.invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain"></field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+        
+        <record id="action_invoice_reconcile_foodex_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="invoice_tree_reconcile_foodex"/>
+            <field name="act_window_id" ref="action_invoice_reconcile_foodex"/>
+        </record>
+        
+
+      
+  </data>
+</odoo>

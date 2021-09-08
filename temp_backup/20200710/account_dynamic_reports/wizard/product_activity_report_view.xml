@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+
+        <record id="product_activity_report_wizard_view" model="ir.ui.view">
+            <field name="name">product.activity.report.wizard.view</field>
+            <field name="model">product.activity.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="product_ids" widget="many2many_tags"
+                                options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                        <field name="category_ids" widget="many2many_tags"
+                                options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                        <!--<field name="product_id"/>-->
+                        <field name="location_id"/>
+                        <field name="salesman_id"/>
+                        <field name="sort_by"/>
+                        <field name="based_on"/>
+                        <field name="state"/>
+                        <!--<field name="group_by"/>-->
+                    </group>
+                    <group>
+<!--                    <group col="4" string="Display Options">
+
+                    </group>-->
+<!--                    <group col="2" string="Product Fields">
+                        <field name="show_arabic_name"/>
+                        <field name="company_id" invisible="1"/>
+                        
+                    </group>-->
+                    </group>
+                    <footer>
+                        <button name="action_pdf" type="object" string="PDF" class="oe_highlight"/>
+                        <button name="action_xlsx" type="object" string="XLSX" class="oe_highlight"/>
+                        <button name="action_view" type="object" string="VIEW" class="oe_highlight"/>
+                        <button string="Cancel" class="btn-default" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_product_activity_report_wizard" model="ir.actions.act_window">
+            <field name="name">Product Activity Report</field>
+            <field name="res_model">product.activity.report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_activity_report_wizard_view"/>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="account_dynamic_reports.model_product_activity_report" />
+            <field name="binding_type">report</field>
+        </record>
+
+
+        <record id="action_product_activity_report" model="ir.actions.client">
+            <field name="name">Product Activity Report</field>
+            <field name="tag">dynamic.par</field>
+        </record>
+        
+        <menuitem id="product_activity_report" sequence="20" action="action_product_activity_report_wizard"
+                  name="Product Activity Report" parent="account_reports_ins" groups="account.group_account_user"/>
+
+        <menuitem id="product_activity_report_wiz" sequence="10" action="action_product_activity_report"
+                  name="Product Activity Report" parent="account_reports_ins_wiz" groups="account.group_account_user"/>
+<!--        <menuitem id="product_profit_report_wiz" sequence="10" action="action_product_profit_report"
+                  name="Product Profit Report" parent="account_reports_ins_wiz" groups="account.group_account_user"/>-->
+
+    </data>
+</odoo>

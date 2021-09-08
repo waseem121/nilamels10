@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem id="product_small_label_acespritech" name="Product Small Label" parent="sales_team.menu_base_partner"/>
+
+        <record id="wizard_product_small_label_design_form_view" model="ir.ui.view">
+            <field name="name">Product.Small.Label.Design</field>
+            <field name="model">product.small.label.design</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Product Small Label Design">
+                    <group>
+                        <field name="name"/>
+                        <field name="template_label_design" invisible="1"/>
+                        <field name="active" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button name="go_to_label_wizard" string="Save" type="object" class="oe_highlight"/>
+                            or
+                        <button name="close_wizard" string="Cancel" type="object" class="oe_link" 
+                            context="{'cancel_change' : True}" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_small_label_design_form_view" model="ir.ui.view">
+            <field name="name">Product.Small.Label.Design.Template</field>
+            <field name="model">product.small.label.design</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <form string="Product Small Label design">
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="report_model"/>
+                            <field name="active" invisible="1"/>
+                            <field name="pricelist_id" groups="product.group_sale_pricelist"
+                                widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="label_logo" widget="image"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Design">
+                            <field name="template_label_design"/>
+                        </page>
+                        <page string="Label">
+                            <group>
+                                <group>
+                                    <field name="label_width"/>
+                                    <field name="label_height"/>
+                                    <field name="dpi"/>
+                                </group>
+                                <group>
+                                    <field name="margin_top"/>
+                                    <field name="margin_left"/>
+                                    <field name="margin_bottom"/>
+                                    <field name="margin_right"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Barcode">
+                            <group>
+                                <group>
+                                    <field name="with_barcode"/>
+                                    <field name="barcode_height" 
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                    <field name="barcode_width" 
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="humanReadable" 
+                                        attrs="{'invisible': [('with_barcode', '=', False)]}"/>
+                                    <field name="display_height" 
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                    <field name="display_width" 
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_small_label_design_tree_view" model="ir.ui.view">
+            <field name="name">Product.Small.Label.Design</field>
+            <field name="model">product.small.label.design</field>
+            <field name="arch" type="xml">
+                <tree string="Product Label design">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_small_label_design" model="ir.actions.act_window">
+            <field name="name">Product Label Design</field>
+            <field name="res_model">product.small.label.design</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_product_label_design_tree" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product_small_label_design_tree_view"/>
+            <field name="act_window_id" ref="action_product_small_label_design"/>
+        </record>
+
+        <!-- child view first -->
+        <record id="action_product_label_design_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_small_label_design_form_view"/>
+            <field name="act_window_id" ref="action_product_small_label_design"/>
+        </record>
+
+        <menuitem id="menuitem_product_small_label_design_template"
+            action="action_product_small_label_design"
+            name="Small Label Design Template"
+            parent="product_small_label_acespritech"/>
+
+        <record id="dynamic_small_product_barcode_form_wizard" model="ir.ui.view">
+            <field name="name">Product.Small.Label</field>
+            <field name="model">wizard.product.small.label.report</field>
+            <field name="arch" type="xml">
+                <form string="Product Small Label">
+                    <group>
+                        <group>
+                            <div>
+                                <field name="report_model" invisible="1"/>
+                                <label for="design_id" style="font-weight:bold"/>
+                                <field name="design_id" colspan="2" nolabel="1" widget="selection" required="1"
+                                        context="{'report_model': report_model, 'from_wizard':True}"/>
+                            </div>
+                            <group>
+                                <button name="save_design" style="margin-left:20px;" string="Save Design"
+                                    type="object" context="{'from_wizard' : True}" class="oe_highlight"/>
+                            </group>
+                            <group col="2" style="width:100%%">
+                                <field name="make_update_existing"/>
+                            </group>
+                            <group col="2" style="width:100%%">
+                                <field name="pricelist_id" groups="product.group_sale_pricelist"
+                                    widget="selection" 
+                                    attrs="{'invisible': [('report_model', 'not in', ('wizard.product.small.label.report', 'product.product'))]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group col="4">
+                                <field name="view_preview"/>
+                                <button name="action_preview" string="Preview"  type="object"
+                                    class="oe_highlight" style="margin-left:20px;"/>
+                            </group>
+                            <group col="4">
+                                <field name="label_preview" widget="image"
+                                     readonly="1" attrs="{'invisible' : [('view_preview', '=', False)]}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <group>
+                                <div>
+                                    <field name="product_ids">
+                                        <tree string="Products" editable="top">
+                                            <field name="product_id"/>
+                                            <field name="qty"/>
+                                            <field name="line_id" invisible="1"/>
+                                        </tree>
+                                    </field>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Label">
+                            <group>
+                                <group>
+                                    <field name="label_width"/>
+                                    <field name="label_height"/>
+                                    <field name="dpi"/>
+                                    <field name="label_logo" widget="image"/>
+                                </group>
+                                <group>
+                                    <field name="margin_top"/>
+                                    <field name="margin_left"/>
+                                    <field name="margin_bottom"/>
+                                    <field name="margin_right"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Barcode">
+                            <group>
+                                <group>
+                                    <field name="with_barcode"/>
+                                    <field name="barcode_height"
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                    <field name="barcode_width"
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                </group>
+                                <group>
+                                    <field name="humanReadable"
+                                        attrs="{'invisible': [('with_barcode', '=', False)]}"/>
+                                    <field name="display_height"
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                    <field name="display_width"
+                                        attrs="{'invisible': [('with_barcode', '=', False)], 'required': [('with_barcode', '=', True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Design">
+                            <field name="view_id" invisible="1"/>
+                            <field name="paper_format_id" invisible="1"/>
+                            <field name="report_design"/>
+                        </page>
+                        <page string="Barcode Print Help">
+                            <div style="padding-left:5px;">
+                            <span><strong>To print barcode follow below the rules.</strong></span><br/>
+                            <span>here is the function that will generate barcode => "<strong>get_barcode_string(barcode_number, type, data)</strong>"</span><br/>
+                            <span>First parameter of Function, That is <strong>barcode_number</strong>.</span><br/>
+                            <span style="padding-left:10px;"><strong>*</strong> here you have to place the field name that contain barcode number</span><br/>
+                            <span>Second parameter of function is <strong>type</strong>.</span><br/>
+                            <span style="padding-left:10px;"><strong>*</strong> here you have to place barcode type along with single quote.</span><br/>
+                            <span><strong>Supported barcode type are : </strong></span>
+                            <ul>
+                                <li>EAN13</li>
+                                <li>Codabar</li>
+                                <li>Code11</li>
+                                <li>Code128</li>
+                                <li>Extended39</li>
+                                <li>EAN8</li>
+                                <li>Extended93</li>
+                                <li>USPS_4State</li>
+                                <li>I2of5</li>
+                                <li>UPCA</li>
+                                <li>QR</li>
+                            </ul>
+                            </div>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="action_print" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="action_small_product_barcode_form"
+            multi="False"
+            name="Print Small Product Label"
+            res_model="wizard.product.small.label.report"
+            view_mode="form" 
+            target="new" 
+            view_type="form"/>
+
+        <menuitem id="menu_print_product_small_label" 
+            action="action_small_product_barcode_form"
+            string="Print Product Small Label"
+            parent="product_small_label_acespritech"/>
+
+        <act_window id="action_sale_order_print_product_small_label"
+            name="Dynamic Product Label"
+            src_model="sale.order"
+            res_model="wizard.product.small.label.report"
+            view_mode="form"
+            key2="client_print_multi"
+            target="new"/>
+
+        <act_window id="action_purchase_order_print_product_small_label"
+            name="Dynamic Product Label"
+            src_model="purchase.order"
+            res_model="wizard.product.small.label.report"
+            view_mode="form"
+            key2="client_print_multi"
+            target="new"/>
+
+        <act_window id="action_stock_picking_print_product_small_label"
+            name="Dynamic Product Label"
+            src_model="stock.picking"
+            res_model="wizard.product.small.label.report"
+            view_mode="form"
+            key2="client_print_multi"
+            target="new"/>
+
+        <act_window id="action_account_invoice_print_product_small_label"
+            name="Dynamic Product Label"
+            src_model="account.invoice"
+            res_model="wizard.product.small.label.report"
+            view_mode="form"
+            key2="client_print_multi"
+            target="new"/>
+
+        <act_window id="action_product_product_print_product_small_label"
+            name="Dynamic Product Label"
+            src_model="product.product"
+            res_model="wizard.product.small.label.report"
+            view_mode="form"
+            key2="client_print_multi"
+            target="new"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="account_dynamic_reports assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/account_dynamic_reports/static/src/scss/dynamic_common_style.scss"/>
+            <script type="text/javascript" src="/account_dynamic_reports/static/src/js/select2.full.min.js"/>
+            <script type="text/javascript" src="/account_dynamic_reports/static/src/js/script.js"></script>
+        </xpath>
+    </template>
+
+    <menuitem id="menu_finance_dynamic" name="Dynamic Reports" parent="account.menu_finance" sequence="5" groups="account.group_account_invoice"/>
+    
+    <menuitem id="account_reports_ins" sequence="10"
+                  name="Dynamic Reports(Wiz)" parent="menu_finance_dynamic"/>    
+<!--    <menuitem id="account_reports_ins" sequence="10"
+                  name="Dynamic Reports(Wiz)" parent="account.menu_finance_reports"/>-->
+
+    <menuitem id="account_reports_ins_wiz" sequence="15"
+                  name="Accounting Reports" parent="account.menu_finance_reports"/>
+
+    <record id="view_account_account" model="ir.ui.view">
+        <field name="name">Account Inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='user_type_id']" position="after">
+                    <field name="cash_flow_category"
+                           options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+
+
+</odoo>

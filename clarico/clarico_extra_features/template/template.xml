@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<template id="clarico_extra_features">
+		<div class="col-md-7 col-sm-7 product_info_style_padding">
+			<t t-if="product.extra_features_id or product.extra_features_sort_description">
+				<div class="col-ld-12 col-md-12 product_sort_description_div_class">
+					<div class="clo-md-12 recently_view_product_headind_div_class">
+						<p class="product_info_heading_para_class">PRODUCT INFO</p>
+					</div>
+				</div>
+				<div class="div_main_class_desc">
+					<p t-if="product.extra_features_sort_description" class="product_sort_description_para_class"
+						t-esc="product.extra_features_sort_description"></p>
+					<t t-foreach="product.extra_features_id" t-as="extra_features">
+						<div class="col-md-12 product_features_attribute_value_div_class">
+							<div class="col-sm-3 col-md-3 col-xs-4 font_style_product_desc">
+								<t t-if="extra_features.attribute_id.name">
+									<p class="product_features_attribute_name_para_class" t-esc="extra_features.attribute_id.name"></p>
+								</t>
+							</div>
+							<t t-set="comma_total" t-value="0" />
+							<div class="col-sm-9 col-md-9 col-xs-8 ">
+								<t t-foreach="extra_features.value_ids" t-as="value_id">
+									<t t-set="comma_total" t-value="comma_total+1" />
+									<t t-if="comma_total == 1">
+										<p class="product_features_value_para_class">
+											<t t-esc="value_id.name" />
+										</p>
+									</t>
+									<t t-if="comma_total > 1">
+										<p class="product_features_value_para_class">,
+											&amp;nbsp;
+											<t t-esc="value_id.name" />
+										</p>
+									</t>
+								</t>
+							</div>
+						</div>
+					</t>
+				</div>
+			</t>
+		</div>
+	</template>
+</odoo>

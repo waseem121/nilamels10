@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+         <record id="inherit_invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="number" position="replace">
+                    <field name="number" readonly="1" class="oe_inline"/>
+                </field>
+            </field>
+        </record>
+
+         <record id="invoice_line_add_field" model="ir.ui.view">
+            <field name="name">account.invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="number" position="replace">
+                    <field name="number" readonly="1" class="oe_inline"/>
+                </field>
+            	<field name="partner_id" position="after">
+                    <field name="lot_setting" invisible="1"/>
+            		<field name="is_direct_invoice" invisible="1"/>
+                    <field name="from_direct_sale" invisible="1"/>
+                    <field name="invoice_picking_id" invisible="1"/>
+                    <field name="refund_without_invoice" invisible="1"/>
+                    <field name="pricelist_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+            	</field>
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+                <field name="user_id" position="after">
+                    <field name="location_id" domain="[('usage', '=', 'internal'),('company_id','=',company_id)]"
+                           attrs="{'readonly':[('state','!=','draft')]}" required="1"/>
+                </field>
+                <field name="quantity" position="after">
+                    <field name="available_qty"/>
+                    <field name="forecast_qty"/>
+                    <field name="refund_invoice_line_id" invisible="1"/>
+                </field>
+                <xpath expr="//tree/field[@name='price_unit']" position="before">
+<!--                     <field name="cost_price_copy" invisible="1"/> -->
+                    <field name="cost_price" readonly="1" groups="base.group_sale_manager_dusal"/>
+                </xpath>
+                <xpath expr="//tree/field[@name='price_unit']" position="after">
+                	 	<field name="is_direct_invoice_line" invisible="1"/>
+                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}"
+                           context="{'loc_id': parent.location_id,'product_id': product_id,'from_invoice':True,
+                                     'refund_without_invoice':parent.refund_without_invoice,'partner_id':parent.partner_id}"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                    <field name="invoice_line_ids_two" nolabel="1" mode="tree,kanban"
+                           context="{'type': type, 'journal_id': journal_id, 'default_invoice_id': id}"
+                           attrs="{'invisible':[('lot_setting','=',True)],'readonly':[('state','not in',['draft'])]}">
+                        <tree string="Invoice Lines" editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"/>
+                            <field name="origin" invisible="1"/>
+                            <field name="name"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="account_id" groups="account.group_account_user" domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other')]" invisible="1"/>
+                            <field name="account_analytic_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id)]"/>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" widget="many2many_tags"/>
+                            <field name="quantity"/>
+                            <field name="available_qty"/>
+                            <field name="forecast_qty"/>
+                            <field name="refund_invoice_line_id" invisible="1"/>
+                            <field name="uom_id" groups="product.group_uom"/>
+                            <field name="cost_price" readonly="1" groups="base.group_sale_manager_dusal"/>
+                            <field name="price_unit"/>
+                            <field name="is_direct_invoice_line" invisible="1"/>
+                            <field name="discount" groups="base.group_no_one" string="Disc."/>
+<!--                            <field name="invoice_line_tax_ids" widget="many2many_tags" context="{'type':parent.type}" domain="[('type_tax_use','=','sale'),('company_id', '=', parent.company_id)]" options="{'no_create': True}"/>-->
+                            <field name="price_subtotal"/>
+                            <field name="currency_id" invisible="1"/>
+                        </tree>
+                        <kanban class="o_kanban_mobile">
+                            <field name="product_id"/>
+                            <field name="price_subtotal"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="product.group_uom"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <strong><span><t t-esc="record.product_id.value or 'None'"/></span></strong>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-8 text-muted">
+                                                <span><t t-esc="record.quantity.value"/> <t t-esc="record.uom_id.value"/></span>
+                                            </div>
+                                            <div class="col-xs-4 text-muted">
+                                                <span class="text-right"><t t-esc="record.price_subtotal.value"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </xpath>
+
+                <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                    <attribute name="attrs">{'invisible':[('lot_setting','=',False)]}</attribute>
+                </xpath>
+               <xpath expr="//tree/field[@name='discount']" position="after">
+                    <field name="discount_amount"/>
+                    <field name="discount_global" invisible="1" />
+                    <field name="discount_amount_global" invisible="1" />
+                </xpath>
+
+                <field name="amount_total" position="replace">
+                    <field name="amount_total" class="oe_subtotal_footer_separator" string="Net Total"/>
+                </field>
+                
+                <field name="amount_tax" position="after">
+                    <field name="amount_untaxed_wo_global_disc" class="oe_subtotal_footer_separator" string="Gross Total"/>
+                    <field name="item_discount"  invisible="0"/>
+                    <field name="total_discount_share" invisible="1"/>
+                    <field name="total_discount"/>
+                </field>
+                <xpath expr="//tree/field[@name='price_subtotal']" position="after">
+                    <button name="split_qty" type="object" string="Split Qty" icon="fa-list"/>
+                </xpath>
+
+                <field name="comment" position="before">
+                    <div>
+                        <label for="discount_type" />
+                        <field name="discount_type" attrs="{'readonly':[('state','!=','draft')]}"
+                            class="oe_inline" style="margin-left: 33px;" />
+                    </div>
+                    <div attrs="{'invisible':[('discount_type','=','amount')]}">
+                        <label for="discount_glob"/>
+                        <field name="discount_glob" attrs="{'readonly':[('state','!=','draft')]}"
+                               class="oe_inline" style="margin-left: 50px;"/>
+                    </div>
+                    <div attrs="{'invisible':[('discount_type','=','perc')]}">
+                        <label for="discount_amount"/>
+                        <field name="discount_amount" attrs="{'readonly':[('state','!=','draft')]}" 
+                               class="oe_inline" style="margin-left: 22px;"/>
+                    </div>
+                </field>
+
+                <xpath expr="//field[@name='number']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button type="object"
+                        name="action_view_picking"
+                        class="oe_stat_button" attrs="{'invisible':[('invoice_picking_id', '=', False)]}"
+                        icon="fa-truck">
+                        <field name="picking_count"  string="Shipment" widget="statinfo"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='%(account.action_account_invoice_refund)d']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|','|',('type', '=', 'out_refund'), ('state', 'not in', ('open','proforma2','paid')),('refund_without_invoice','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='account_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='account_analytic_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='analytic_tag_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='invoice_line_tax_ids']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True, 'no_create_edit':True}</attribute>
+            </xpath>
+            <xpath expr="//page[@name='other_info']/group" position="after">
+                <group name="user_info" string="User Info" col="4" groups="sales_team.group_sale_manager">
+                    <field name="create_uid" string="Created User" readonly="1"/>
+                    <field name="create_date" string="Created Datetime" readonly="1"/>
+                    <field name="write_uid" string="Modified User" readonly="1"/>
+                    <field name="write_date" string="Modified Datetime" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">['|',('is_company','=',True),('supplier','=',False)]</attribute>
+            </xpath>
+            </field>
+        </record>
+
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale','default_is_direct_invoice':True}</field>
+        </record>
+
+
+        <record id="action_refund_invoice_without_invoice" model="ir.actions.act_window">
+            <field name="name">Refund Without Invoice</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_refund'),('refund_without_invoice','=',True)]</field>
+            <field name="context">{'type':'out_refund', 'journal_type': 'sale','default_refund_without_invoice':True}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+        </record>
+
+        <record id="action_refund_invoice_without_invoice_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="act_window_id" ref="action_refund_invoice_without_invoice"/>
+        </record>
+
+        <record id="action_refund_invoice_without_invoice_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="act_window_id" ref="action_refund_invoice_without_invoice"/>
+        </record>
+
+        <menuitem action="action_refund_invoice_without_invoice" id="menu_refund_invoice_without_invoice" parent="account.menu_finance_receivables"/>
+
+
+        <!-- Code added on Date 10-April-2019-->
+        <menuitem action="action_refund_invoice_without_invoice" id="menu_refund_invoice_without_invoice_sale" parent="sales_team.menu_sales" sequence="12" />
+
+        <menuitem name="Customer Invoices" action="account.action_invoice_tree1" id="action_invoice_tree1_sale" parent="sales_team.menu_sales" sequence="12" />
+
+
+        <record id="account.action_invoice_tree1" model="ir.actions.act_window">
+            <field name="domain">[('type','in',('out_invoice', 'out_refund')),('refund_without_invoice','!=',True)]</field>
+        </record>
+        
+	<record id="view_move_form_data_entry_direct_sale_syn" model="ir.ui.view">
+	    <field name="name">view.move.form.data.entry.direct.sale.syn</field>
+	    <field name="model">account.move</field>
+	    <field name="inherit_id" ref="account_powersports.view_move_form_data_entry"/>
+	    <field name="arch" type="xml">
+	        <field name="ref" position="replace">
+                    <field name="ref_required" invisible="1"/>
+                    <field name="ref" attrs="{'required': [('ref_required', '=', True)]}"/>
+                    <field name="salesman_id" />
+                    <field name="collector_id" />
+	        </field>
+	        <field name="partner_id" position="replace">
+                    <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]" />
+	        </field>
+	    </field>
+	</record>
+
+    </data>
+</openerp>

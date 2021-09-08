@@ -1,0 +1,96 @@
+#container {
+    display: flex;
+}
+#left {
+    width: 210px;
+    height: 551px;
+}
+#right {
+    width: 800px;
+    height: 551px;
+}
+.custom_button{
+	top: 0px;
+	line-height: 32px;
+	padding: 3px 13px;
+	font-size: 20px;
+	background: rgb(230, 230, 230);
+	margin: 12px;
+	border-radius: 3px;
+	border: solid 1px rgb(209, 209, 209);
+	cursor: pointer;
+	transition: all 150ms linear;
+}
+/* menu */
+#divMenu, ul, li, li li {
+    margin: 0;
+    padding: 0;
+}
+#divMenu {
+    width: 150px;
+    height: 27px;
+}
+#divMenu ul{
+    line-height: 25px;
+}
+#divMenu li {
+    list-style: none;
+    position: relative;
+    background: rgb(230, 230, 230);
+}
+#divMenu li li {
+    list-style: none;
+    position: relative;
+    background: rgb(230, 230, 230);
+    left: 148px;
+    top: -27px;
+}
+#divMenu ul li a {
+    width: 148px;
+    height: 30px;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    color:#555555;
+    border:2px solid #eee;
+    font-size: 15px;
+}
+#divMenu ul ul {
+    position: absolute;
+    visibility: hidden;
+    top: 27px;
+}
+#divMenu ul li:hover ul {
+    visibility: visible;
+}
+
+#divMenu li:hover {
+    background-color: #6EC89B;
+}
+#divMenu ul li:hover ul li a:hover {
+    background-color: #6EC89B;
+}
+#divMenu a:hover {
+    font-weight: bold;
+    color: white;
+}
+.selected_chart{
+	background: #EAB364 !important;
+	color: white !important;
+}
+.menu_selected{
+	background: #EAB364 !important;
+    color: white !important;
+}
+#duration_selection, #limit_selection{
+	top: 0px;
+	line-height: 32px;
+	padding: 9px 15px;
+	font-size: 14px;
+	background: white;
+	margin: 12px;
+	border-radius: 3px;
+	border: 1px solid rgb(209, 209, 209);
+	cursor: pointer;
+	transition: all 150ms linear 0s;
+}

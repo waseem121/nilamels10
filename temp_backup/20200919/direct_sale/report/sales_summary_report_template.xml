@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="sales_summary_report_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Cashier Summary Report</span>
+                        </h2>
+                    </center>
+                    <t t-set="invoice" t-value="get_invoice(o)"/>
+                    <t t-if="invoice">
+                        <t t-set="total_cash_amount" t-value="0.00"/>
+                        <t t-set="total_refund_amount" t-value="0.00"/>
+                        <t t-set="invoice" t-value="get_invoice(o)" />
+                        <t t-value="invoice.filtered(lambda l:l.type == 'out_invoice')" t-set="cust_invoice" />
+                        <t t-value="invoice.filtered(lambda l:l.type == 'out_refund')" t-set="cust_refund" />
+                        <t t-if="cust_invoice">
+                            <t t-set="total_invoice_cash_amount" t-value="0.00"/>
+                            <t t-set="total_invoice_other_amount" t-value="0.00"/>
+                            <span style="font-weight:bold;font-size:18px;">Sales</span>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice No</th>
+                                        <th>Invoice Date</th>
+                                        <th>Actual Credit</th>
+                                        <th>Cash</th>
+                                        <th>Others</th>
+                                        <th>Discount</th>
+                                        <th>Net</th>
+                                        <th>Customer Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="cust_invoice" t-as="invoice">
+                                        <tr>
+                                            <td>
+                                                <span t-field="invoice.number" />
+                                            </td>
+                                            <td>
+                                                <span t-field="invoice.date_invoice" t-options ='{"format": "dd/MM/yyyy"}'/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % invoice.amount_total"/>
+                                            </td>
+                                            <td>
+                                                <span t-set="cash_amount" t-value="get_invoice_payment(invoice,cash=True)"/>
+                                                <span t-set="total_cash_amount" t-value="total_cash_amount + cash_amount"/>
+                                                <span t-set="total_invoice_cash_amount" t-value="total_invoice_cash_amount + cash_amount"/>
+                                                <span t-esc="'%.3f' % cash_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-set="other_amount" t-value="get_invoice_payment(invoice,cash=False)"/>
+                                                <span t-set="total_refund_amount" t-value="total_refund_amount + other_amount"/>
+                                                <span t-set="total_invoice_other_amount" t-value="total_invoice_other_amount + other_amount"/>
+                                                <span t-esc="'%.3f' % other_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % invoice.total_discount" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % invoice.residual"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="invoice.partner_id.name" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td colspan="1"></td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice.mapped('amount_total'))"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % total_invoice_cash_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % total_invoice_other_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice.mapped('total_discount'))"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice.mapped('residual'))" />
+                                        </td>
+                                        <td colspan="2"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="cust_refund">
+                            <t t-set="total_refund_cash_amount" t-value="0.00"/>
+                            <t t-set="total_refund_other_amount" t-value="0.00"/>
+                            <span style="font-weight:bold;font-size:18px;">Refund</span>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction No</th>
+                                        <th>Date</th>
+                                        <th>Actual Credit</th>
+                                        <th>Cash</th>
+                                        <th>Others</th>
+                                        <th>Discount</th>
+                                        <th>Net</th>
+                                        <th>Customer Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="cust_refund" t-as="refund">
+                                        <tr>
+                                            <td>
+                                                <span t-field="refund.number" />
+                                            </td>
+                                            <td>
+                                                <span t-field="refund.date_invoice" t-options ='{"format": "dd/MM/yyyy"}'/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % refund.amount_total"/>
+                                            </td>
+                                            <td>
+                                                <span t-set="refund_cash_amount" t-value="get_invoice_payment(refund,cash=True)"/>
+                                                <span t-set="total_cash_amount" t-value="total_cash_amount - refund_cash_amount"/>
+                                                <span t-set="total_refund_cash_amount" t-value="total_refund_cash_amount + refund_cash_amount"/>
+                                                <span t-esc="'%.3f' % refund_cash_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-set="refund_other_amount" t-value="get_invoice_payment(refund,cash=False)"/>
+                                                <span t-set="total_refund_amount" t-value="total_refund_amount + refund_other_amount"/>
+                                                <span t-set="total_refund_other_amount" t-value="total_refund_other_amount + refund_other_amount"/>
+                                                <span t-esc="'%.3f' % refund_other_amount"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % refund.total_discount" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % refund.residual"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="refund.partner_id.name" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td><strong>Total Refund</strong></td>
+                                        <td colspan="1"></td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_refund.mapped('amount_total'))"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % total_refund_cash_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % total_refund_other_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_refund.mapped('total_discount'))"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_refund.mapped('residual'))" />
+                                        </td>
+                                        <td colspan="2"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+                        
+                        <t t-if="cust_refund or cust_invoice">
+                            <span style="font-weight:bold;font-size:18px;">Cash Summary</span>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th/>
+                                        <th>Actual Credit</th>
+                                        <th>Cash</th>
+                                        <th>Others</th>
+                                        <th>Discount</th>
+                                        <th>Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % (sum(cust_invoice.mapped('amount_total')) - sum(cust_refund.mapped('amount_total')))" />
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % total_cash_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % total_refund_amount"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % (sum(cust_invoice.mapped('total_discount')) - sum(cust_refund.mapped('total_discount')))"/>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc = "'%.3f' % (sum(cust_invoice.mapped('residual')) - sum(cust_refund.mapped('residual')))"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="sales_summary_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="direct_sale.sales_summary_report_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

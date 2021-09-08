@@ -1,0 +1,151 @@
+/*!
+ * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+
+/* Toggle Styles */
+#mysidebar #wrapper {
+	padding-left: 0;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+#mysidebar #wrapper.toggled {
+	padding-left: 250px;
+}
+
+#sidebar-wrapper {
+	z-index: 1000;
+	position: fixed;
+	left: 250px;
+	width: 0;
+	height: 85%;
+	margin-left: -250px;
+	overflow-y: auto;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	top: 0px;
+	background: #F0EEEE;
+	transition: all 0.5s ease;
+	margin-top: 96px;
+}
+
+#mysidebar #wrapper.toggled #sidebar-wrapper {
+	width: 250px;
+}
+
+#page-content-wrapper {
+	width: 100%;
+	position: absolute;
+	padding: 15px;
+}
+
+#mysidebar #wrapper.toggled #page-content-wrapper {
+	position: absolute;
+	margin-right: -250px;
+}
+
+/* Sidebar Styles */
+.sidebar-nav {
+	position: absolute;
+	top: 0;
+	width: 250px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	/*     background: #A0BD93; */
+}
+
+.sidebar-nav li {
+	text-indent: 20px;
+	line-height: 20px;
+}
+
+.sidebar-nav li a {
+	display: block;
+	text-decoration: none;
+	font-weight: bold;
+	color: #555555;
+	/*     background: #A0BD93; */
+}
+
+.sidebar-nav li a:hover {
+	text-decoration: none;
+	background: none;
+}
+
+.sidebar-nav li a:active, .sidebar-nav li a:focus {
+	text-decoration: none;
+}
+
+.sidebar-nav>.sidebar-brand {
+	height: 65px;
+	font-size: 20px;
+	line-height: 60px;
+}
+
+.sidebar-nav>.sidebar-brand a {
+	color: #FFF;
+}
+
+.sidebar-nav>.sidebar-brand a:hover {
+	color: #fff;
+	background: none;
+}
+
+.sidebar-nav li a.item {
+	height: 30px !important;
+	margin-top: 10px;
+	font-size: 14px;
+	border: none !important;
+}
+
+@media ( min-width :768px) {
+	#mysidebar #wrapper {
+		padding-left: 250px;
+	}
+	#mysidebar #wrapper.toggled {
+		padding-left: 0;
+	}
+	#sidebar-wrapper {
+		width: 11%;
+	}
+	#mysidebar #wrapper.toggled #sidebar-wrapper {
+		width: 0;
+	}
+	#mysidebar #wrapper.toggled #page-content-wrapper {
+		position: relative;
+		margin-right: 0;
+	}
+}
+
+.sidebar-nav table {
+	border-spacing: 10px;
+	border-collapse: separate;
+}
+
+.sidebar-nav table tr td {
+	background: #FFF;
+	cursor: pointer;
+	width: 50%;
+	height: 44px;
+}
+
+.sidebar-nav table tr td a {
+	text-decoration: none;
+	color: #000;
+}
+#sidebar-wrapper #menu{
+	float: left;
+/* 	padding: 15px; */
+	background: none repeat scroll 0% 0% #A4CABC;
+	margin-top: 7px;
+/* 	height: 50px; */
+/* 	width: 54px; */
+	margin-left: 8px;
+	cursor: pointer;
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<!-- Wizard View -->
+		<record id="wizard_stock_rotation_report_ept" model="ir.ui.view">
+			<field name="name">Stock Rotation Report</field>
+			<field name="model">stock.rotation.report</field>
+			<field name="arch" type="xml">
+				<form string="Stock Rotation Report">
+					<group>
+						<group>
+							<field name="from_date"/>
+						</group>
+						<group>
+							<field name="to_date"/>
+						</group>
+					</group>
+					<group>
+						<field name='filtaration' widget='radio'/>
+					</group>
+					<group attrs="{'invisible':[('filtaration', '=', 'warehouse')]}">
+						<field name="include_all_location"/>
+						<field name="location_ids" widget="many2many_tags" 
+							domain="[('usage','=','internal')]"
+							options="{'no_create': True}" attrs="{'invisible': [('include_all_location', '=', True)],'required': [('include_all_location', '=', False)]}"/>
+					</group>
+					<group attrs="{'invisible':[('filtaration', '=', 'location')]}">
+						<field name="include_all_warehouse"/>
+						<field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('include_all_warehouse', '=', True)],'required': [('include_all_warehouse', '=', False)]}"/>
+					</group>
+					
+					<footer>
+						<button string="Download Report" type="object" name="print_stock_rotation_report"
+							class="oe_highlight" />
+						<button string="_Cancel" class="btn-default" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_stock_rotation_ept" model="ir.actions.act_window">
+			<field name="name">Stock Rotation</field>
+			<field name="res_model">stock.rotation.report</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="menu_stock_rotation_report_ept"
+			parent="stock.menu_warehouse_report" action="action_stock_rotation_ept"
+			sequence="120" groups='stock.group_stock_manager'/>
+
+	</data>
+</odoo>

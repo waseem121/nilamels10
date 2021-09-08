@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="collection_report_template_document">
+            <!--<t t-call="report.external_layout">-->
+                <div class="header">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Collection Report</span>
+                        </h2>
+                            <strong>Date From:</strong>
+                            <span t-field="o.date_from"/>
+                            <strong>-        Date To:</strong>
+                            <span t-field="o.date_to"/>
+                            <strong>--        Collector:</strong>
+                            <span t-field="o.partner_id.name"/>
+                    </center>
+                    <t t-set="cash_collection_res" t-value="get_cash_collection(o)"/>
+
+                    <newline/>
+                    <span style="font-size:10px;">.</span>
+                    <!--<span style="font-weight:bold;font-size:18px;">Collector:</span><span t-field="o.partner_id.name"/>-->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Receipt Voucher No</th>
+                                <th>Customer Name</th>
+                                <th>Amount</th>
+                                <!--<th>Balance</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="balance" t-value="0"/>
+                            <t t-foreach="cash_collection_res" t-as="cash_collection_line">
+                                <tr>
+                                    <td>
+                                        <span t-esc="cash_collection_line['date']" t-field-options='{"format": "dd/M/YYYY"}'/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['name']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="cash_collection_line['customer']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.3f}'.format(cash_collection_line['amount'])" />
+                                    </td>
+<!--                                    <td>
+                                        <span t-esc="'{:,.3f}'.format(cash_collection_line['balance'])" />
+                                    </td>-->
+                                </tr>
+                                <t t-set="balance" t-value="balance + cash_collection_line['amount']"/>
+                            </t>
+                            
+                            <tr>
+                                <td colspan="4" class="text-right" style="border-top:2px solid black;border-bottom:2px solid black">
+                                    <b style="border-bottom:1px solid black">
+                                        <span>
+                                            Grand Total :
+                                        </span>
+                                        <span t-esc="'%.3f'%balance"/>
+                                    </b>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div class="footer">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img t-if="user.company_id.footer_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.footer_image_qweb" />
+                        </div>
+                    </div>
+                </div>
+            <!--</t>-->
+        </template>
+                    
+
+
+        <template id="collection_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="weekly_account_report.collection_report_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

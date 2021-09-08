@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_pos_config_session_report_form_inherit" model="ir.ui.view">
+        <field name="name">pos.config.session.report.form.view.inherit</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_form"></field>
+        <field name="arch" type="xml">
+            <field name="iface_tax_included" position="after">
+                <field name="iface_session_report"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_session_report_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.session.report.form.view.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="is_return_order" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

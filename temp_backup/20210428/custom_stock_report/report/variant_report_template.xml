@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_with_qty_price">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h2>
+                            Variant Report
+                        </h2>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Inventory</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Date</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-set="available_qty_tot" t-value="0"/>
+                        <t t-set="difference_qty_tot" t-value="0"/>
+                        <t t-set="amount_total" t-value="0"/>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Location</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Product</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Production Lot</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Unit</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>System Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Real Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Variance</strong>
+                                    </th>
+                                    <!--<t t-if="docs.with_qty_cost">-->
+                                    <th class="text-right">
+                                        <strong>Price</strong>
+                                    </th>
+                                    <!--</t>-->
+                                </tr>
+                            </thead>
+                            <tr t-foreach="o.line_ids" t-as="line">
+
+                                <td>
+                                    <span t-field="line.location_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.prod_lot_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.theoretical_qty"/>
+                                    <t t-set="old" t-value="line.theoretical_qty"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.product_qty"/>
+                                    <t t-set="new" t-value="line.product_qty"/>
+                                    <t t-set="available_qty_tot" t-value="available_qty_tot+line.product_qty"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-set="variance" t-value="new-old"/>
+                                    <t t-esc="variance"/>
+                                    <t t-set="difference_qty_tot" t-value="difference_qty_tot+variance"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <td class="text-right">
+                                    <t t-set="price" t-value="line.product_id.lst_price"/>
+                                    <span t-esc="price*variance"/>
+<!--                                    t-options="{'widget': 'monetary', 'display_currency': line.product_id.currency_id}"-->
+                                    <t t-set="amount_total" t-value="amount_total+(price*variance)"/>
+                                </td>
+                                <!--</t>-->
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <!--<td class="text-right">-->
+                                <!--    <t t-set="price" t-value="line.product_id.standard_price"/>-->
+                                <!--    <t t-esc="price*variance"/>-->
+                                <!--</td>-->
+                                <!--</t>-->
+                            </tr>
+                            <tr>
+                                <th colspan="5" class="text-right">Total</th>
+                                <th class="text-right">
+                                    <t t-esc="available_qty_tot"/>
+
+                                </th>
+                                <th class="text-right">
+                                    <t t-esc="difference_qty_tot"/>
+                                </th>
+                                <th class="text-right">
+                                    <span t-esc="amount_total"/>
+<!--                                          t-options="{'widget': 'monetary', 'display_currency': o.line_ids[0].product_id.currency_id}"-->
+                                    <br/>
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_with_qty_cost">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h2>
+                            Variant Report
+                        </h2>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Inventory</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Date</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-set="available_qty_tot" t-value="0"/>
+                        <t t-set="difference_qty_tot" t-value="0"/>
+                        <t t-set="amount_total" t-value="0"/>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Location</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Product</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Production Lot</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Unit</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>System Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Real Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Variance</strong>
+                                    </th>
+                                    <!--<t t-if="docs.with_qty_cost">-->
+                                    <th class="text-right">
+                                        <strong>Cost</strong>
+                                    </th>
+                                    <!--</t>-->
+                                </tr>
+                            </thead>
+                            <tr t-foreach="o.line_ids" t-as="line">
+
+                                <td>
+                                    <span t-field="line.location_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.prod_lot_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.theoretical_qty"/>
+                                    <t t-set="old" t-value="line.theoretical_qty"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.product_qty"/>
+                                    <t t-set="new" t-value="line.product_qty"/>
+                                    <t t-set="available_qty_tot" t-value="available_qty_tot+line.product_qty"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <td class="text-right">
+                                    <t t-set="variance" t-value="new-old"/>
+                                    <t t-esc="variance"/>
+                                    <t t-set="difference_qty_tot" t-value="difference_qty_tot+variance"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <!--<td class="text-right">-->
+                                <!--    <t t-set="price" t-value="line.product_id.lst_price"/>-->
+                                <!--    <t t-esc="price*variance"/>-->
+                                <!--</td>-->
+                                <!--</t>-->
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <td class="text-right">
+                                    <t t-set="price" t-value="line.product_id.standard_price"/>
+                                    <!--<t t-esc=""/>-->
+                                    <span t-esc="price*variance"/>
+<!--                                          t-options="{'widget': 'monetary', 'display_currency': line.product_id.currency_id}"/>-->
+                                    <t t-set="amount_total" t-value="amount_total+(price*variance)"/>
+                                </td>
+                                <!--</t>-->
+                            </tr>
+                            <tr>
+                                <th colspan="5" class="text-right">Total</th>
+                                <th class="text-right">
+                                    <t t-esc="available_qty_tot"/>
+<!--                                    <span t-field="o.line_ids[0].product_uom_id" groups="product.group_uom"/>-->
+                                </th>
+                                <th class="text-right">
+                                    <t t-esc="difference_qty_tot"/>
+<!--                                    <span t-field="o.line_ids[0].product_uom_id" groups="product.group_uom"/>-->
+                                </th>
+                                <th class="text-right">
+                                    <span t-esc="amount_total"/>
+<!--                                          t-options="{'widget': 'monetary', 'display_currency': o.line_ids[0].product_id.currency_id}"/>-->
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_with_only_qty">
+        <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="report.external_layout">
+                    <div class="page">
+                        <h2>
+                            Variant Report
+                        </h2>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Inventory</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Date</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="o.date"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <t t-set="available_qty_tot" t-value="0"/>
+                        <t t-set="difference_qty_tot" t-value="0"/>
+                        <!--                        <t t-set="amount_total" t-value="0"/>-->
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <strong>Location</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Product</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Production Lot</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Unit</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>System Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Real Qty</strong>
+                                    </th>
+                                    <th class="text-right">
+                                        <strong>Variance</strong>
+                                    </th>
+                                    <!--<t t-if="docs.with_qty_cost">-->
+                                    <!--                                    <th class="text-right">-->
+                                    <!--                                        <strong>Cost</strong>-->
+                                    <!--                                    </th>-->
+                                    <!--                                    </t>-->
+                                </tr>
+                            </thead>
+                            <tr t-foreach="o.line_ids" t-as="line">
+
+                                <td>
+                                    <span t-field="line.location_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.prod_lot_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.theoretical_qty"/>
+                                    <t t-set="old" t-value="line.theoretical_qty"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.product_qty"/>
+                                    <t t-set="new" t-value="line.product_qty"/>
+                                    <t t-set="available_qty_tot" t-value="available_qty_tot+line.product_qty"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <td class="text-right">
+                                    <t t-set="variance" t-value="new-old"/>
+                                    <t t-esc="variance"/>
+                                    <t t-set="difference_qty_tot" t-value="difference_qty_tot+variance"/>
+<!--                                    <span t-field="line.product_uom_id" groups="product.group_uom"/>-->
+                                </td>
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <!--<td class="text-right">-->
+                                <!--    <t t-set="price" t-value="line.product_id.lst_price"/>-->
+                                <!--    <t t-esc="price*variance"/>-->
+                                <!--</td>-->
+                                <!--</t>-->
+                                <!--<t t-if="docs.with_qty_cost">-->
+                                <!--                                <td class="text-right">-->
+                                <!--                                    <t t-set="price" t-value="line.product_id.standard_price"/>-->
+                                <!--<t t-esc=""/>-->
+                                <!--                                    <span t-esc="price*variance"-->
+                                <!--                                          t-options="{'widget': 'monetary', 'display_currency': line.product_id.currency_id}"/>-->
+                                <!--                                    <t t-set="amount_total" t-value="amount_total+(price*variance)"/>-->
+                                <!--                                </td>-->
+                                <!--</t>-->
+                            </tr>
+                            <tr>
+                                <th colspan="5" class="text-right">Total</th>
+                                <th class="text-right">
+                                    <t t-esc="available_qty_tot"/>
+<!--                                    <span t-field="o.line_ids[0].product_uom_id" groups="product.group_uom"/>-->
+                                </th>
+                                <th class="text-right">
+                                    <t t-esc="difference_qty_tot"/>
+<!--                                    <span t-field="o.line_ids[0].product_uom_id" groups="product.group_uom"/>-->
+                                </th>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report id="stock_inventory_report_with_qty_price"
+            string="Variant Report Price"
+            name="custom_stock_report.report_with_qty_price"
+            model="stock.inventory"
+            file="custom_stock_report.report_with_qty_price"
+            report_type="qweb-pdf"
+            menu="False"
+    />
+    <report id="stock_inventory_report_with_qty_cost"
+            string="Variant Report Cost"
+            name="custom_stock_report.report_with_qty_cost"
+            model="stock.inventory"
+            file="custom_stock_report.report_with_qty_cost"
+            report_type="qweb-pdf"
+            menu="False"
+    />
+    <report id="stock_inventory_report_with_only_qty"
+            string="Variant Report"
+            name="custom_stock_report.report_with_only_qty"
+            model="stock.inventory"
+            file="custom_stock_report.report_with_only_qty"
+            report_type="qweb-pdf"
+            menu="False"
+    />
+
+</odoo>

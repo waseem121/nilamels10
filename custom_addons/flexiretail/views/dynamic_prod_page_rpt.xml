@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="dynamic_prod_page_rpt">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="doc_id">
+                    <div class="page">
+                        <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                            <span t-as="f" t-foreach="draw_table(data)">
+                                <span t-as="c" t-foreach="f">
+                                    <tr>
+                                        <span t-as="product" t-foreach="f[c]">
+                                            <t t-if="product != False">
+                                                <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                <t t-set="style" t-value="draw_style(data)"/>
+                                                <td t-att-style="style" align="center">
+                                                    <div style="overflow: hidden;">
+                                                        <!-- do your design into this block only -->
+                                                        <!-- product name style can be change here -->
+                                                        <div style="color:black;font-size:20px;">
+                                                            <span t-field="product.name"/>
+                                                        </div>
+                                                        <!-- product internal code style can be change here -->
+                                                        <div style="color:black;font-size:20px;">
+                                                            <span t-field="product.default_code"/>
+                                                        </div>
+                                                        <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                        <div style="color:black;margin-top:15px;font-size:9px;">
+                                                            <span t-raw="get_barcode(product.barcode, 'EAN13', data)"/>
+                                                        </div>
+                                                        <!-- design only above part for label -->
+                                                    </div>
+                                                </td>
+                                            </t>
+                                            <!-- Do not remove this lines , this is for blank td.-->
+                                            <t t-if="product == False">
+                                            <t t-set="style_td" t-value="draw_style(data)"/>
+                                                <td t-att-style="style_td">
+                                                </td>
+                                            </t>
+                                            <!-- Do not remove this lines -->
+                                        </span>
+                                    </tr>
+                                </span>
+                            </span>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

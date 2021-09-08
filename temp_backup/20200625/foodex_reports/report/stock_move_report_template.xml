@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="stock_move_report_template_doc">
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 70px;"/>
+                        </div>
+                        <div style="text-align:center">
+                            <h3><b style="border-bottom:2px solid black">Stock Move Report</b></h3>
+                        </div>
+                    </div>
+                    <div style="border:2px solid black;text-align:center">
+                        <b><span t-esc="o.product_id.default_code"></span></b>
+                        <br/>
+                        <b><span t-esc="o.product_id.name"/></b>
+                        <br/>
+                    </div>
+                    <div style="border-bottom:3px solid black;margin-top:10px">
+                    </div>
+                </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Serial.</th>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Picking</th>
+                                <th>Source Location</th>
+                                <th>Destination Location</th>
+                                <th class="text-right">Quantity</th>
+                                <t t-if="o.option == 'qty_cost'">
+                                    <th class="text-right">cost</th>
+                                </t>
+                                <th  class="text-right">Quantity Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="count" t-value="1"/>
+                                <t t-if="data">
+                                    <t t-set="balance_qty" t-value="0"></t>
+                                    <t t-foreach="data" t-as="record">
+                                        <t t-if="record['model'] == 'stock.move'">
+                                            <tr>
+                                                <td style="border-bottom:1px solid black">
+                                                    <span t-esc="count"></span>
+                                                    <t t-set="count" t-value="count + 1"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid black; width:100px">
+                                                    <span t-esc="context_timestamp(datetime.datetime.strptime(record['date'], '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+                                                    <t t-if="record['record_id'].picking_id">
+                                                        <span t-esc="record['record_id'].picking_id.origin"/>
+                                                    </t>
+                                                    <t t-if="not record['record_id'].picking_id">
+                                                        <span t-esc="record['record_id'].origin"/>
+                                                    </t>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+                                                    <t t-if="record['record_id'].picking_id">
+                                                        <span t-esc="record['record_id'].picking_id.name"/>
+                                                    </t>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+                                                    <t t-if="record['record_id'].location_id.name == 'Customers' or record['record_id'].location_id.name == 'Vendors'">
+                                                        <t t-if="record['record_id'].picking_id and record['record_id'].picking_id.partner_id">
+                                                            <span t-esc="record['record_id'].picking_id.partner_id.name"></span>
+                                                        </t>
+                                                        <t t-if="not record['record_id'].picking_id">
+                                                            <span t-esc="record['record_id'].location_id.display_name"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="not record['record_id'].location_id.name == 'Customers' or not record['record_id'].location_id.name == 'Vendors'">
+                                                        <span t-esc="record['record_id'].location_id.display_name"/>
+                                                    </t>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+                                                   <t t-if="record['record_id'].location_dest_id.name == 'Customers' or record['record_id'].location_dest_id.name == 'Vendors'">
+                                                        <t t-if="record['record_id'].picking_id and record['record_id'].picking_id.partner_id">
+                                                            <span t-esc="record['record_id'].picking_id.partner_id.name"></span>
+                                                        </t>
+                                                        <t t-if="not record['record_id'].picking_id">
+                                                            <span t-esc="record['record_id'].location_dest_id.display_name"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="not record['record_id'].location_dest_id.name == 'Customers' or not record['record_id'].location_dest_id.name == 'Vendors'">
+                                                        <span t-esc="record['record_id'].location_dest_id.display_name"/>
+                                                    </t>
+                                                </td>
+                                                <td style="border-bottom:1px solid black" class="text-right">
+                                                    <span t-esc="'%.3f'%record['record_id'].product_qty"/>
+                                                </td>
+                                                <t t-if="o.option == 'qty_cost'">
+                                                    <td style="border-bottom:1px solid black" class="text-right">
+                                                        <t t-if="record['record_id'].quant_ids">
+                                                            <span t-esc="('%.3f'%(record['record_id'].quant_ids[0].cost * record['record_id'].product_qty))"/>
+                                                        </t>
+                                                        <t t-if="not record['record_id'].quant_ids and record['record_id'].account_invoice_line_id">
+                                                            <span t-esc="('%.3f'%(record['record_id'].account_invoice_line_id.cost_price * record['record_id'].product_qty))"/>
+                                                        </t>
+                                                        <t t-if="not record['record_id'].quant_ids and not record['record_id'].account_invoice_line_id">
+                                                            <span t-esc="('%.3f'%(record['record_id'].product_id.standard_price * record['record_id'].product_qty))"/>
+                                                        </t>
+                                                    </td>
+                                                </t>
+                                                <td style="border-bottom:1px solid black" class="text-right">
+                                                    <t t-if="o.location_id.id == record['record_id'].location_id.id">
+                                                        <t t-set="balance_qty" t-value="balance_qty - record['record_id'].product_qty"/>
+                                                        <span t-esc="'%.3f'%balance_qty"/>
+                                                    </t>
+                                                    <t t-if="o.location_id.id == record['record_id'].location_dest_id.id">
+                                                        <t t-set="balance_qty" t-value="balance_qty + record['record_id'].product_qty"/>
+                                                        <span t-esc="'%.3f'%balance_qty"/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+
+                                        <t t-if="record['model'] == 'account.invoice'">
+                                             <tr>
+                                                <td style="border-bottom:1px solid black">
+                                                    <span t-esc="count"></span>
+                                                    <t t-set="count" t-value="count + 1"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid black;width:100px">
+                                                    <span t-esc="context_timestamp(datetime.datetime.strptime(record['date'], '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+                                                    <span t-esc="record['record_id'].invoice_id.number"/>
+                                                </td>
+                                                <td style="border-bottom:1px solid black">
+    <!--                                                <t t-if="move.picking_id">-->
+    <!--                                                    <span t-esc="move.picking_id.name"/>-->
+    <!--                                                </t>-->
+                                                </td>
+
+                                                <td style="border-bottom:1px solid black">
+                                                    <t t-if="record['record_id'].invoice_id.type == 'out_invoice'">
+                                                        <span t-esc="record['record_id'].invoice_id.location_id.display_name"/>
+                                                    </t>
+                                                    <t t-if="record['record_id'].invoice_id.type == 'out_refund'">
+                                                        <span t-esc="record['record_id'].invoice_id.partner_id.name"/>
+                                                    </t>
+                                                </td>
+
+                                                <td style="border-bottom:1px solid black">
+                                                    <t t-if="record['record_id'].invoice_id.type == 'out_invoice'">
+                                                        <span t-esc="record['record_id'].invoice_id.partner_id.name"/>
+                                                    </t>
+                                                    <t t-if="record['record_id'].invoice_id.type == 'out_refund'">
+                                                        <span t-esc="record['record_id'].invoice_id.location_id.display_name"/>
+                                                    </t>
+                                                    <t t-if="not record['record_id'].invoice_id.type == 'out_invoice' and not record['record_id'].invoice_id.type == 'out_refund'">
+                                                        <span t-esc="record['record_id'].invoice_id.partner_id.property_stock_customer.display_name"/>
+                                                    </t>
+                                                </td>
+
+                                                <td style="border-bottom:1px solid black" class="text-right">
+                                                     <t t-if="record['record_id'].uom_id.category_id.name == 'Unit' and record['record_id'].uom_id.uom_type == 'bigger'">
+                                                        <span t-esc="'%.3f'%(record['record_id'].quantity * record['record_id'].uom_id.factor_inv)"/>
+                                                    </t>
+                                                    <t t-else="not record['record_id'].uom_id.category_id.name == 'Unit' and not record['record_id'].uom_id.uom_type == 'bigger'">
+                                                        <span t-esc="'%.3f'%record['record_id'].quantity"/>
+                                                    </t>
+                                                </td>
+                                                 <t t-if="o.option == 'qty_cost'">
+                                                    <td style="border-bottom:1px solid black" class="text-right">
+                                                        <t t-if="record['record_id'].uom_id.category_id.name == 'Unit' and record['record_id'].uom_id.uom_type == 'bigger'">
+                                                            <span t-esc="'%.3f'%(record['record_id'].cost_price * (record['record_id'].quantity * record['record_id'].uom_id.factor_inv))"/>
+                                                        </t>
+                                                        <t t-else="not record['record_id'].uom_id.category_id.name == 'Unit' and not record['record_id'].uom_id.uom_type == 'bigger'">
+                                                            <span t-esc="'%.3f'%(record['record_id'].cost_price * record['record_id'].quantity)"/>
+                                                        </t>
+                                                    </td>
+                                                 </t>
+                                                 <td style="border-bottom:1px solid black" class="text-right">
+                                                     <t t-if="record['record_id'].invoice_id.type == 'out_invoice'">
+                                                        <t t-if="record['record_id'].uom_id.category_id.name == 'Unit' and record['record_id'].uom_id.uom_type == 'bigger'">
+                                                           <t t-set="balance_qty" t-value="balance_qty - (record['record_id'].quantity * record['record_id'].uom_id.factor_inv)"/>
+                                                            <span t-esc="'%.3f'%balance_qty"/>
+                                                        </t>
+                                                         <t t-else="not record['record_id'].uom_id.category_id.name == 'Unit' and not record['record_id'].uom_id.uom_type == 'bigger'">
+                                                             <t t-set="balance_qty" t-value="balance_qty - record['record_id'].quantity"/>
+                                                            <span t-esc="'%.3f'%balance_qty"/>
+                                                         </t>
+                                                     </t>
+                                                    <t t-if="record['record_id'].invoice_id.type == 'out_refund'">
+                                                        <t t-if="record['record_id'].uom_id.category_id.name == 'Unit' and record['record_id'].uom_id.uom_type == 'bigger'">
+                                                           <t t-set="balance_qty" t-value="balance_qty + (record['record_id'].quantity * record['record_id'].uom_id.factor_inv)"/>
+                                                            <span t-esc="'%.3f'%balance_qty"/>
+                                                        </t>
+                                                         <t t-else="not record['record_id'].uom_id.category_id.name == 'Unit' and not record['record_id'].uom_id.uom_type == 'bigger'">
+                                                             <t t-set="balance_qty" t-value="balance_qty + record['record_id'].quantity"/>
+                                                            <span t-esc="'%.3f'%balance_qty"/>
+                                                         </t>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </t>
+                                </t>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="stock_move_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.stock_move_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_stock_move" model="report.paperformat">
+            <field name="name">Stock Move Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">45</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_stock_move1"
+            string="stock_move_report"
+            model="stock.move.report"
+            name="foodex_reports.stock_move_report_template"
+            file="foodex_reports.stock_move_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="paperformat_stock_move"
+            />
+    </data>
+</openerp>

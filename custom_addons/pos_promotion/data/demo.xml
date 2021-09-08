@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="true">
+
+        <record id="pos_promotion_01" model="pos.promotion">
+            <field name="sequence">1</field>
+            <field name="name">Discount 10% Total Order</field>
+            <field name="type">total_order</field>
+            <field name="method">percent</field>
+            <field name="percent_total">10</field>
+            <field name="min_total_order">1000</field>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="pos_promotion_02" model="pos.promotion">
+            <field name="sequence">2</field>
+            <field name="name">Discount 100$ Total Order</field>
+            <field name="discount_total">100</field>
+            <field name="type">total_order</field>
+            <field name="method">discount</field>
+            <field name="min_total_order">1000</field>
+            <field name="state">approved</field>
+        </record>
+
+    </data>
+</openerp>

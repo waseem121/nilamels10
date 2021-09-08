@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="report_doctor_sale_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Doctor Sale Report</span>
+                        </h2>
+                    </center>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Doctor</th>
+                                <th>Invoice</th>
+                                <th>Barcode</th>
+                                <th>Brand</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                            </tr>
+                        </thead>
+                        <t t-set="grand_qty" t-value="0" />
+                        <t t-set="grand_rate" t-value="0" />
+                        <tbody class="sale_tbody">
+                            <t t-foreach="get_doctor_record(o)" t-as="order">
+                                <t t-if="order">
+                                    <t t-set="sum_qty" t-value="0" />
+                                    <t t-set="sum_rate" t-value="0" />
+                                    <t t-foreach="order_value" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="line.get('pos_name')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('date')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('doctor')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('invoice')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('barcode')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('brand')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('name')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('qty')" />
+                                                <span t-set="sum_qty" t-value="sum_qty +line.get('qty')" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.3f'% line.get('rate')" />
+                                                <span t-set="sum_rate" t-value="sum_rate +line.get('rate')" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <th>Total</th>
+                                        <td colspan="6"/>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc="sum_qty" />
+                                            <span t-set="grand_qty" t-value="grand_qty +sum_qty"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span style="font-weight:bold;" t-esc="'%.3f'% sum_rate" />
+                                            <span t-set="grand_rate" t-value="grand_rate +sum_rate"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="9">
+                                            <br/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-foreach="get_doctor_record(o)" t-as="order">
+                                <t t-if="not order">
+                                    <t t-set="sum_qty" t-value="0" />
+                                    <t t-set="sum_rate" t-value="0" />
+                                    <t t-foreach="order_value" t-as="line">
+                                        <tr>
+                                            <td>
+                                                <span t-esc="line.get('pos_name')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('date')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('doctor')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('invoice')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('barcode')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('brand')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('name')" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="line.get('qty')" />
+                                                <span t-set="sum_qty" t-value="sum_qty +line.get('qty')" />
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="'%.3f'% line.get('rate')" />
+                                                <span t-set="sum_rate" t-value="sum_rate +line.get('rate')" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <th>Total</th>
+                                        <td colspan="6"/>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc="sum_qty" />
+                                            <span t-set="grand_qty" t-value="grand_qty +sum_qty"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span style="font-weight:bold;" t-esc="'%.3f'% sum_rate" />
+                                            <span t-set="grand_rate" t-value="grand_rate +sum_rate"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr>
+                                <td colspan="9">
+                                    <br/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Grand Total</th>
+                                <td colspan="6"/>
+                                <td>
+                                    <span style="font-weight:bold;" t-esc="grand_qty" />
+                                </td>
+                                <td class="text-right">
+                                    <span style="font-weight:bold;" t-esc="'%.3f'% grand_rate" />
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_doctor_sale_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="flexiretail.report_doctor_sale_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

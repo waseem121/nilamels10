@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- wishlist in Compare -->
+	<template id="clarico_compare_compare_page_template" inherit_id="clarico_compare.clarico_compare_page_template">
+		<xpath expr="//div[@id='compare_wishlist_div_id']" position="inside">
+			<a title="Add To Wishlist" href="#a" class="add2wish" t-att-data-id="'%s' % product.id "><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+			<a title="In Wishlist" class="in2wish" t-att-data-id="'%s' % product.id "><i class="fa fa-heart"></i></a>
+	    </xpath>
+	</template>
+	
+</odoo>

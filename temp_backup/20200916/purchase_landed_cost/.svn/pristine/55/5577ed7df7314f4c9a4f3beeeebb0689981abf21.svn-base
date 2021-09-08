@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="adjust_difference_cost_wizard_view">
+			<field name="name">adjust.difference.cost.wizard.form</field>
+			<field name="model">adjust.difference.cost.wizard</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Adjust Difference Cost">
+                    <group>
+                        <field name="calculation_method" />
+                    </group>
+					<footer>
+                        <button string="Calculate"
+                                name="action_calculate"
+                                type="object"
+                                class="oe_highlight" />
+                        or
+                        <button string="Cancel"
+                                class="oe_link"
+                                special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_adjust_difference_cost_wizard" model="ir.actions.act_window">
+			<field name="name">Adjust Difference Cost</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">adjust.difference.cost.wizard</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+	</data>
+</openerp>

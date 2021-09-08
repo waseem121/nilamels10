@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="vender_sale_report_template_doc">
+            <div class="header">
+                <div>
+                     <div class="text-center">
+                        <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="widht:100%;max-height: 115px;"/>
+                    </div>
+                    <div style="text-align:center">
+                        <h3><b style="border-bottom:2px solid black">Vendor wise sales report</b></h3>
+                    </div>
+                </div>
+                <center>
+                    <div style="text-align:center;border:2px solid black;width:500px;padding:10px;margin-top:15px">
+                        <b class="text-left">
+                            <span>Vendor :</span>
+                        </b>
+                        <b class="text-right">
+                            <span t-esc="o.vendor_id.name"></span>
+                        </b>
+                    </div>
+                </center>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-6" style="text-align:center">
+                        <span style="border-bottom:2px solid black; font-size:15px">
+                        <span><b> From : <span style="margin-left:10px" t-field="o.date_from"/></b></span>
+                        <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-field="o.date_to"/></b></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="border-bottom:3px solid black;margin-top:10px">
+                </div>
+            </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Srl.</th>
+                                <th>Date</th>
+                                <th>Invoice No</th>
+                                <th>Customer</th>
+                                <th>Customer Item</th>
+                                <th class="text-right">Qty Sold</th>
+                                 <t t-if="o.option == 'qty_and_price'">
+                                    <th class="text-right">Sales Price</th>
+                                    <th class="text-right">Discount</th>
+                                    <th class="text-right">Amount</th>
+                                 </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total" t-value="0"/>
+                            <t t-if="data">
+                                <t t-set="count" t-value="1"/>
+                                <t t-foreach="data" t-as="record">
+                                    <tr>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="count"/>
+                                            <t t-set="count" t-value="count + 1"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black;width:85px">
+                                            <span t-esc="context_timestamp(datetime.datetime.strptime(record.invoice_id.date_invoice, '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.invoice_id.number"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.invoice_id.partner_id.name"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.product_id.display_name"/>
+                                        </td>
+                                        <td class="text-right" style="border-bottom:1px solid black">
+                                            <t t-if="record.uom_id.category_id.name == 'Unit' and record.uom_id.uom_type == 'bigger'">
+                                                <span t-esc="'%.3f'%(record.quantity * record.uom_id.factor_inv)"/>
+                                            </t>
+                                            <t t-else="not record.uom_id.category_id.name == 'Unit' and not record.uom_id.uom_type == 'bigger'">
+                                                <span t-esc="'%.3f'%record.quantity"/>
+                                            </t>
+                                        </td>
+                                        <t t-if="o.option == 'qty_and_price'" class="text-right">
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <span t-esc="'%.3f'%record.price_unit"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <span t-esc="'%.3f'%(record.discount_share + record.discount_amount)"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <span t-esc="'%.3f'%(record.price_subtotal - record.discount_share)"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                                 <t t-if="o.option == 'qty_and_price'">
+                                    <tr>
+                                        <td colspan="4">
+                                           <b> Total Sale :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_sale"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td colspan="4">
+                                           <b> Total Refund :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_refund"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="border-bottom:1px solid black;border-top:1px solid black">
+                                           <b> Net Total :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right" style="border-bottom:1px solid black;border-top:1px solid black">
+                                            <b>
+                                                 <span t-esc="'%.3f'%(total_sale - total_refund)"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                 </t>
+                            </t>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="vendor_sale_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.vender_sale_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_vendor_sale_report" model="report.paperformat">
+            <field name="name">Vendor Sales Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">70</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">66</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_vendor_wise_sale_report"
+            string="vendor_sale_report"
+            model="vendor.sales"
+            name="foodex_reports.vendor_sale_report_template"
+            file="foodex_reports.vendor_sale_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="foodex_reports.paperformat_vendor_sale_report"
+            />
+    </data>
+</openerp>

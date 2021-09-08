@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_discount_inherit_purchase_form_form"
+                model="ir.ui.view">
+            <field name="name">purchase.order</field>
+            <field name="model">purchase.order</field>
+            <field name="groups_id" eval="[(4,ref('purchase_discount.group_purchase_discount'))]"/>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']//tree//field[@name='name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='date_planned']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="attributes">
+                    <attribute name="context">{'discount_item': 'True'}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_qty']" position="attributes">
+                    <attribute name="context">{'discount_item': 'True'}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']"
+                       position="after">
+                    <field name="discount_share"/>
+                    <field name="discount_item"
+                           context="{'discount_item': 'True'}"/>
+                    <field name="discount_amount_item"
+                           sum="Item Discount Amount"
+                           context="{'discount_amount': 'True'}"/>
+                </xpath>
+                <field name="amount_tax" position="after">
+                    <field name="total_item_discount"/>
+                    <field name="gross_total" class="oe_subtotal_footer_separator"/>
+                    <field name="total_share_discount"/>
+                    <field name="total_discount" invisible="1"/>
+<!--                    <field name="amount_untaxed_wo_global_disc"-->
+<!--                           class="oe_subtotal_footer_separator"-->
+<!--                           string="Gross Total"/>-->
+                </field>
+
+                <field name="notes" position="before">
+                    <div>
+                        <label for="discount_type"/>
+                        <field name="discount_type"
+                               attrs="{'readonly':[('state','!=','draft')]}"
+                               class="oe_inline" style="margin-left: 33px;"/>
+                    </div>
+                    <div attrs="{'invisible':[('discount_type','=','amount')]}">
+                        <label for="discount_glob"/>
+                        <field name="discount_glob"
+                               attrs="{'readonly':[('state','!=','draft')]}"
+                               class="oe_inline" style="margin-left: 50px;"/>
+                    </div>
+                    <div attrs="{'invisible':[('discount_type','=','perc')]}">
+                        <label for="discount_amount"/>
+                        <field name="discount_amount"
+                               attrs="{'readonly':[('state','!=','draft')]}"
+                               class="oe_inline" style="margin-left: 22px;"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

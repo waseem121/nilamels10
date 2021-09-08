@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_report_general_ledger_view_custom1" model="ir.ui.view">
+            <field name="name">General Ledger report1</field>
+            <field name="model">account.report.general.ledger</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+                <field name="journal_ids" position="after">
+                    <field name="ageing"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="general_ledger_filter_custom" model="ir.ui.view">
+            <field name="name">General Ledger report</field>
+            <field name="model">account.report.general.ledger</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <field name="company_id" invisible="1"/>
+                    <group col="4">
+                        <field name="target_move" widget="radio"/>
+                        <field name="display_account" widget="radio"/>
+                        <field name="sortby" widget="radio"/>
+                        <field name="initial_balance" widget="checkbox"/>
+                        <field name="portrait_wo_header" widget="checkbox"/>
+                        <newline/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="analytic_account_ids" widget="many2many_tags" options="{'no_create': True}"
+                               context="{'from_single_journal':True}"/>
+                        <field name="ageing"/>
+                    </group>
+                    <footer>
+                        <button name="check_report" context="{'from_single_journal':True}" string="Print" type="object"
+                                default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_general_ledger_report_filter" model="ir.actions.act_window">
+            <field name="name">General Ledger report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.report.general.ledger</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <!-- <field name="view_id" ref="account_report_general_ledger_view"/> -->
+            <field name="target">new</field>
+        </record>
+
+        <!-- Menu for general ledger report account filter -->
+        <menuitem
+                id="menu_general_ledger_report_custom"
+                name="Single General Ledger"
+                parent="account_reports.account_reports_legal_statements_menu"
+                action="action_general_ledger_report_filter"
+        />
+
+    </data>
+</odoo>

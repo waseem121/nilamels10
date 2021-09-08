@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="free_qty_view_order_form" model="ir.ui.view">
+            <field name="name">free.qty.view.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="after">
+                    <field name="free_qty" groups="purchase_free_qty.group_free_qty"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>    

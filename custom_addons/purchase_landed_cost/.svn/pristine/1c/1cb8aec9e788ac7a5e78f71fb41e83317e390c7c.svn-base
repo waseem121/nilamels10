@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="landed_cost_report_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Receipt</span>
+                        </h2>
+                    </center>
+                    <span t-set= "get_data" t-value="_get_purchase_data(o)"/>
+                    <div class="row mt32 mb32" style="float:left;width:50%;padding-left: 15px;">
+                        <div>
+                            <strong>Receipt No: </strong>
+                            <span t-esc="get_data.get('receipt_no')"/>
+                        </div>
+                        <div>
+                            <strong>Receipt Date: </strong>
+                            <span t-esc="get_data.get('receipt_date')"/>
+                        </div>
+                        <div>
+                            <strong>Purchase Order: </strong>
+                            <span t-esc="get_data.get('purchase_order')"/>
+                        </div>
+                        <div>
+                            <strong>Warehouse: </strong>
+                            <span t-esc="get_data.get('warehouse')"/>
+                        </div>
+                    </div>
+
+                    <div class="row mt32 mb32" style="float:left;width:50%">
+                        <div>
+                            <strong>Supplier: </strong>
+                            <span t-esc="get_data.get('supplier')"/>
+                        </div>
+                        <div>
+                            <strong>Credit A/C: </strong>
+                            <span t-esc="get_data.get('credit_account')"/>
+                        </div>
+                        <div>
+                            <strong>Received By: </strong>
+                            <span t-esc="get_data.get('received_by')"/>
+                        </div>
+                        <div>
+                            <strong>Currency: </strong>
+                            <span t-esc="get_data.get('currency')" style="padding-right:20px;"/>
+
+                            <strong>EXCH. Rate: </strong>
+                            <span t-esc="get_data.get('exch_rate')"/>
+                        </div>
+                    </div>
+
+                    <t t-if="o.expense_lines">
+                        <h2>
+                            <span>Expenses</span>
+                        </h2>
+                        <table class="table table-condensed">
+                            <t t-set="expenses_total" t-value="0"/>
+                            <tr>
+                                <th>Description</th>
+                                <th>Reference</th>
+                                <th>GL Account</th>
+                                <th>Description</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                            <tbody class="invoice_tbody">
+                                <tr t-foreach="o.expense_lines" t-as="l">
+                                    <td>
+                                        <span t-field="l.type.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="l.ref"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="l.account_id.code"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="l.account_id.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.expense_amount_currency"/>
+                                    </td>
+                                    <t t-set = "expenses_total"  t-value="expenses_total+l.expense_amount_currency"/>
+                                </tr>
+                            </tbody>
+                            <tr>
+                                <th>Total</th>
+                                <td/><td/><td/>
+                                <td class="text-right">
+                                <span style="font-weight:bold;" t-esc="'%.3f'% expenses_total"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
+
+                    <t t-if="o.cost_lines">
+                    <table class="table table-condensed">
+                        <tr style="border: 2px solid black;">
+                            <td colspan="3" style="border-right: 1px solid black;"></td>
+                            <td colspan="5" style="border-right: 1px solid black;">(<span t-esc="get_data.get('currency')" style="font-weight:bold;"/>)</td>
+                            <td colspan="2" style="border-right: 1px solid black;font-weight:bold">Expense</td>
+                            <td colspan="2" style="border-right: 1px solid black;font-weight:bold">Landed Cost</td>
+                        </tr>
+                        <tr style="border: 2px solid black;">
+                            <th>Item Code</th>
+                            <th>Description</th>
+                            <th style="border-right: 1px solid black;">Unit</th>
+
+                            <th>Qty</th>
+                            <th>Unit Price</th>
+                            <th>Total</th>
+                            <th>Discount</th>
+                            <th style="border-right: 1px solid black;">Net</th>
+
+                            <th>Unit Expense Amount</th>
+                            <th style="border-right: 1px solid black;">Expense Amount</th>
+
+                            <th>Landed Cost</th>
+                            <th style="border-right: 1px solid black;">Total Cost</th>
+                        </tr>
+                        <tbody class="invoice_tbody">
+                            <span t-set="total_qty" t-value="0.00"/>
+                            <span t-set="sum_total_amount" t-value="0.00"/>
+                            <span t-set="sum_net_amount" t-value="0.00"/>
+                            <span t-set="total_expense_amount" t-value="0.00"/>
+                            <span t-set="total_landed_cost" t-value="0.00"/>
+                            <span t-set="total_cost" t-value="0.00"/>
+                            <tr t-foreach="o.cost_lines" t-as="l">
+                                <td>
+                                    <span t-esc="l.product_id.default_code"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.product_id.name"/>
+                                    <t t-if="l.product_id.tracking != 'none'">
+                                        <span t-set= "get_lot_value" t-value="_get_lot_values(l)"/>
+                                        <t t-if="get_lot_value">
+                                            <table class="table table-condensed" style="margin-bottom: 0;">
+                                                <tr t-foreach="get_lot_value" t-as="lot">
+                                                    <td>
+                                                        <strong><span t-esc="lot.name" /></strong>
+                                                        <t t-if="lot.life_date">
+                                                            <strong>[
+                                                            <span
+                                                                t-esc="datetime.datetime.strptime(lot.life_date, '%Y-%m-%d %H:%M:%S').strftime('%d-%m-%Y')"/>
+                                                            ]</strong>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </t>
+                                    </t>
+                                </td>
+                                <td>
+                                    <span t-field="l.purchase_line_id.product_uom.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.product_qty"/>
+                                    <t t-set = "total_qty"  t-value="total_qty+l.product_qty"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.purchase_line_id.price_unit"/>
+                                </td>
+                                <td>
+                                    <span t-set="total_amount" t-value ="'%.3f'% (l.purchase_line_id.price_unit * l.purchase_line_id.qty_received)"/>
+                                    <span t-esc="total_amount"/>
+                                    <t t-set="sum_total_amount" t-value="sum_total_amount+float(total_amount)"/>
+                                </td>
+                                <td>
+                                    <span>0.00</span>
+                                </td>
+                                <td>
+                                    <span t-set="net_amount" t-value ="'%.3f'% (l.purchase_line_id.price_unit * l.purchase_line_id.qty_received)"/>
+                                    <span t-esc="net_amount"/>
+                                    <t t-set = "sum_net_amount"  t-value="sum_net_amount+float(net_amount)"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.cost_ratio"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.expense_amount"/>
+                                    <t t-set = "total_expense_amount"  t-value="total_expense_amount+l.expense_amount"/>
+                                </td>
+                                <td>
+                                    <span t-field="l.standard_price_new"/>
+                                    <t t-set = "total_landed_cost"  t-value="total_landed_cost+l.standard_price_new"/>
+                                </td>
+                                
+                                <td>
+                                    <span t-set="total_cost_value" t-value ="'%.4f'% (l.standard_price_new * l.product_qty)"/>
+                                    <span t-esc="total_cost_value"/>
+                                    <t t-set = "total_cost"  t-value="total_cost+float(total_cost_value)"/>
+                                </td>
+
+                            </tr>
+                            <tr>
+                            <th>Total</th>
+                            <td/><td/>
+                            <td><span style="font-weight:bold;" t-esc="int(total_qty)"/></td>
+                            <td/>
+                            <td><span style="font-weight:bold;" t-esc="'%.3f'% sum_total_amount"/></td>
+                            <td/>
+                            <td><span style="font-weight:bold;" t-esc="'%.3f'% sum_net_amount"/></td>
+                            <td/>
+                            <td><span style="font-weight:bold;" t-esc="'%.3f'% total_expense_amount"/></td>
+                            <td><span style="font-weight:bold;" t-esc="'%.3f'% total_landed_cost"/></td>
+                            <td><span style="font-weight:bold;" t-esc="'%.3f'% round(total_cost,2)"/></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </t>
+                    <br/>
+                    <div class="col-xs-4">
+                        <span style="border-top: 1px solid black;">
+                            <b>Prepared By</b>
+                        </span>
+                    </div>
+                    <div class="col-xs-4">
+                        <span style="border-top: 1px solid black;">
+                            <b>Received By</b>
+                        </span>
+                    </div>
+                    <div class="col-xs-4">
+                        <span style="border-top: 1px solid black;">
+                            <b>Approved By</b>
+                        </span>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="landed_cost_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="purchase_landed_cost.landed_cost_report_template_document" />
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

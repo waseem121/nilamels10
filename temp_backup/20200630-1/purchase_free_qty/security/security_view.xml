@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="group_free_qty" model="res.groups">
+            <field name="name">Show Free Qty</field>
+            <!--<field name="category_id" ref="base.module_category_hidden"/>-->
+        </record>
+        
+        <record model="res.groups" id="base.group_user">
+            <field name="implied_ids" eval="[(4, ref('purchase_free_qty.group_free_qty'))]"/>
+        </record>
+
+    </data>
+</odoo>

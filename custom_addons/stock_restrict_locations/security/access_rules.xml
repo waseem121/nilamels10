@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright © Ryan Cole 2017-Present
+	- https://www.ryanc.me/
+	- admin@ryanc.me
+ 
+  Please see the LICENSE file for license details
+-->
+
+<openerp>
+	<data>
+
+
+<!-- For the "Warehouse: User" role - restrict access to records that have been explicitly allowed -->
+<record model="ir.rule" id="ir_values_stock_user_location">
+	<field name="name">Stock Location User</field>
+	<field name="model_id" ref="stock.model_stock_location"/>
+	<field name="domain_force">[("id", "in", [loc.id for loc in user.allowed_location_ids_computed])]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_user'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="False"/>
+	<field name="perm_unlink" eval="False"/>
+	<field name="perm_create" eval="False"/>
+    <field name="active" eval="False"/>
+</record>
+
+<record model="ir.rule" id="ir_values_stock_user_warehouse">
+	<field name="name">Stock Warehouse User</field>
+	<field name="model_id" ref="stock.model_stock_warehouse"/>
+	<field name="domain_force">[("id", "in", [wh.id for wh in user.allowed_warehouse_ids_computed])]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_user'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+<record model="ir.rule" id="ir_values_stock_user_picking">
+	<field name="name">Stock Picking User</field>
+	<field name="model_id" ref="stock.model_stock_picking"/>
+	<field name="domain_force">["|", ("location_id", "in", [loc.id for loc in user.allowed_location_ids_computed]), ("location_dest_id", "in", [loc.id for loc in user.allowed_location_ids_computed])]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_user'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+<record model="ir.rule" id="ir_values_stock_user_picking_type">
+	<field name="name">Stock Picking Type User</field>
+	<field name="model_id" ref="stock.model_stock_picking_type"/>
+	<field name="domain_force">[("id", "in", [picking.id for picking in user.allowed_picking_type_ids_computed])]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_user'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+
+<!-- Allow full un-restricted access for the "Warehouse: Manager" role -->
+<record model="ir.rule" id="ir_values_stock_manager_location">
+	<field name="name">Stock Location Manager</field>
+	<field name="model_id" ref="stock.model_stock_location"/>
+	<field name="domain_force">[(1, "=", 1)]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_manager'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+<record model="ir.rule" id="ir_values_stock_manager_warehouse">
+	<field name="name">Stock Warehouse Manager</field>
+	<field name="model_id" ref="stock.model_stock_warehouse"/>
+	<field name="domain_force">[(1, "=", 1)]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_manager'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+<record model="ir.rule" id="ir_values_stock_manager_picking">
+	<field name="name">Stock Picking Manager</field>
+	<field name="model_id" ref="stock.model_stock_picking"/>
+	<field name="domain_force">[(1, "=", 1)]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_manager'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="False"/>
+	<field name="perm_unlink" eval="False"/>
+	<field name="perm_create" eval="False"/>
+</record>
+<record model="ir.rule" id="ir_values_stock_manager_picking_type">
+	<field name="name">Stock Picking Type Manager</field>
+	<field name="model_id" ref="stock.model_stock_picking_type"/>
+	<field name="domain_force">[(1, "=", 1)]</field>
+	<field name="groups" eval="[(4, ref('stock.group_stock_manager'))]" />
+	<field name="perm_read" eval="True"/>
+	<field name="perm_write" eval="True"/>
+	<field name="perm_unlink" eval="True"/>
+	<field name="perm_create" eval="True"/>
+</record>
+
+
+
+	</data>
+</openerp>

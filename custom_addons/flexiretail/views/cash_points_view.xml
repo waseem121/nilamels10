@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="cash_points_form_view_acespritech" model="ir.ui.view">
+            <field name="name">Cash Points</field>
+            <field name="model">cash.points</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="approve_cash_point" states="draft" type="object" string="Approve" />
+                        <button name="cancel_cash_point" states="draft,approved" type="object" string="Cancel" />
+                        <button name="pay_cash_point" states="approved" string="Pay" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,paid,cancel"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="customer_id" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                                <field name="points" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                                <field name="cash_point" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                                <field name="cash_point_amt"/>
+                            </group>
+                            <group>
+                                <field name="account_move_id" invisible="1"/>
+                                <field name="date" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                                <field name="approved_date" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                                <field name="approved_by" attrs="{'readonly':[('state', 'not in', ['draft','approved'])]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <!--<notebook>-->
+                        <!--<page string="Payments">-->
+                            <!--<field name="account_move_line_ids"/>-->
+                        <!--</page>-->
+                    <!--</notebook>-->
+                </form>
+            </field>
+        </record>
+
+        <record id="cash_points_tree_view_acespritech" model="ir.ui.view">
+            <field name="name">Cash Points</field>
+            <field name="model">cash.points</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="customer_id"/>
+                    <field name="points"/>
+                    <field name="cash_point"/>
+                    <field name="date"/>
+                    <field name="approved_date" readonly="1"/>
+                    <field name="approved_by" readonly="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_cash_points_model" model="ir.actions.act_window">
+            <field name="name">Cash Points</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cash.points</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_item_cash_points_acespritech" name="Cash Points"
+            parent="account.menu_finance_receivables"
+            action="action_cash_points_model" sequence="101"/>
+
+    </data>
+</openerp>

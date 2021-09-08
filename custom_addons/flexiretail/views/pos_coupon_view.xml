@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_pos_coupon_form" model="ir.ui.view">
+            <field name="name">view.pos.coupon.form</field>
+            <field name="model">pos.coupon</field>
+            <field name="arch" type="xml">
+                <form string="Create Coupon">
+                    <sheet string="Coupon Details">
+                        <div style="color: #7c7bad;">
+                            <h2>
+                                <label string="Create Coupon" />
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="name" />
+                            <field name="validity"/>
+                        </group>
+                        <group>
+                            <notebook>
+                                <page string="Coupons">
+                                    <field name="line_ids" nolabel='1'/>
+                                </page>
+                                <page string="History">
+                                    <field name="coupon_history" nolabel='1'/>
+                                </page>
+                                <page string="Note">
+                                    <field name="coupon_note"/>
+                                </page>
+                            </notebook>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_coupon_line_tree" model="ir.ui.view">
+	        <field name="name">view.pos.coupon.line.tree</field>
+	        <field name="model">pos.coupon.line</field>
+	        <field name="arch" type="xml">
+	            <tree string="Coupon Line" editable="bottom">
+	                <field name="name"/>
+	                <field name="amount"/>
+	                <field name="remaining_amt"/>
+	                <field name="product_id"/>
+	                <field name="validity"/>
+	                <field name="date_create_line"/>
+	                <field name="date_expiry_line"/>
+	            </tree>
+	        </field>
+	    </record>
+
+	    <record id="view_pos_coupon_history_tree" model="ir.ui.view">
+	        <field name="name">view.pos.coupon.history.tree</field>
+	        <field name="model">pos.coupon.history</field>
+	        <field name="arch" type="xml">
+	            <tree string="Coupon History" editable="bottom">
+	                <field name="name" />
+	                <field name="used_amount"/>
+	                <field name="used_date"/>
+	                <field name="pos_order"/>
+	            </tree>
+	        </field>
+	    </record>
+
+        <record id="view_pos_coupon_tree" model="ir.ui.view">
+            <field name="name">view.pos.coupon.tree</field>
+            <field name="model">pos.coupon</field>
+            <field name="arch" type="xml">
+                <tree string="List of Coupons">
+                    <field name="name"/>
+                    <field name="validity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_pos_coupon" model="ir.actions.act_window">
+            <field name="name">Gift Coupon</field>
+            <field name="res_model">pos.coupon</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_pos_coupon_submain" name="Coupon Management" parent="point_of_sale.menu_point_root"
+            sequence='12'/>
+        <menuitem action="action_pos_coupon" id="pos_coupon_side_menu" name="Gift Coupons"
+            parent="menu_pos_coupon_submain" sequence='1'/>
+
+    </data>
+</openerp>

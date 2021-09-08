@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- For Add Quickview button into single carousel -->
+	<template id="clarico_carousel_quick_view_single_carousel" inherit_id="clarico_product_carousel.clarico_product_carousel_snippet_product">
+		<xpath expr="//div[@id='quickview_icon_carousel']" position="inside">
+			<a class="add2quick"  t-att-data-id="product.id">Quick View</a>
+		</xpath>
+	</template>
+	
+	<!-- For Add Quickview button into Multi carousel -->
+	<template id="clarico_carousel_quick_view_multi_carousel" inherit_id="clarico_product_carousel.clarico_product_carousel_static_carousel_snippet_product">
+		<xpath expr="//div[@id='quickview_icon_carousel']" position="inside">
+			<a class="add2quick"  t-att-data-id="product.id">Quick View</a>
+		</xpath>
+	</template>	
+</odoo>

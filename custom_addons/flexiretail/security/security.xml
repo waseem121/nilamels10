@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<!-- Miscellaneous Operations/Reporting -->
+		<menuitem id="point_of_sale.menu_point_rep" name="Reports" 
+			sequence="99" groups="point_of_sale.group_pos_manager,point_of_sale.group_pos_user"/>
+        <menuitem id="point_of_sale.menu_report_pos_order_all" name="Orders" action="point_of_sale.action_report_pos_order_all" 
+        parent="point_of_sale.menu_point_rep" sequence="3" groups="point_of_sale.group_pos_manager"/>
+        <menuitem id="point_of_sale.menu_report_order_details" name="Sale Details" action="point_of_sale.action_report_pos_details"
+         parent="point_of_sale.menu_point_rep" sequence="4" groups="point_of_sale.group_pos_manager"/>
+	</data>
+</odoo>

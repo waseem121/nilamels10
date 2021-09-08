@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="account_dynamic_reports.partner_ageing">
+        <t t-call="account_dynamic_reports.external_layout_partner_ageing">
+            <!--<t t-call="report.internal_layout">-->
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <style>
+                        .pims_report_content{
+                            font-size: 16px;
+                            font-family" 'Arial';
+                        }
+
+                        .pims_report_line_table {
+                            width:100%;
+                            border-collapse: collapse;
+                        }
+
+                        .pims_report_line_table thead{
+                            width: 100%;
+                            overflow: auto;
+                            border-bottom:2px solid grey;
+                        }
+
+                        .pims_report_line_main_tr {
+                            font-weight:bold;
+                            --background-color: cyan;
+                            border-bottom:1px solid grey;
+                        }
+
+                        .pims_report_line_initial_tr {
+                            font-style:italic;
+                        }
+
+                        .pims_report_line_subtotal {
+                            font-weight:bold;
+                            background-color: white;
+                            --border:1px solid grey;
+                        }
+                    </style>
+                    <h3><span t-esc="res_company.name"/>: Partner Ageing</h3>
+                    <!--<div>-->
+                    <div class="row mt32">
+
+                        <div class="row pims_report_content">
+                            <div class="col-xs-3">
+                                <strong>As on Date:</strong>
+                                <p t-esc="Filters['as_on_date']" t-options='{"widget": "date"}'></p>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Salesman:</strong>
+                                <p t-esc="Filters['sales_man']"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Partners:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in Filters['partners'] ])"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Partner Tags:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in Filters['categories'] ])"/>
+                            </div>
+                        </div>
+
+                        <br></br>
+                        <br></br>
+
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center">
+                                    <!--<th class="text-right" width="5%">Sr No</th>-->
+                                    <th class="text-left" width="3%">Sr No</th>
+                                    <th class="text-left" width="5%">Code</th>
+                                    <th width="15%">Partner</th>
+                                    
+                                    <!--<th class="text-right" width="5%">Credit Days</th>-->
+                                    
+                                    <t t-foreach="Period_List" t-as="period">
+                                        <th class="text-right" width="6%"><t t-esc="period"/></th>
+                                    </t>
+                                    <!--<th class="text-right" width="10%">Uncleared Receipts</th>-->
+                                    <!--<th class="text-right" width="5%">Balance</th>-->
+                                    <th class="text-right" width="10%">Amount Due</th>
+                                </tr>
+                            </thead>
+                            <t t-set="sr_no" t-value="1"/>
+                            <t t-foreach="sorted_partner" t-as="line">
+                                <t t-if="line != 'Total'">
+                                    <!--<t t-set="style" t-value="'font-weight: normal;'"/>-->
+                                    <t t-set="style" t-value="'font-weight: normal; padding-top:10px; line-height:20pt;'"/>
+                                    <tr class="pims_report_line_main_tr" t-att-style="style">
+                                        <t>
+                                            <td class="text-left" width="3%">
+                                                <span t-esc="sr_no"/>
+                                            </td>
+                                            <td class="text-left" width="5%">
+                                                <span t-esc="Ageing_data[line]['code']"/>
+                                            </td>                                            
+                                            <td width="15%">
+                                                <span t-esc="Ageing_data[line]['partner_name']"/>
+                                            </td>
+
+<!--                                            <td class="text-right" width="5%">
+                                                <span t-esc="Ageing_data[line]['credit_days']"/>
+                                            </td>-->
+
+                                        </t>
+                                        <t t-foreach="Period_List" t-as="period">
+                                            <td class="text-right" width="6%">
+                                                <span t-esc="'%.3f'%(Ageing_data[line][period])"/>
+                                            </td>
+                                        </t>
+<!--                                        <td class="text-right" width="10%">
+                                            <span t-esc="'%.3f'%(Ageing_data[line]['uncleared_receipts'])"/>
+                                        </td>-->
+<!--                                            <td class="text-right" width="5%">
+                                                <span t-esc="'%.3f'%(Ageing_data[line]['balance'])"/>
+                                            </td>-->
+                                        <td class="text-right" width="10%">
+                                            <span t-esc="'%.3f'%(Ageing_data[line]['amount_due'])"/>
+                                        </td>
+                                        <t t-set="sr_no" t-value="sr_no+1"/>
+                                    </tr>
+                            </t>
+                            </t>                            
+
+<!--                            <t t-foreach="Ageing_data" t-as="line">
+                                <t t-if="line != 'Total'">
+                                    <t t-set="style" t-value="'font-weight: normal;'"/>
+                                    <tr class="pims_report_line_main_tr" t-att-style="style">
+                                        <t>
+                                            <td width="15%">
+                                                <span t-esc="Ageing_data[line]['partner_name']"/>
+                                            </td>
+                                            <td class="text-right" width="5%">
+                                                <span t-esc="Ageing_data[line]['code']"/>
+                                            </td>
+                                            <td class="text-right" width="5%">
+                                                <span t-esc="Ageing_data[line]['credit_days']"/>
+                                            </td>
+                                            <td class="text-right" width="5%">
+                                                <span t-esc="'%.3f'%(Ageing_data[line]['balance'])"/>
+                                            </td>
+                                        </t>
+                                        <t t-foreach="Period_List" t-as="period">
+                                            <td class="text-right" width="6%">
+                                                <span t-esc="'%.3f'%(Ageing_data[line][period])"/>
+                                            </td>
+                                        </t>
+                                        <td class="text-right" width="10%">
+                                            <span t-esc="'%.3f'%(Ageing_data[line]['uncleared_receipts'])"/>
+                                        </td>
+                                        <td class="text-right" width="10%">
+                                            <span t-esc="'%.3f'%(Ageing_data[line]['amount_due'])"/>
+                                        </td>
+                                    </tr>
+                            </t>
+                            </t>-->
+                            <!--Totals-->
+                            <t t-set="style" t-value="'font-weight: bold;'"/>
+                            <tr class="pims_report_line_main_tr" t-att-style="style">
+                                <td></td>
+                                <td></td>
+                                <!--<td></td>-->
+                                <td>
+                                    <span>Total</span>
+                                </td>
+                                
+                                <t t-foreach="Period_List" t-as="period">
+                                    <td class="text-right" width="6%">
+                                        <span t-esc="'%.3f'%(Ageing_data['Total'][period])"/>
+                                    </td>
+                                </t>
+<!--                                <td class="text-right" width="10%">
+                                    <span t-esc="'%.3f'%(Ageing_data['Total']['uncleared_receipts'])"/>
+                                </td>-->
+                                <td class="text-right" width="10%">
+                                    <span t-esc="'%.3f'%(Ageing_data['Total']['amount_due'])"/>
+                                </td>
+                            </tr>
+                            
+                            
+                        </table>
+                    </div>
+                    <br></br>
+                    <p style="text-align:center"> *** END OF DOCUMENT ***</p>
+                </div>
+           <!--</t>-->
+        </t>
+    </template>
+    
+    
+        <record id="paperformat_partner_ageing" model="report.paperformat">
+            <field name="name">European A4</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <!--<field name="margin_top">40</field>-->
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <!--<field name="header_spacing">35</field>-->
+            <field name="header_spacing">50</field>
+            <field name="dpi">90</field>
+        </record>    
+
+    <report id="action_print_partner_ageing"
+        model="ins.partner.ageing"
+        report_type="qweb-pdf"
+        menu="False"
+        string="Partner Ageing"
+        name="account_dynamic_reports.partner_ageing"
+        file="account_dynamic_reports.partner_ageing"
+        paperformat="account_dynamic_reports.paperformat_partner_ageing"
+    />
+</odoo>

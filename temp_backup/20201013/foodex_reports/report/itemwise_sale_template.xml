@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="itemwise_sale_report_template_doc">
+            <div class="header">
+                <div>
+                     <div class="text-center">
+                        <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 75px;"/>
+                    </div>
+                    <div style="text-align:center">
+                        <h3><b style="border-bottom:2px solid black">Itemwise Sales Report</b></h3>
+                    </div>
+                </div>
+<!--                <t t-if="single_item">
+                    <div style="border:2px solid black;text-align:center">
+                        <t t-if="data">
+                            <b><span t-esc="data[0].product_id.default_code"></span></b>
+                            <br/>
+                            <b><span t-esc="data[0].product_id.name"/></b>
+                            <br/>
+                        </t>
+                    </div>
+                </t>-->
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-6" style="text-align:center">
+                        <span style="border-bottom:2px solid black; font-size:15px">
+                        <span><b> From : <span style="margin-left:10px" t-field="o.date_from"/></b></span>
+                        <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-field="o.date_to"/></b></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="border-bottom:3px solid black;margin-top:10px">
+                </div>
+            </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <t t-set="lines" t-value="get_lines(o)"/>
+                        <t t-foreach="lines" t-as="val1">
+                            <tr>
+                                <td colspan="8">
+                                    <strong>
+                                        <p class="text-center text-primary">Product : <span t-esc="val1"/></p>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Srl.</th>
+                                <th>Invoice Date</th>
+                                <th>Invoice No</th>
+                                <th>Cust. Name</th>
+                                <th>Qty Sold</th>
+                                <th>Free Qty</th>
+                                <th>Sales Price</th>
+                                <th>Total Cost</th>
+                                <th>Discount</th>
+                                <th>Amount</th>
+                            </tr>
+                            <t t-foreach="lines.get(val1)" t-as="val2_val">
+                                <tr>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['srl']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black;width:95px">
+                                        <t t-esc="val2_val['invoice_date']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['invoice_number']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['cust_name']"/>
+                                    </td>
+                                    
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="'%.3f'%val2_val['qty_sold']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="'%.3f'%val2_val['free_qty']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="'%.3f'%val2_val['price_unit']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="'%.3f'%val2_val['cost']"/>
+                                    </td>
+                                    
+                                    <td style="border-bottom:1px solid black" class="text-right">
+                                        <t t-esc="'%.3f'%val2_val['discount']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black" class="text-right">
+                                        <t t-esc="'%.3f'%val2_val['subtotal']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            
+                        </t>
+                                <tr style="padding-top:5px">
+                                    <br/><br/>
+                                    <td style="border-top:2px solid black;">
+                                        <b>Grand Total</b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black">
+
+                                        <b><span t-esc="'%.3f'%total_sold_qty"/></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                    <td style="border-top:2px solid black">
+                                        <b><span t-esc="'%.3f'%total_free_qty"/></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black">
+                                        <b><span t-esc="'%.3f'%total_cost"/></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black" class="text-right">
+                                        <b><span t-esc="'%.3f'%total_amount"></span></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                </tr>
+                     </table>
+                     
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="itemwise_sale_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.itemwise_sale_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_itemwise_sale_report" model="report.paperformat">
+            <field name="name">Itemwise Sales Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">52</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">52</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_item_wise_sale_report"
+            string="Itemwise Sale"
+            model="item.sale"
+            name="foodex_reports.itemwise_sale_report_template"
+            file="foodex_reports.itemwise_sale_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="foodex_reports.paperformat_itemwise_sale_report"
+            />
+    </data>
+</openerp>

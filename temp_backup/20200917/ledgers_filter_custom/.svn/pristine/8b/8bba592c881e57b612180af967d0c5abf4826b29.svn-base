@@ -1,0 +1,30 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;"> Partner, General ledger filters </h2>
+        <p class="text-center">
+            This module create two new reports in accouting report menu with the name of Single Partner Ledger and Single General Ledger. You can print single partner/single account report with this tool.
+        </p>
+        <h3 class="oe_slogan">Account Ledger filter,Partner Ledger filter menu under accounts reports.</h3>
+        <div class="oe_span12">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="Menu.PNG">
+            </div>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan">General ledger filter by accounts.</h3>
+        <div class="oe_span12">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="GL_Filters.PNG">
+            </div>
+        </div>
+    </div>
+    <div class="oe_row oe_spaced">
+        <h3 class="oe_slogan">Financial ledger filter by analytic accounts.</h3>
+        <div class="oe_span12">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <img src="Partner_Filters.PNG">
+            </div>
+        </div>
+    </div>
+</section>

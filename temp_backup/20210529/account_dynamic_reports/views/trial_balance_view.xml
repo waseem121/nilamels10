@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="account_dynamic_reports.trial_balance">
+        <t t-call="report.html_container">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <style>
+                        .pims_report_content{
+                            font-size: 14px;
+                            font-family" 'Arial';
+                        }
+
+                        .pims_report_line_table {
+                            width:100%;
+                            --table-layout: fixed;
+                            --word-break: break-all;
+                            border-collapse: collapse;
+                        }
+
+                        .pims_report_line_main_tr {
+                            font-weight:bold;
+                            background-color: cyan;
+                            border:1px solid grey;
+                        }
+
+                        .pims_report_line_initial_tr {
+                            font-style:italic;
+                        }
+
+                        .pims_report_line_subtotal {
+                            font-weight:bold;
+                            background-color: white;
+                            border-top:2px solid grey;
+                        }
+
+                        <!-- For TB Only -->
+
+                        .pims_report_line_tb {
+                            border:1px solid grey;
+                        }
+
+                        .pims_report_line_tb td {
+                            overflow: hidden;
+                        }
+
+                        .pims_report_line_tb td+td {
+                            width: auto;
+                        }
+
+                        .pims_tb_head {
+                            font-weight:bold;
+                            background-color: cyan;
+                            border:1px solid grey;
+                            text-align:right;
+                        }
+                    </style>
+                    <h3><span t-esc="res_company.name"/>: Trial Balance</h3>
+                    <div>
+
+                        <div class="row pims_report_content">
+                            <div class="col-xs-3">
+                                <strong>Display Account</strong>
+                                <p t-esc="Filters.get('display_accounts')"></p>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Journals:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in Filters['journals'] ])"/>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Date From:</strong>
+                                <p t-esc="Filters['date_from']" t-options='{"widget": "date"}'></p>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Date To:</strong>
+                                <p t-esc="Filters['date_to']" t-options='{"widget": "date"}'></p>
+                            </div>
+
+                        </div>
+                        <div class="row pims_report_content">
+                            <div class="col-xs-3">
+                                <strong>Analytic:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in Filters['analytics'] ])"/>
+                            </div>
+                        </div>
+                        <br></br>
+                        
+                        <!--############### withithout hirarchy-->
+                        <t t-if="not Filters['show_hierarchy']">
+                        <t t-if="Filters['show_debit_credit_balances']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+
+                                    <th style="text-align:right;padding-bottom:10px;">Initial Balance</th>
+                                    <th style="text-align:right;">Debit</th>
+                                    <th style="text-align:right;">Credit</th>
+                                    <th style="text-align:right;">Balance</th>
+                                    <th style="text-align:right;">Ending Balance</th>
+                                </tr>
+                            </thead>
+
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['initial_balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['credit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_balance'])"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+
+                            <t t-if="Filters['strict_range']">
+                                <t t-foreach="Retained" t-as="line"> <!-- Retained -->
+                                    <tr class="pims_report_line_tb"  style="font-weight:bold;">
+                                        <td colspan="1">
+                                            <span><t t-esc="Retained[line]['code']"/>   <t t-esc="Retained[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['initial_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['ending_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['initial_balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['balance'])"/>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_balance'])"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </t>
+                        </table>
+                        </t>
+                        <!--show debit credit balances end-->
+                        
+                        <!--show total debit credit start-->
+                        <t t-if="Filters['show_total_debit_credit']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right;">Total Debit</th>
+                                    <th style="text-align:right;">Total Credit</th>
+                                </tr>
+                            </thead>
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_credit'])"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_credit'])"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </table>
+                        </t>                        
+                        <!--show total debit credit end-->
+                        
+                        <!--show balances start-->
+                        <t t-if="Filters['show_balances']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right;">Opening Balance</th>
+                                    <th style="text-align:right;">Debit</th>
+                                    <th style="text-align:right;">Credit</th>
+                                    <th style="text-align:right;">Closing Balance</th>
+                                </tr>
+                            </thead>
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['initial_balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['credit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_balance'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['initial_balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_balance'])"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </table>
+                        </t>
+                        <!--show balances end-->
+                        
+                        </t>
+                        
+                        <!--############### with hirarchy-->
+                        <t t-if="Filters['show_hierarchy']">
+                            
+                            
+                        <t t-if="Filters['show_debit_credit_balances']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+
+                                    <th style="text-align:right;padding-bottom:10px;">Initial Balance</th>
+                                    <th style="text-align:right;">Debit</th>
+                                    <th style="text-align:right;">Credit</th>
+                                    <th style="text-align:right;">Balance</th>
+                                    <th style="text-align:right;">Ending Balance</th>
+                                </tr>
+                            </thead>
+
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+
+                                    
+                                        <td>
+                                            <t t-foreach="Ledger_data[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="Ledger_data[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['initial_balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['credit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_balance'])"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+
+                            <t t-if="Filters['strict_range']">
+                                <t t-foreach="Retained" t-as="line"> <!-- Retained -->
+                                    <tr class="pims_report_line_tb"  style="font-weight:bold;">
+                                        <td colspan="1">
+                                            <t t-foreach="Retained[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>                                            
+                                            <span><t t-esc="Retained[line]['code']"/>   <t t-esc="Retained[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['initial_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['ending_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                            <t t-foreach="Subtotal[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>                                        
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['initial_balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['balance'])"/>
+                                    </td>
+
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_balance'])"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </t>
+                        </table>
+                        </t>
+                        <!--show debit credit balances end-->
+                        
+                        <!--show total debit credit start-->
+                        <t t-if="Filters['show_total_debit_credit']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right;">Total Debit</th>
+                                    <th style="text-align:right;">Total Credit</th>
+                                </tr>
+                            </thead>
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+                                        <td>
+                                            <t t-foreach="Ledger_data[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_credit'])"/>
+                                        </td>
+
+                                    </tr>
+                                </t>
+
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_credit'])"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </table>
+                        </t>                        
+                        <!--show total debit credit end-->
+                        
+                        <!--show balances start-->
+                        <t t-if="Filters['show_balances']">
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right;">Opening Balance</th>
+                                    <th style="text-align:right;">Debit</th>
+                                    <th style="text-align:right;">Credit</th>
+                                    <th style="text-align:right;">Closing Balance</th>
+                                </tr>
+                            </thead>
+                                <t t-foreach="sorted_accounts" t-as="line">
+                                    
+                                    <t t-if="Ledger_data[line]['type'] != 'view'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="Ledger_data[line]['type'] == 'view'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+                                    
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style"> <!-- Normal lines -->
+                                        <td>
+                                            <t t-foreach="Ledger_data[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>                                            
+                                            <span><t t-esc="Ledger_data[line]['code']"/></span>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="Ledger_data[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>                                            
+                                            <span><t t-esc="Ledger_data[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['initial_balance'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['debit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['credit'])"/>
+                                        </td>
+                                        <td class="text-right" style="width:10%;">
+                                            <span t-esc="'%.3f'%(Ledger_data[line]['ending_balance'])"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            <t t-foreach="Subtotal" t-as="line"> <!-- Subtotal -->
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                            <t t-foreach="Subtotal[line]['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>                                        
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['initial_balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_balance'])"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </table>
+                        </t>
+                            
+                            
+<!--                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <tr class="text-center pims_tb_head">
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align:right;padding-bottom:10px;">Initial Balance</th>
+                                    <th style="text-align:right;">Debit</th>
+                                    <th style="text-align:right;">Credit</th>
+                                    <th style="text-align:right;">Balance</th>
+                                    <th style="text-align:right;">Ending Balance</th>
+                                </tr>
+                            </thead>
+
+                                <t t-foreach="Ledger_data" t-as="line">
+
+                                    <t t-if="line['parent'] != '0'"><t t-set="tr_style" t-value="'border-bottom:1px solid grey;'"/></t>
+                                    <t t-if="line['parent'] == '0'"><t t-set="tr_style" t-value="'border-bottom:2px solid black;font-weight:bold'"/></t>
+
+                                    <tr class="pims_report_line_tb" t-att-style="tr_style">  Normal lines 
+                                        <td colspan="1">
+
+                                            <t t-foreach="line['indent_list']" t-as="i">
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                                <span>&amp;nbsp;</span>
+                                            </t>
+
+                                            <t t-if="line['dummy']">
+                                                <t t-esc="line['code']"/>
+                                                -
+                                                <t t-esc="line['name']"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="line['code']"/>
+                                                -
+                                                <t t-esc="line['name']"/>
+                                            </t>
+
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['initial_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['ending_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+
+                            <t t-if="Filters['strict_range']">
+                                <t t-foreach="Retained" t-as="line">  Retained 
+                                    <tr class="pims_report_line_tb"  style="font-weight:bold;">
+                                        <td colspan="1">
+                                            <span><t t-esc="Retained[line]['code']"/>   <t t-esc="Retained[line]['name']"/></span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['initial_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['debit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['credit']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="Retained[line]['ending_balance']" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-foreach="Subtotal" t-as="line">  Subtotal 
+                                <tr class="pims_report_line_subtotal">
+                                    <td colspan="1">
+                                        <span><t t-esc="Subtotal[line]['code']"/>   <t t-esc="Subtotal[line]['name']"/></span>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['initial_balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['balance'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%(Subtotal[line]['ending_balance'])"/>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </t>
+                        </table>-->
+                            
+                        </t>
+                        
+                        
+                    </div>
+                    <br></br>
+                    <p style="text-align:center"> *** END OF DOCUMENT ***</p>
+                </div>
+           </t>
+        </t>
+    </template>
+
+    <report id="action_print_trial_balance"
+        model="ins.trial.balance"
+        report_type="qweb-pdf"
+        menu="False"
+        string="Trial Balance"
+        name="account_dynamic_reports.trial_balance"
+        file="account_dynamic_reports.trial_balance"
+        paperformat="report.paperformat_euro"
+    />
+</odoo>

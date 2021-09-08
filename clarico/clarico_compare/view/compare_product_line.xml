@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>	
+		<record id="compareproducttline_form_view" model="ir.ui.view">
+			<field name="name">compareproductline.form.view</field>
+			<field name="model">compare.product.line</field>
+			<field name="arch" type="xml">
+				<form string="List">
+					<sheet>
+						<group string="Attribute Information">
+							<group colspan="4">
+								<field name="name" />
+								<field name="attribute_ids" />
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="clarico_account_ecommerce_portal_my_account" name="Link to e-Commerce frontend portal"
+		inherit_id="clarico_layout.clarico_header_main">
+		<xpath expr="//ul[@id='logout_ul']//li[@id='o_logout']"
+			position="before">
+			<li>
+				<p class="ul_class_admin_name">
+					<i class="fa fa-user fa_common_style_header" style="padding-right: 9px;"></i>
+					<a href="/my/home">
+						<span class="span_logout"
+							t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name" />
+					</a>
+				</p>
+			</li>
+			<li>
+				<p class="ul_class_admin_name">
+					<i class="fa fa-shopping-cart fa_common_style_header"></i>
+					<a href="/shop/cart" class="span_logout">My Cart</a>
+				</p>
+			</li>
+			<li>
+				<p class="ul_class_admin_name">
+					<i class="fa fa-heart fa_common_style_header"></i>
+					<a href="/wishlist" class="span_logout">My Wishlist</a>
+				</p>
+			</li>
+			<li>
+				<p class="ul_class_admin_name">
+					<i class="fa fa-pie-chart fa_common_style_header"></i>
+					<a href="/my/orders" class="span_logout">My Orders</a>
+				</p>
+			</li>
+			<li>
+				<p class="ul_class_admin_name">
+					<i class="fa fa-usd fa_common_style_header" style="padding-right: 9px;"></i>
+					<a href="/my/invoices" class="span_logout">My Invoices</a>
+				</p>
+			</li>
+		</xpath>
+	</template>
+
+	<template id="website_portal.details">
+		<t t-call="website.layout">
+			<t t-set="additional_title">Contact Details</t>
+			<div id="wrap">
+				<div
+					class="breadcrumb-main-div col-sm-12 div_class_contact_details_page_padding">
+					<ol class="breadcrumb">
+						<li>
+							<a class="anch_class_op_myaccount" href="/my/home">My Account</a>
+						</li>
+						<li class="li_class_op_details">Details</li>
+					</ol>
+				</div>
+				<div class="container div_class_contact_details_page_padding">
+					<div class="row">
+
+					</div>
+					<h3 class="chs_heading">
+						Contact Details
+						<a href="/web/reset_password" class="reset-password-link">Reset Password</a>
+					</h3>
+					<form action="/my/account" method="post">
+						<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+						<div class="row o_website_portal_details mt32">
+							<div
+								class="col-md-8 div_class_contact_details_page_padding div_class_contact_details_responsive">
+								<div class="row">
+									<div class="col-md-12 pl0" style="min-height: auto;">
+										<div t-if="error_message" class="alert alert-danger">
+											<t t-foreach="error_message" t-as="err">
+												<t t-esc="err" />
+												<br />
+											</t>
+										</div>
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class pl0">
+										<label class="control-label label_style_my_account_contact_details"
+											for="contact_name">Your Name</label>
+										<input type="text" name="name" class="form-control"
+											t-att-value="name or partner.name" />
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class">
+										<label class="control-label label_style_my_account_contact_details"
+											for="contact_name">Email</label>
+										<input id="email_space_ckeck" type="email" name="email"
+											class="form-control" t-att-value="email or partner.email"
+											t-att-readonly="'readonly' if email or partner.email else ''" />
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class pl0">
+										<label class="control-label label_style_my_account_contact_details"
+											for="phone">Phone</label>
+										<input type="tel" name="phone" class="form-control"
+											t-att-value="phone or partner.phone" onkeypress="return isNumber(event)" />
+									</div>
+
+									<div class="clearfix" />
+									<div
+										t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class pl0">
+										<label
+											class="control-label label-optional label_style_my_account_contact_details"
+											for="street">Company Name</label>
+										<input type="text" name="company_name" class="form-control"
+											t-att-value="company_name or partner.company_name" />
+									</div>
+									<div t-if="has_check_vat"
+										t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class">
+										<label
+											class="control-label label-optional label_style_my_account_contact_details"
+											for="vat">VAT Number</label>
+										<input type="text" name="vat" class="form-control"
+											t-att-value="vat or partner.vat" />
+									</div>
+
+									<div class="clearfix" />
+									<div
+										t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6  col-md-6 my_account_label_font_class pl0">
+										<label class="control-label label_style_my_account_contact_details"
+											for="street">Street</label>
+										<input type="text" name="street" class="form-control"
+											t-att-value="street or partner.street" />
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class">
+										<label class="control-label label_style_my_account_contact_details"
+											for="city">City</label>
+										<input type="text" name="city" class="form-control"
+											t-att-value="city or partner.city" />
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class pl0">
+										<label class="control-label label_style_my_account_contact_details"
+											for="zipcode">Zip / Postal Code</label>
+										<input type="text" name="zipcode" class="form-control"
+											t-att-value="zipcode or partner.zip" />
+									</div>
+									<div class="clearfix" />
+									<div
+										t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class pl0">
+										<label class="control-label label_style_my_account_contact_details"
+											for="country_id">Country</label>
+										<select name="country_id" class="form-control" style="height:47px">
+											<option value="">Country...</option>
+											<t t-foreach="countries or []" t-as="country">
+												<option t-att-value="country.id"
+													t-att-selected="country.id == partner.country_id.id">
+													<t t-esc="country.name" />
+												</option>
+											</t>
+										</select>
+									</div>
+									<div
+										t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6 col-md-6 my_account_label_font_class">
+										<label
+											class="control-label label-optional label_style_my_account_contact_details"
+											for="state_id">State / Province</label>
+										<select name="state_id" class="form-control" style="height:47px">
+											<option value="">select...</option>
+											<t t-foreach="states or []" t-as="state">
+												<option t-att-value="state.id" style="display:none;"
+													t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
+													<t t-esc="state.name" />
+												</option>
+											</t>
+										</select>
+									</div>
+									<input type="hidden" name="redirect" t-att-value="redirect" />
+								</div>
+								<div class="clearfix">
+									<button type="submit"
+										class="btn btn-default btn-primary mt16 common-btn">
+										Confirm
+										<span class="fa fa-long-arrow-right" />
+									</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<script>
+
+				$('input#email_space_ckeck').keypress(function(e){
+				if(e.which === 32)
+				return false;
+				})
+				$(".btn_class_my_account_submit").click(function(){
+				$("#email_space_ckeck").val($("#email_space_ckeck").val().replace(/\s+/g,
+				''));
+				});
+			</script>
+		</t>
+	</template>
+
+	<!-- My Account -->
+	<template id="website_portal.account" name="Account">
+		<t t-call="website.layout">
+			<div id="wrap">
+				<div
+					class="container mb64 div_class_map_account_padding div_class_mb_responsive">
+					<div
+						class="col-md-9 o_my_documents div_class_map_account_padding div_class_mya_left">
+						<div class="oe_structure" />
+					</div>
+					<div t-if="sales_rep" class="col-md-3 div_class_mya_right">
+						<t t-call="website_portal.contact" />
+						<div class="oe_structure" />
+					</div>
+					<div id="o_my_sidebar" class="col-md-3 o_my_sidebar div_class_mya_right">
+						<div class="o_my_details">
+							<h3 class="page-header h3_class_account_heading">
+								Your Details
+								<a href="/my/account" class="btn btn-default btn-xs">
+									Change
+									<span class="fa fa-long-arrow-right i_class_arrow_map"></span>
+								</a>
+							</h3>
+							<div class="div_class_my_account_address" t-field="user.partner_id"
+								t-field-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}' />
+						</div>
+					</div>
+					<div class="col-md-12 oe_structure" />
+				</div>
+			</div>
+			<script type="text/javascript"
+				src="/clarico_account/static/src/js/portal_sale_address.js"></script>
+		</t>
+	</template>
+
+	<!-- Contact Address -->
+	<template id="website_portal.contact" name="Contact">
+		<h3 class="page-header h3_class_account_heading">Contact</h3>
+		<h5 t-esc="sales_rep.name" />
+		<p>
+			<a t-att-href="'mailto:'+sales_rep.email" t-esc="sales_rep.email" />
+		</p>
+		<p t-esc="sales_rep.phone" />
+		<p t-esc="sales_rep.city" />
+	</template>
+
+
+
+	<!-- Remove My Account Menu -->
+	<template id="website_portal.my_account_link" name="Link to frontend portal"
+		inherit_id="website.layout">
+		<xpath expr="//li[@id='o_logout']" position="before">
+
+		</xpath>
+	</template>
+
+	<!-- Manage your payment methods Link -->
+	<template id="website_payment.pay_meth_link" inherit_id="website_portal.account">
+		<xpath expr="//div[@class='o_my_details']" position="inside">
+			<p class="para_class_manage_your_order_link">
+				<a class="anch_class_manage_payment_method_link" href="/my/payment_method">
+					Manage your payment methods
+					<span class="fa fa-long-arrow-right i_class_arrow_payment_method"></span>
+				</a>
+			</p>
+		</xpath>
+	</template>
+
+	<!--website portal template override -->
+	<template id="website_portal_sale.account" name="Account"
+		inherit_id="website_portal.account">
+		<xpath expr="//div[contains(@class,'o_my_documents')]" position="inside">
+			<!-- <t t-call="website_portal_sale.quotations" /> -->
+			<t t-call="website_portal_sale.sale_orders" />
+			<t t-call="website_portal_sale.invoices" />
+		</xpath>
+	</template>
+
+	<template id="website_portal_sale.portal_my_quotations" name="Quotations">
+		<t t-call="website_portal.portal_layout">
+			<h3 class="page-header h3_class_account_heading">Your Quotes</h3>
+			<t t-if="not quotations">
+				<p class="para_class_quotation_warning">There are currently no quotes for your account.</p>
+			</t>
+			<t t-if="quotations">
+				<div class="table-responsive">
+					<table class="table o_my_status_table table_portal_sale">
+						<thead>
+							<tr class="active">
+								<th>Quotation #</th>
+								<th>Valid Until</th>
+								<th>Status</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<t t-foreach="quotations" t-as="quotation">
+							<tr
+								t-att-class="'hidden to_hide' if quotation.state!='sent' and quotation_index &gt; 4 else ''">
+								<td>
+									<a class="anch_class_ma_quotation_id" t-att-href="'/my/orders/'+str(quotation.id)">
+										<t t-esc="quotation.name" />
+									</a>
+								</td>
+								<td>
+									<span class="span_class_map_date" t-field="quotation.validity_date" />
+								</td>
+								<td>
+									<t t-if="quotation.state == 'cancel'">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa fa-fw fa-remove" />
+											Cancelled
+										</span>
+									</t>
+									<t
+										t-if="quotation.validity_date and quotation.validity_date &lt; date">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa fa-fw fa-clock-o" />
+											Expired
+										</span>
+									</t>
+								</td>
+								<td>
+									<span class="span_class_map_amount" t-esc="quotation.amount_total"
+										t-esc-options='{"widget": "monetary", "display_currency": "quotation.pricelist_id.currency_id"}' />
+								</td>
+							</tr>
+						</t>
+						<tr t-att-class="'hidden' if len(quotations) &lt; 6 else ''">
+							<td colspan="4">
+								<a class="o_my_show_more btn btn-sm btn-primary">
+									<span>
+										Show more
+										<i class="fa fa-plus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+									<span class="hidden">
+										Show less
+										<i class="fa fa-minus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+
+	<template id="website_portal_sale.portal_my_orders" name="Sales Orders">
+		<t t-call="website_portal.portal_layout">
+			<h3 class="page-header h3_class_account_heading">Your Orders</h3>
+			<t t-if="not orders">
+				<p class="para_class_quotation_warning">There are currently no orders for your account.</p>
+			</t>
+			<t t-if="orders">
+				<div class="table-responsive">
+					<table class="table o_my_status_table table_portal_sale">
+						<thead>
+							<tr class="active">
+								<th>Sale Order #</th>
+								<th>Order Date</th>
+								<th>Status</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<t t-foreach="orders" t-as="order">
+							<tr
+								t-att-class="'hidden to_hide' if order.state not in ['manual', 'progress'] and order_index &gt; 4 else ''">
+								<td>
+									<a class="anch_class_ma_quotation_id" t-att-href="'/my/orders/'+str(order.id)">
+										<t t-esc="order.name" />
+									</a>
+								</td>
+								<td>
+									<span class="span_class_map_date" t-field="order.create_date"
+										t-field-options='{"widget": "date"}' />
+								</td>
+								<td>
+									<t t-if="order.state == 'progress'">
+										<span class="label label-info btn_class_status_button_font">
+											<i class="fa fa-fw fa-clock-o" />
+											Invoiced
+										</span>
+									</t>
+									<t t-if="order.state in ['shipping_except','invoice_except']">
+										<span class="label label-danger btn_class_status_button_font">
+											<i class="fa fa-fw fa-warning" />
+											Problem
+										</span>
+									</t>
+									<t t-if="order.state == 'sale'">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa  fa-fw fa-clock-o" style="margin-right: 2px;" />
+											Pending
+										</span>
+									</t>
+									<t t-if="order.state == 'done'">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa fa-fw fa-check" />
+											Done
+										</span>
+									</t>
+								</td>
+								<td>
+									<span class="span_class_map_amount" t-esc="order.amount_total"
+										t-esc-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+								</td>
+							</tr>
+						</t>
+						<tr t-att-class="'hidden' if len(orders) &lt; 6 else ''">
+							<td colspan="4">
+								<a class="o_my_show_more btn btn-sm btn-primary">
+									<span>
+										Show more
+										<i class="fa fa-plus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+									<span class="hidden">
+										Show less
+										<i class="fa fa-minus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+
+	<template id="website_portal_sale.portal_my_invoices" name="Invoices and Payments">
+		<t t-call="website_portal.portal_layout">
+
+			<h3 class="page-header h3_class_account_heading">Your Invoices and Payments</h3>
+			<t t-if="not invoices">
+				<p class="para_class_quotation_warning">There are currently no invoices for your account.</p>
+			</t>
+			<t t-if="invoices">
+				<div class="table-responsive">
+					<table class="table o_my_status_table table_portal_sale">
+						<thead>
+							<tr class="active">
+								<th>Invoice #</th>
+								<th>Invoice Date</th>
+								<th>Due Date</th>
+								<th class="th_class_status_column_width">Status</th>
+								<th></th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<t t-foreach="invoices" t-as="invoice">
+							<tr
+								t-att-class="'hidden to_hide' if invoice.state!='open' and invoice_index &gt; 4 else ''">
+								<td>
+									<a target="_blank" class="anch_class_ma_quotation_id"
+										t-att-href="'/report/pdf/account.report_invoice/'+str(invoice.id)">
+										<t t-esc="invoice.number" />
+									</a>
+								</td>
+								<td>
+									<span class="span_class_map_date" t-field="invoice.date_invoice" />
+								</td>
+								<td>
+									<span class="span_class_map_date" t-field="invoice.date_due" />
+								</td>
+								<td>
+									<t t-if="invoice.state == 'open'">
+										<span class="label label-info btn_class_status_button_font">
+											<i class="fa fa-fw fa-clock-o" />
+											Waiting for Payment
+										</span>
+									</t>
+									<t t-if="invoice.state == 'paid'">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa fa-fw fa-check" />
+											Paid
+										</span>
+									</t>
+									<t t-if="invoice.state == 'cancel'">
+										<span class="label label-default btn_class_status_button_font">
+											<i class="fa fa-fw fa-remove" />
+											Cancelled
+										</span>
+									</t>
+								</td>
+								<td>
+									<a t-if="invoice.state == 'open'"
+										t-attf-href="/website_payment/pay?reference=#{invoice.number}&amp;amount=#{invoice.amount_total}&amp;currency_id=#{invoice.currency_id.id}&amp;country_id=#{invoice.partner_id.country_id.id}"
+										alt="Pay Now" class="btn btn-xs btn-primary btn_class_ma_paynow">
+										<i class="fa fa-arrow-circle-right icon_class_invoice_status" />
+										Pay Now
+									</a>
+								</td>
+								<td>
+									<span class="span_class_map_amount" t-esc="invoice.amount_total"
+										t-esc-options='{"widget": "monetary", "display_currency": "invoice.currency_id"}' />
+								</td>
+							</tr>
+						</t>
+						<tr t-att-class="'hidden' if len(invoices) &lt; 6 else ''">
+							<td colspan="5">
+								<a class="o_my_show_more btn btn-sm btn-primary">
+									<span>
+										Show more
+										<i class="fa fa-plus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+									<span class="hidden">
+										Show less
+										<i class="fa fa-minus i_class_show_more_btn_icon"
+											aria-hidden="true"></i>
+									</span>
+								</a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+
+	<template id="website_portal_sale.orders_followup" name="Sales Order">
+		<t t-call="website.layout">
+			<div id="wrap">
+				<div class="col-sm-12 breadcrumb-main-div div_class_myorders_page_padding">
+					<ol class="breadcrumb">
+						<li>
+							<a class="anch_class_op_myaccount" href="/my/home">My Account</a>
+						</li>
+						<li class="li_class_op_details">
+							<t t-if="order.state == 'sent'">
+								Quotation
+							</t>
+							<t t-if="order.state != 'sent'">
+								Order
+							</t>
+							<t t-esc="order.name" />
+
+						</li>
+					</ol>
+				</div>
+				<div class="container div_class_myorders_page_padding">
+					<div class="oe_structure">
+						<div class="row">
+
+						</div>
+					</div>
+					<div id="optional_placeholder"></div>
+					<div class="div_whole_class_panel">
+
+						<div class="panel">
+							<div class="panel-heading" t-if="order.name">
+								<div class="row">
+									<div class="col-md-12 div_class_myorders_page_padding">
+										<h4 class="h4_class_qp_quotation_heading">
+											<t t-if="order.state == 'sent'">
+												Quotation
+											</t>
+											<t t-if="order.state != 'sent'">
+												Order
+											</t>
+											<span t-esc="order.name" />
+											<span class="ml16 div_class_op_date">
+												Placed On:
+												<span t-field="order.create_date" t-field-options='{"widget": "date"}' />
+											</span>
+										</h4>
+									</div>
+								</div>
+							</div>
+							<div class="panel-body">
+								<t t-if="not len(order.order_line)">
+									<div class="row mt32">
+										<h1 class="h1_class_order_cancelled_status">Order: Cancelled</h1>
+									</div>
+								</t>
+								<div class='row div_class_op_address'>
+									<div class="div_main_class_invloicing_address">
+										<div t-if="order.partner_invoice_id">
+											<h5 class="h5_class_qp_invoicing_add_heading">Invoicing
+												Address</h5>
+										</div>
+										<div>
+											<address class="div_class_qp_address" t-field="order.partner_invoice_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+										</div>
+										<t t-set="invoices"
+											t-value="[i for i in order.invoice_ids if i.state not in ['draft', 'cancel']]" />
+										<t t-if="invoices">
+											<div class="div_class_op_invoice_link_main_class">
+												<h5 class="h5_class_qp_invoicing_add_heading">Invoices</h5>
+											</div>
+											<div class="div_class_op_invoice_link_sub_class">
+												<t t-foreach="invoices" t-as="i">
+													<t t-set="report_url" t-value="'/report/pdf/account.report_invoice/%s' % i.id" />
+													<div>
+														<a target="_blank" class="a_class_op_download_icon"
+															t-att-href="report_url">
+															<span class="fa fa-download" />
+														</a>
+														<a target="_blank" class="a_class_op_download_invoice_number"
+															t-att-href="report_url">
+															<span t-esc="i.number" />
+														</a>
+														<span class="span_class_op_download_invoice_data text-muted"
+															t-field="i.date_invoice" />
+														<t t-if="i.state == 'paid'">
+															<span
+																class="label label-success orders_label_text_align span_class_op_invoice_status_success ml4 btn_class_status_button_font">
+																<i class="fa fa-fw fa-check" />
+																Paid
+															</span>
+														</t>
+														<t t-if="i.state != 'paid'">
+															<span
+																class="label label-info orders_label_text_align span_class_op_invoice_status_info ml4 btn_class_status_button_font">
+																<i class="fa fa-fw fa-clock-o" />
+																Waiting
+															</span>
+														</t>
+													</div>
+												</t>
+											</div>
+										</t>
+									</div>
+									<div id="shipping_address" class="col-md-6"
+										t-if="order.partner_shipping_id">
+										<div>
+											<h5 class="h5_class_qp_invoicing_add_heading">Shipping Address</h5>
+										</div>
+										<div>
+											<address class="div_class_qp_address" t-field="order.partner_shipping_id"
+												t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+										</div>
+									</div>
+								</div>
+
+								<t t-if="len(order.website_order_line)">
+									<div class="div_whole_class_my_order_product_table">
+										<div class="row div_main_class_op_product_table">
+											<div class="col-sm-6 div_class_mo_product_heading">
+												<strong>Product</strong>
+											</div>
+											<div class="col-sm-2 div_class_mo_unit_price_heading">
+												<strong>Unit Price</strong>
+											</div>
+											<div class="col-sm-2 div_class_mo_unit_price_heading text-center">
+												<strong>Quantity</strong>
+											</div>
+											<div class="col-sm-2 text-right div_class_mo_unit_price_heading">
+												<strong>Subtotal</strong>
+											</div>
+										</div>
+
+										<t t-foreach="order.website_order_line" t-as="ol">
+											<div
+												class="row orders_vertical_align div_class_op_product_details_row">
+												<div class="col-sm-1 text-center div_class_mo_unit_product_image">
+													<img class="img_class_op_product_image"
+														t-att-src="'/web/image/product.product/%s/image_small/48x48' % ol.product_id.id" />
+												</div>
+												<div id='product_name' class="col-sm-5 div_class_mo_unit_product_attri">
+													<span t-esc="ol.product_id.name" />
+												</div>
+												<div class="col-sm-2 div_class_mo_unit_price_heading">
+													<span class="span_class_map_amount" t-field="ol.price_unit"
+														t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+												</div>
+												<div class="col-sm-2 div_class_mo_unit_price_heading text-center">
+													<t t-if="ol._name == 'sale.order.line'">
+														<span class="span_class_op_quantity" t-esc="int(ol.product_uom_qty)" />
+													</t>
+													<t t-if="ol._name == 'account.invoice.line'">
+														<span class="span_class_op_quantity" t-esc="int(ol.quantity)" />
+													</t>
+												</div>
+												<div class="col-sm-2 text-right div_class_mo_unit_price_heading">
+													<span class="span_class_map_amount" t-field="ol.price_subtotal"
+														t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+												</div>
+											</div>
+										</t>
+
+
+										<div class="row div_class_op_product_total_contact">
+											<div class="col-xs-6">
+												<div class="div_class_op_contact_heading">
+													<p>Contact</p>
+												</div>
+												<div class="div_class_qp_bottom_address mt8" t-field="order.partner_id"
+													t-field-options='{"widget": "contact", "fields": ["email", "phone"]}' />
+											</div>
+											<div class="col-xs-6 price_order_table">
+												<div class="row mb4">
+													<div class="col-xs-10 text-right div_class_untaxed_heading">
+														Sub Total&amp;nbsp;:
+													</div>
+													<div class="col-xs-2 text-right div_class_untaxed_amount">
+														<span t-esc="(order.amount_untaxed - order.amount_delivery)"
+															t-esc-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+													</div>
+												</div>
+												<div class="row mb4">
+													<div class="col-xs-10 text-right div_class_untaxed_heading">
+														Taxes&amp;nbsp;:
+													</div>
+													<div class="col-xs-2 text-right div_class_untaxed_amount">
+														<span t-field="order.amount_tax"
+															t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+													</div>
+												</div>
+												<div class="row mb4">
+													<div
+														class="col-xs-10 text-muted text-right div_class_untaxed_heading">
+														Delivery Cost&amp;nbsp;:
+													</div>
+													<div class="col-xs-2 text-right div_class_untaxed_amount">
+														<span class="text-muted" t-field="order.amount_delivery"
+															t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-xs-10 text-right div_class_op_total_heading">
+														<p>Total&amp;nbsp;:</p>
+													</div>
+													<div class="col-xs-2 text-right div_class_op_total_price">
+														<p>
+															<span t-field="order.amount_total"
+																t-field-options='{"widget": "monetary", "display_currency": "order.pricelist_id.currency_id"}' />
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</t>
+
+							</div>
+						</div>
+
+					</div>
+					<div class="oe_structure mb32" />
+				</div>
+			</div>
+		</t>
+	</template>
+
+	<!-- Add a link to the product page in the portal orders followup page -->
+	<template id="website_sale.orders_followup_products_links"
+		name="Orders Followup Products Links" inherit_id="website_portal_sale.orders_followup">
+		<xpath expr="//div[@id='product_name']/*" position="replace">
+			<div class="ml16">
+				<div class="div_class_op_product_sku" t-if="ol.product_id.default_code">
+					<span class="div_class_op_sku_left_bracket_left">[</span>
+					<t t-esc="ol.product_id.default_code"></t>
+					<span class="div_class_op_sku_left_bracket_right">]</span>
+				</div>
+
+				<p class="para_class_op_product_name" t-if="ol.product_id.website_published">
+					<a class="anch_class_op_product_name" t-att-href="ol.product_id.website_url"
+						t-field="ol.product_id.name"></a>
+				</p>
+				<t t-if="not ol.product_id.website_published">
+					<span t-field="ol.product_id.name" />
+				</t>
+				<t t-if="len(ol.product_id.attribute_value_ids)">
+					<div class="div_class_op_product_attribute">
+						<t t-set="total_attribute" t-value="0"></t>
+						<span class="div_class_op_attribute_left_bracket_left">(</span>
+						<t t-foreach="ol.product_id.attribute_value_ids" t-as="product_attributes">
+							<t t-if="total_attribute">,</t>
+							<span class="span_class_op_product_attribute">
+								<t t-esc="product_attributes.attribute_id.name"></t>
+							</span>
+							:
+							<span class="span_class_op_product_attribute">
+								<t t-esc="product_attributes.name"></t>
+							</span>
+							<t t-set="total_attribute" t-value="total_attribute + 1"></t>
+						</t>
+						<span class="div_class_op_attribute_left_bracket_right"> )</span>
+					</div>
+				</t>
+			</div>
+		</xpath>
+	</template>
+
+	<!-- Change Payment Methods Page -->
+	<template id="website_payment.pay_methods" name="Payment Methods">
+		<t t-call="website.layout">
+			<t t-set="additional_title">Payment Methods</t>
+			<div class="wrap">
+				<div class="col-sm-12 breadcrumb-main-div div_class_payment_page_padding">
+					<ol class="breadcrumb">
+						<li>
+							<a class="anch_class_op_myaccount" href="/my/home">My Account</a>
+						</li>
+						<li class="li_class_op_details">Payment Methods</li>
+					</ol>
+				</div>
+				<div class="container div_class_payment_page_padding">
+					<div class="row">
+
+					</div>
+					<h1 class="h1_class_pp_payment_methods_heading">Payment Methods</h1>
+					<h4 class="h1_class_pp_add_new_methods_heading" t-if="acquirers">Add a new
+						payment method:</h4>
+					<div t-if="acquirers" class="row">
+						<div
+							class="col-md-6 div_class_payment_page_padding div_class_payment_page_responsive">
+							<div t-if="error_message" class="alert alert-danger">
+								<t t-foreach="error_message" t-as="err">
+									<t t-esc="err" />
+									<br />
+								</t>
+							</div>
+							<div t-if='len(acquirers)>1'>
+								<label class="control-label" for="pm_acquirer_id">Acquirer</label>
+								<select name="pm_acquirer_id" class="form-control">
+									<t t-foreach="acquirers" t-as="acquirer">
+										<option t-att-value="acquirer.id" t-esc="acquirer.name" />
+									</t>
+								</select>
+							</div>
+							<t t-foreach="acquirers" t-as="acquirer">
+								<div t-raw="acquirer.form" t-att-data-acquirer-id="acquirer.id"
+									t-attf-class="acquirer #{'hidden' if acquirer!=acquirers[0] else ''}" />
+							</t>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+					<h4 class="h1_class_pp_add_new_methods_heading">Delete a payment method:</h4>
+					<div class="row">
+						<div class="col-md-6 div_class_payment_page_padding">
+							<form method="post" action="/website_payment/delete/">
+								<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+								<div class="form-group">
+									<select name="delete_pm_id" class="form-control">
+										<t t-foreach="pms" t-as="pm">
+											<option t-att-value="pm.id" t-esc="pm.name" />
+										</t>
+									</select>
+								</div>
+								<div class="clearfix"></div>
+								<button class="btn btn-primary">
+									Delete
+									<span class="fa fa-long-arrow-right"></span>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</t>
+	</template>
+
+	<!--Pay Payment Page -->
+	<template id="website_payment.pay">
+		<t t-call="website.layout">
+			<t t-set="additional_title">Payment</t>
+			<div class="wrap">
+				<div class="container o_website_payment div_class_payment_page_padding">
+					<h1 class="h1_class_pp_payment_methods_heading">Payment</h1>
+					<div class="row">
+						<div
+							class="col-md-6 div_class_payment_page_padding div_class_payment_page_responsive">
+							<div class="oe_structure"></div>
+							<div>
+								<div class="form-horizontal row o_website_payment_new_payment mt16"
+									t-att-data-acquirer_id="acquirer.id" t-att-data-currency_id="currency.id"
+									t-att-data-reference="reference" t-att-data-amount="amount">
+									<div class="form-group mb0">
+										<label for="form_reference"
+											class="col-sm-12 control-label label_reference_style_checkout">Reference</label>
+										<div class="col-sm-9 mt8">
+											<span name="form_reference" class="form-control text_box_reference"
+												t-esc="reference" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="form_amount"
+											class="col-sm-12 control-label label_amount_style_checkout">Amount</label>
+										<div class="col-sm-9 mt8">
+											<span name="form_amount" class="form-control text_box_amount"
+												t-esc="amount" />
+											<!-- <span name="form_amount" class="form-control" t-esc="amount" 
+												t-esc-options='{"widget": "monetary", "display_currency": "currency"}'/> -->
+										</div>
+									</div>
+									<div
+										class="col-sm-12 o_website_payment_form div_class_payment_page_padding"
+										t-raw="payment_form" />
+									<div
+										class="col-md-7 col-sm-9 col-xs-12 div_class_payment_page_padding text-muted mt16">
+										<img alt="payment_provider_logo" class="mr8"
+											t-att-src="website.image_url(acquirer, 'image_small')" />
+										<span
+											class="col-md-7 col-sm-5 col-xs-9 mt8 spna_class_Payment_process_font">
+											This transaction will be processed by
+											<t t-esc="acquirer.name" />
+											.
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</t>
+	</template>
+
+	<!--Payment Confirm Page -->
+	<template id="website_payment.confirm">
+		<t t-call="website.layout">
+			<t t-set="additional_title">Payment</t>
+			<div class="wrap">
+				<div class="container o_website_payment div_class_payment_page_padding">
+					<h1 class="h1_class_pp_payment_methods_heading">Payment</h1>
+					<div class="row">
+						<div
+							class="col-md-6 div_class_payment_page_padding div_class_payment_page_responsive">
+							<div class="form-horizontal">
+								<div t-attf-class="alert alert-#{status}" t-esc="message" />
+								<div class="form-group mb0">
+									<label for="form_partner_name"
+										class="col-sm-12 control-label label_reference_style_checkout">From</label>
+									<div class="col-sm-9 mt8">
+										<span name="form_partner_name" class="form-control"
+											t-esc="tx.partner_name" />
+									</div>
+								</div>
+								<div class="form-group mb0">
+									<label for="form_reference"
+										class="col-sm-12 control-label label_reference_style_checkout">Reference</label>
+									<div class="col-sm-9 mt8">
+										<span name="form_reference" class="form-control" t-esc="tx.reference" />
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="form_amount"
+										class="col-sm-12 control-label label_amount_style_checkout">Amount</label>
+									<div class="col-sm-9 mt8">
+										<span name="form_amount" class="form-control" t-esc="tx.amount"
+											t-esc-options='{"widget": "monetary", "display_currency": "tx.currency_id"}' />
+									</div>
+								</div>
+								<div class="col-sm-12 div_class_payment_page_padding">
+									<a t-attf-class="btn back_to_payment_btn btn-primary btn-#{status}"
+										href="/my/home">
+										<i class="fa fa-arrow-circle-right" />
+										Back to My Account
+									</a>
+								</div>
+								<div
+									class="col-md-7 col-sm-9 col-xs-12 div_class_payment_page_padding text-muted mt16">
+									<img alt="payment_provider_logo" class="pull-left mr8"
+										t-att-src="website.image_url(tx.acquirer_id, 'image_small')" />
+									<span
+										class="col-md-7 col-sm-5 col-xs-9 mt8 spna_class_Payment_process_font">
+										Payment processed by
+										<t t-esc="tx.acquirer_id.name" />
+										.
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</t>
+	</template>
+
+	<template id="clarico_account_portal_layout" inherit_id="website_portal.portal_layout">
+		<xpath expr="//div[@class='container mt16']" position="replace">
+			<div class="wizard-bg">
+				<div class="wizard-bg-maxW">
+					<a class="chs_heading mt8 mb8 my-account-center" href="/my/home">
+						My Account
+					</a>
+				</div>
+			</div>
+			<div class="container mt16 home_page_account">
+				<div class="navbar navbar-default">
+					<div class="navbar-header">
+						<!-- <button type="button" class="navbar-toggle" data-toggle="collapse" 
+							data-target="#oe-help-navbar-collapse"> <span class="sr-only">Toggle navigation</span> 
+							<span class="icon-bar"></span> <span class="icon-bar"></span> </button> -->
+					</div>
+					<div class="collapse navbar-collapse" id="oe-help-navbar-collapse">
+						<ul class="nav navbar-nav o_portal_submenu">
+
+						</ul>
+					</div>
+				</div>
+			</div>
+		</xpath>
+		<xpath expr="//div[@id='wrap']/div[@class='container mb64']"
+			position="replace">
+			<div id="wrap">
+				<div class="container mb64">
+					<div class="col-md-9 homepage_account_left_div">
+						<t t-raw="0" />
+					</div>
+					<div id="o_my_sidebar"
+						class="col-md-3 o_my_sidebar div_class_mya_right homepage_account_right_div">
+						<div class="o_my_details">
+							<h3 class="page-header h3_class_account_heading">
+								Your Details
+								<a href="/my/account" class="btn btn-default btn-xs change-btn">
+									Change
+									<span class="fa fa-long-arrow-right i_class_arrow_map"></span>
+								</a>
+							</h3>
+							<div class="div_class_my_account_address" t-field="user.partner_id"
+								t-field-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}' />
+						</div>
+					</div>
+				</div>
+			</div>
+		</xpath>
+	</template>
+
+
+
+	<template id="clarico_account_portal_my_home_menu_sale"
+		inherit_id="website_portal_sale.portal_my_home_menu_sale">
+		<xpath expr="//li" position="replace"></xpath>
+		<xpath expr="//li" position="replace"></xpath>
+		<xpath expr="//li" position="replace"></xpath>
+		<xpath expr="//ul[contains(@class,'o_portal_submenu')]"
+			position="inside">
+			<!-- <xpath expr="//ul[@class='nav navbar-nav o_portal_submenu']" position="replace"> -->
+			<ul class="nav navbar-nav o_portal_submenu">
+				<li class="portal-home-menu-li">
+					<a href="/my/quotes" style="padding-left: 0 !important;">Quotes</a>
+				</li>
+				<li class="portal-home-menu-li">
+					<a href="/my/orders">Orders</a>
+				</li>
+				<li class="portal-home-menu-li">
+					<a href="/my/invoices">Invoices</a>
+				</li>
+			</ul>
+		</xpath>
+	</template>
+
+	<template id="clarico_account_portal_my_home_sale" inherit_id="website_portal_sale.portal_my_home_sale">
+		<xpath expr="//h3[@class='page-header']" position="replace">
+			<h3 class="page-header_h3">
+				<a href="/my/quotes">
+					Your Quotes
+					<small class="ml8">
+						<t t-if="quotation_count">
+							<span class='badge_count'>
+								(
+								<t t-esc="quotation_count" />
+								)
+							</span>
+						</t>
+						<t t-if="not quotation_count">
+							(There are currently no quotes for your account.)
+						</t>
+					</small>
+				</a>
+			</h3>
+			<hr class="page-header-hr"></hr>
+			<h3 class="page-header_h3">
+				<a href="/my/orders">
+					Your Orders
+					<small class="ml8">
+						<t t-if="order_count">
+							<span class='badge_count'>
+								(
+								<t t-esc="order_count" />
+								)
+							</span>
+						</t>
+						<t t-if="not order_count">
+							There are currently no orders for your account.
+						</t>
+					</small>
+				</a>
+			</h3>
+			<hr class="page-header-hr"></hr>
+			<h3 class="page-header_h3">
+				<a href="/my/invoices">
+					Your Invoices and Payments
+					<small class="ml8">
+						<t t-if="invoice_count">
+							<span class='badge_count'>
+								(
+								<t t-esc="invoice_count" />
+								)
+							</span>
+						</t>
+						<t t-if="not invoice_count">
+							There are currently no invoices for your account.
+						</t>
+					</small>
+				</a>
+			</h3>
+			<hr class="page-header-hr"></hr>
+		</xpath>
+		<xpath expr="//h3[@class='page-header']" position="replace">
+
+		</xpath>
+		<xpath expr="//h3[@class='page-header']" position="replace">
+
+		</xpath>
+	</template>
+</odoo>

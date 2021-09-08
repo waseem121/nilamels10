@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_report_trial_balance_report_xls_view" model="ir.ui.view">
+        <field name="name">Trial Balance Report</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="account.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <button name="check_report" position="after">
+                or
+                <button name="print_xls" string="Print XLS" type="object" default_focus="1" class="oe_highlight"/>
+                or
+            </button>
+        </field>
+    </record>
+    
+</odoo>

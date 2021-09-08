@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_invoice_custom_document_foodex">
+    <t t-call="custom_invoice_report.external_layout_custom_invoice_foodex">
+        <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})" />
+        <div class="page">
+
+<!--            <div style="margin-left: 14.6cm">
+                <span>Salesperson: <span t-field="o.user_id.name"/></span>
+            </div>-->
+
+            <div style="margin-top: 0.2cm">
+            </div>
+            <!--<div style="margin-top: 1.6cm">-->
+            <div style="margin-top: 1.1cm">
+            </div>
+<!--                    <div class="not-first-page">
+
+                    </div>            -->
+
+            <table style="border: none;  border-collapse:separate;border-spacing:0 10px;">
+                    <tr t-foreach="o.invoice_line_ids" t-as="l" >
+                        <!--<td style="width: 2.2cm;text-align: left"><span t-field="l.product_id.default_code"/></td>-->
+                        <td style="width: 2.8cm;text-align: left"><span t-field="l.product_id.default_code"/></td>
+                        <!--<td style="width: 11.9cm;text-align: left"><span t-field="l.product_id.name"/></td>-->
+                        <!--<td style="width: 10cm;text-align: left"><span t-field="l.product_id.name"/></td>-->
+                        <td style="width: 9.5cm;text-align: left"><span t-field="l.product_id.name"/></td>
+                        
+<!--                    <td t-if="l.uom_id.name == 'PCS'" style="width: 1.5cm;text-align: center">
+                            <span>0</span>
+                    </td>
+                    <td t-if="l.uom_id.name != 'PCS'" style="width: 1.4cm;text-align: center">
+                            <span t-esc="int(l.quantity)+int(l.free_qty)"/>
+                    </td>-->
+                        <!--<td style="width: 1.5cm;text-align: left" ><span t-field="l.uom_id"/></td>-->
+                        <td style="width: 1.5cm;text-align: left" ><span t-field="l.uom_id"/></td>
+
+                        <!--cartn-->
+                        <td t-if="l.uom_id.name == 'PCS'" style="width: 1.5cm;text-align: right" >
+                            <span>0</span>
+                            
+                        </td>
+                        <td t-if="l.uom_id.name != 'PCS'" style="width: 1.5cm;text-align: right" >
+                            <!--<span t-esc="int(l.quantity)+int(l.free_qty)"/>-->
+                            <span t-esc="'{:,.3f}'.format(l.quantity + l.free_qty)" />
+                        </td>                        
+                        
+                        <!--pcs-->
+                       <td t-if="l.uom_id.name == 'PCS'" style="width: 1cm;text-align: right">
+                           <!--<span t-esc="int(l.quantity)+int(l.free_qty)"/>-->
+                           <span t-esc="'{:,.3f}'.format(l.quantity + l.free_qty)" />
+                        </td>
+                       <td t-if="l.uom_id.name != 'PCS'" style="width: 1cm;text-align: right">
+                            <span>0</span>
+                        </td>
+                        
+<!--                    <td t-if="l.uom_id.name == 'PCS'" style="width: 2.4cm;text-align: center">
+                            <span t-esc="int(l.quantity)+int(l.free_qty)"/>
+                    </td>
+                    <td t-if="l.uom_id.name != 'PCS'" style="width: 2.2cm;text-align: center">
+                            <span>0</span>
+                    </td>-->
+                                            
+                        
+                        <!--<td style="width: 2.8cm;text-align: left" >-->
+                        <!--<td style="width: 1.3cm;text-align: right" >-->
+                        <td style="width: 3.3cm;text-align: right" >
+                            <span t-field="l.price_unit"/>
+                        </td>
+
+                       <!--<td style="width: 2.5cm;text-align: right">-->
+                       <td style="width: 3cm;text-align: right">
+                            <span t-esc="'{:,.3f}'.format(l.price_unit * l.quantity)" />
+                        </td>
+                    </tr>                
+<!--                    <tr t-foreach="o.invoice_line_ids" t-as="l" >
+                        <td style="width: 4.7cm"><span t-field="l.product_id.default_code"/></td>
+                        <td style="width: 8cm"><span t-field="l.product_id.name"/></td>
+                        <td style="width: 1.5cm;text-align: right" ><span t-field="l.uom_id"/></td>
+
+                        <td style="width: 2.0cm;text-align: right" >
+                            <span t-field="l.quantity"/>
+                        </td>
+                        <td style="width: 3cm;text-align: right" >
+                            <span t-field="l.price_unit"/>
+                        </td>
+
+                       <td style="width: 3.5cm;text-align: right">
+                            <span t-esc="'{:,.3f}'.format(l.price_unit * l.quantity)" />
+                        </td>
+                    </tr>-->
+            </table>
+
+        </div>
+    </t>
+</template>
+
+<template id="report_invoice_custom_report_foodex">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="custom_invoice_report.report_invoice_custom_document_foodex" t-lang="o.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+
+</odoo>

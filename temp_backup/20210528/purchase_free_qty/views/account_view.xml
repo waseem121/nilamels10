@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="free_qty_vendor_bill_form" model="ir.ui.view">
+            <field name="name">account.invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='account_analytic_id']" position="replace"/>
+                <xpath expr="//field[@name='invoice_line_ids']//field[@name='analytic_tag_ids']" position="replace"/>
+                <xpath expr="//field[@name='invoice_line_ids']//tree//field[@name='quantity']" position="after">
+                    <field name="free_qty" groups="purchase_free_qty.group_free_qty"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="free_qty_invoice_form" model="ir.ui.view">
+            <field name="name">free.qty.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="quantity" position="after">
+                    <field name="free_qty" groups="purchase_free_qty.group_free_qty"/>
+                </field>                
+            </field>
+        </record>
+        
+        <record id="free_qty_invoice_form" model="ir.ui.view">
+            <field name="name">free.qty.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="quantity" position="after">
+                    <field name="free_qty" groups="purchase_free_qty.group_free_qty"/>
+                </field>                
+            </field>
+        </record>        
+        
+        <record id="free_qty_invoice_line_add_field" model="ir.ui.view">
+            <field name="name">free.qty.invoice.line.add.field</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="direct_sale.invoice_line_add_field"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='quantity']" position="after">
+                    <field name="free_qty" groups="purchase_free_qty.group_free_qty"/>
+                </xpath>                
+            </field>
+        </record>
+        
+    </data>
+</odoo>    

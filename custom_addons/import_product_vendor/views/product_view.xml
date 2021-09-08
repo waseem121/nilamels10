@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+     <record id="gen_product_wizard_view" model="ir.ui.view">
+        <field name="name">wizard for import product from csv and excel file </field>
+        <field name="model">import.product.vendor</field>
+        <field name="arch" type="xml">
+            <form string="Import Product Vendor">
+                <group>
+                    <field name="import_option" widget="radio" />
+                </group>
+                <group>
+                    <field name="file" filename="name"/>
+                </group>
+                <footer>
+                    <button name="import_product_vendor" string="Import" type="object"/>
+                    <button string="Cancel" class="oe_highlight" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+        <record id="import_product_vendor_wizard" model="ir.actions.act_window">
+            <field name="name">Import Product Vendor</field>
+            <field name="res_model">import.product.vendor</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+   <menuitem action="import_product_vendor_wizard"
+    id="import_product_vendor"
+     parent="sales_team.menu_sales"
+      />
+
+  </data>
+</openerp>
+ 

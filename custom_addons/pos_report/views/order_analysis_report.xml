@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <report 
+        string="Order Analysis" 
+        id="action_pos_order_analysis" 
+        model="pos.order.line" 
+        report_type="qweb-pdf"
+        name="pos_report.report_order_analysis" 
+        file="pos_report.report_order_analysis" 
+        attachment_use="True"
+         />
+         
+    
+<template id="report_order_analysis">
+	<t t-call="report.html_container">
+    <t t-call="report.internal_layout">
+        <div class="page">
+            <div class="row">
+                <div class="text-center">
+                <h2>Order Analysis</h2>
+            	</div>
+                
+                <table class="table table-bordered" width="100%" height="100%" style="border: 2px solid #000000;font-size:13px">
+                    <thead>
+                        <tr style="border: 1px solid black;">
+                            <th  height="10%" width="15%" class="text-center" style="border: 1px solid black;"><strong>Item Name</strong></th>
+                            <th height="10%"  width="10%" class="text-center" style="border: 1px solid black;"><strong>Quantity</strong></th>
+                            <th height="10%" width="10%"  class="text-center" style="border: 1px solid black;"><strong>Sold Price</strong></th>
+                            <th  height="10%" width="10%" class="text-center" style="border: 1px solid black;"><strong>Discount</strong></th>
+                            <th height="10%"  width="10%" class="text-center" style="border: 1px solid black;"><strong>Net Sale</strong></th>
+                            <th height="10%" width="10%"  class="text-center" style="border: 1px solid black;"><strong>Cost Of Sale</strong></th>
+                            <th  height="10%" width="10%" class="text-center" style="border: 1px solid black;"><strong>Profit</strong></th>
+                            <th height="10%"  width="10%" class="text-center" style="border: 1px solid black;"><strong>Profit Margin</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+								<tr t-foreach="pos_order" t-as="pos_order_line" style="border: 1px solid black;">
+		                                <td   height="10%" width="15%" class="text-center" style="border: 1px solid black;">
+		                                   <t t-esc="pos_order_line['item_name']"/>
+		                                </td >
+		                                <td height="10%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                   <t  t-esc="pos_order_line['qty']"/> 
+		                                </td>
+		                                <td height="10%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                   <t  t-esc="pos_order_line['sold_price']"/> 
+		                                </td>
+		                                <td height="100%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                    <t t-esc="pos_order_line['discount']"/>
+		                                </td> 
+		                                <td height="100%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                    <t t-esc="pos_order_line['net_sale']"/>
+		                                </td> 
+		                                <td height="100%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                    <t t-esc="pos_order_line['product_cost']"/>
+		                                </td> 
+		                                <td height="100%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                    <t t-esc="pos_order_line['profit']"/>
+		                                </td> 
+		                                <td height="100%" width="10%" class="text-center" style="border: 1px solid black;">
+		                                    <t t-esc="pos_order_line['profit_margin']"/> %
+		                                </td> 
+	                             </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+
+        </div>
+    </t>
+    </t>
+</template>
+
+</data>
+</odoo>

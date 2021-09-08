@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report 
+            id="report_sale_order_foodex"
+            string="Quotation Foodex"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="foodex_client.report_saleorder_foodex" 
+            name="foodex_client.report_saleorder_foodex" 
+        />
+        
+        <report 
+            id="report_sale_order_foodex_no_header"
+            string="Quotation Foodex Without Header"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="foodex_client.report_saleorder_foodex_no_header" 
+            name="foodex_client.report_saleorder_foodex_no_header" 
+        />
+    </data>
+    
+    
+    
+<template id="external_layout_foodex">
+    <!-- Multicompany -->
+    <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+    </t>
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="foodex_client.external_layout_header_foodex" />
+    <t t-raw="0" />
+    <t t-call="foodex_client.external_layout_footer_foodex" />
+</template>
+
+<template id="external_layout_header_foodex">
+    <div class="header">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <img t-if="company.header_image_qweb" t-att-src="'data:image/png;base64,%s' % company.header_image_qweb" />
+                    </div>
+                </div>
+<!--                <div class="col-xs-9 text-right">
+                    <img t-if="company.header_image_qweb"
+                         t-att-src="'data:image/png;base64,%s' % company.header_image_qweb"
+                         style="height: 100px;max-height: 150px;max-width: 430px;width: 430px"/>
+                </div>-->
+                
+<!--        <div class="row">
+            <div class="col-xs-3">
+                <img t-if="company.logo" t-att-src="'data:image/png;base64,%s' % company.logo" style="max-height: 45px;"/>
+            </div>
+            <div class="col-xs-9 text-right" style="margin-top:20px;" t-field="company.rml_header1"/>
+        </div>
+        <div class="row zero_min_height">
+            <div class="col-xs-12">
+                <div style="border-bottom: 1px solid black;"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-6" name="company_address">
+                <span t-field="company.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
+                    style="border-bottom: 1px solid black; display:inline-block;"/>
+            </div>
+        </div>-->
+    </div>
+</template>
+
+<template id="external_layout_footer_foodex">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+<!--            <ul t-if="not company.custom_footer" class="list-inline">
+                <t t-set="company" t-value="company.sudo()"/>
+                <li t-if="company.phone">Phone: <span t-field="company.phone"/></li>
+
+                <li t-if="company.fax and company.phone">&amp;bull;</li>
+                <li t-if="company.fax">Fax: <span t-field="company.fax"/></li>
+
+                <li t-if="company.email and company.fax or company.email and company.phone">&amp;bull;</li>
+                <li t-if="company.email">Email: <span t-field="company.email"/></li>
+
+                <li t-if="company.website and company.email or company.website and company.fax or company.website and company.phone">&amp;bull;</li>
+                <li t-if="company.website">Website: <span t-field="company.website"/></li>
+            </ul>-->
+            
+            <ul class="list-inline">
+                <li t-if="company.street"><span t-field="company.street"/></li>
+                <li t-if="company.street2"><span t-field="company.street2"/></li>
+                <li t-if="company.zip">Postal: <span t-field="company.zip"/></li>
+                <li t-if="company.city"><span t-field="company.city"/></li>
+                <li t-if="company.country_id"><t t-esc="company.country_id.name"/></li>
+                <li t-if="company.website"><span t-field="company.website"/></li>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span class="text-left">Page: </span><span class="page"/> / <span class="topage"/>
+            </ul>
+
+<!--            <ul t-if="not company.custom_footer" class="list-inline" name="financial_infos">
+                <li t-if="company.vat">TIN: <span t-field="company.vat"/></li>
+            </ul>
+
+            <t t-if="company.custom_footer">
+                <span t-raw="company.rml_footer"/>
+            </t>
+
+            <ul class="list-inline">
+                <li>Page:</li>
+                <li><span class="page"/></li>
+                <li>/</li>
+                <li><span class="topage"/></li>
+            </ul>-->
+        </div>
+    </div>      
+</template>
+
+
+
+
+
+<template id="external_layout_foodex_no_header">
+    <!-- Multicompany -->
+    <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+    </t>
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="foodex_client.external_layout_header_foodex_no_header" />
+    <t t-raw="0" />
+    <t t-call="foodex_client.external_layout_footer_foodex_no_header" />
+</template>
+
+<template id="external_layout_header_foodex_no_header">
+    <div class="header">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <!--<img t-if="company.header_image_qweb" t-att-src="'data:image/png;base64,%s' % company.header_image_qweb" />-->
+                    </div>
+                </div>
+    </div>
+</template>
+
+<template id="external_layout_footer_foodex_no_header">
+    <div class="footer">
+        <!--<div class="text-center" style="border-top: 1px solid black;">-->
+<!--            <ul class="list-inline">
+                <li t-if="company.street"><span t-field="company.street"/></li>
+                <li t-if="company.street2"><span t-field="company.street2"/></li>
+                <li t-if="company.zip">Postal: <span t-field="company.zip"/></li>
+                <li t-if="company.city"><span t-field="company.city"/></li>
+                <li t-if="company.country_id"><t t-esc="company.country_id.name"/></li>
+                <li t-if="company.website"><span t-field="company.website"/></li>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                <span class="text-left">Page: </span><span class="page"/> / <span class="topage"/>
+            </ul>-->
+        <!--</div>-->
+    </div>      
+</template>
+    
+    
+</odoo>

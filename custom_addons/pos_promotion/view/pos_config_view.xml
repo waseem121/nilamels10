@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="child_view_pos_config_form">
+            <field name="name">pos.config.form.view</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='features']" position="before">
+                        <group string="Promotion Rules">
+                            <field name="promotion_ids" nolabel="1"/>
+                        </group>
+                        <group string="Promotion Packs">
+                            <field name="pack_ids" nolabel="1"/>
+                        </group>
+
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</openerp>

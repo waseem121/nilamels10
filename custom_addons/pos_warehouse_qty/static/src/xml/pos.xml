@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+   <t t-name="ProductQty">
+        <span class="control-button product_qty">
+            Product Quantity
+        </span>
+    </t>
+
+    <t t-name="ProductQtyPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput">
+                <p class="title">Product Quantity</p>
+                <div><t t-esc="widget.prod_info"/></div>
+	            <table style="width:100%;font-size: 16px;">
+		            <tr style="background: #CCC; border-top: 1px solid gray;border-bottom: 1px solid gray;">
+		                <th style="text-align: left;padding-left: 15px;">Warehouse</th>
+		                <th style="text-align: right;padding-right: 15px;">Quantity</th>
+		            </tr>
+		            <t t-raw="widget.prod_info_data"/>
+		            <tr style="border-top: 1px solid gray;border-bottom: 1px solid gray;">
+		                <th style="text-align: left;padding-left: 15px;">Total</th>
+		                <td style="text-align: right;padding-right: 15px;"><t t-esc="widget.total_qty"/></td>
+		            </tr>
+                </table>
+                <div class="footer">
+                    <div class="button confirm">
+                        Close
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
