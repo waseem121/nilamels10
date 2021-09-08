@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+	<!-- Main Menu -->
+	
+	<menuitem id="menu_advance_procurement" 
+	 	name="Advance Reordering" 
+	 	parent='stock.menu_stock_root' 
+	 	sequence="3" />
+	 	
+	 <menuitem id="menu_forecast_sale_ept_root" 
+	 	name="Forecast Sale" 
+	 	parent='menu_advance_procurement' 
+	 	sequence="50" 
+	 	groups="inventory_coverage_report_ept.group_forecast_sale_ept"
+	 	/>
+	 	
+	 <!-- Forecast Sales --> 
+	<menuitem id="forcast_sale_ept_sub_menu_item" name="Forecast Sales"
+		parent="menu_forecast_sale_ept_root" action="forecast_sale_ept_action_window"
+		sequence="10" />
+	 		
+	<menuitem id="import_forecast_sales_menu_items" name="Import / Export"
+		action="import_forecast_sales_ept_window_action" parent="menu_forecast_sale_ept_root"
+		sequence="20"  />	
+		
+	<!--  Forecast Sales Rule -->
+	<menuitem id="menu_forecast_sale_rule_main_menu_ept" name="Forecast Sales Rule"
+		parent="menu_forecast_sale_ept_root" sequence="60" />
+		
+	<menuitem id="forecast_sale_rule_ept_menu_item_id" name="Forecast Sales Rule"
+		parent="menu_forecast_sale_rule_main_menu_ept" action="forecast_sale_rule_ept_action_window_id"
+		sequence="50"/>
+	
+	<menuitem id="import_forecast_sales_rule_menu_items" name="Import / Export"
+			action="import_forecast_sales_rule_ept_action" parent="menu_forecast_sale_rule_main_menu_ept"
+			sequence="70"/>
+			
+	<menuitem id="requisition_fiscal_period_menu_items" name="Periods"
+		parent="menu_forecast_sale_ept_root" action="requisition_period_ept_window_id"
+		sequence="70" />		
+	
+	<menuitem id="requisition_fiscal_year_menu_items" name="Years"
+		parent="menu_forecast_sale_ept_root" action="requisition_fiscal_year_ept_action_window_id"
+		sequence="80" />
+	
+	<menuitem id="menu_inventory_coverage_report_root" name="Reporting"
+			parent="menu_advance_procurement" sequence="90" groups="stock.group_stock_manager" />		 
+			
+	<menuitem id="menu_inventory_coverage_report_ept" name="Inventory Coverage" sequence="10"
+			action="action_inventory_coverage_report_ept" parent="menu_inventory_coverage_report_root"
+			 />
+	
+	<menuitem id="menu_requisition_product_suggestion_ept" name=" Product Recommendation"
+			action="action_requisition_product_suggestion_ept" parent="menu_inventory_coverage_report_root"
+			sequence="30" />
+	
+	<menuitem id="menu_forecast_sale_ept_report" name="Forecast Sales" sequence="50"
+			parent="menu_inventory_coverage_report_root" action="action_forecast_sales_ept_report"
+			groups="inventory_coverage_report_ept.group_forecast_sale_ept" />
+		
+	<menuitem id="menu_forecast_and_actual_sales_report" name="Forecast v/s Actual Sales" sequence="70"
+			parent="menu_inventory_coverage_report_root" action="action_forecasted_and_actual_sales_report_all"
+			groups="inventory_coverage_report_ept.group_forecast_sale_ept"
+			/>	
+			
+	<!--  Logs -->
+	<menuitem id="menu_requisition_logs_ept" name="Logs" parent="menu_advance_procurement" 
+		action='action_requisition_log' sequence="100"
+		groups="inventory_coverage_report_ept.group_forecast_sale_ept" />
+</odoo>

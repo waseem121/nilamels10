@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="clarico_wishlist_popover" inherit_id="website.layout">
+		<xpath expr="//div[last()]" position="after">
+		<div class="common-main-div" style="display:none">
+			<div class="filter-div-maxW">
+        		<p class="common-close-btn">X</p>
+        		<div class="common-continer"></div> 
+									
+        	</div>
+        	
+    	</div>
+    	</xpath>
+	</template>
+	<template id="clarico_wishlist_popover_data">
+		<div class="popover_common_wrap">
+			<div class="popover_common_container">
+			<t t-foreach="object" t-as="p">
+					<div class="popover_each_product_div">
+						<div class="product_img_popover">
+							<img t-att-src="'data:image/png;base64,%s' % p.product_id.image_small"></img>
+						</div>
+						<div class="name_price_comb_popover">
+							<div class="product_name_popover">
+								<a t-esc="p.product_id.name"></a>
+							</div>
+							<div class="product_price_popover">
+								<!-- <p t-esc="p.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"></p>
+								<strike class="wishlist-price-p strike-price" t-field="p.product_id.website_public_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+					 -->		
+					 			
+                           <div itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer" class="product_price" t-if="p.product_id.product_variant_ids">
+                            <p class="oe_price_h4 css_editable_mode_hidden">
+								<div class="price_comman_class">
+									<div class="price_comman_sub_class">
+									
+                            	
+		                        <p>
+		                            <t t-if="(compute_currency(p.product_id.lst_price) -p.product_id.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+		                               
+		                                <del class="text-danger mr8 common-price-pop" style="white-space: nowrap;" t-esc="compute_currency(p.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+		                            </t>
+									 <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
+					                t-esc="compute_currency(p.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if (compute_currency(p.product_id.lst_price) - p.product_id.website_price) &gt; 0.01 and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'" />
+					              
+		                            <!-- <span class="p-orignal-price" t-esc="p.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/> -->
+		                             <p class="oe_price" style="white-space: nowrap;" t-esc="p.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+		                            <span itemprop="price" style="display:none;" t-esc="p.product_id.website_price" />
+		                            <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+		                        </p>
+		                        
+		                        </div>
+								</div>
+		                         </p>
+		                          <h4 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="p.product_id.currency_id.decimal_places">
+					            <span t-field="p.product_id.lst_price"
+					                t-options='{
+					                   "widget": "monetary",
+					                   "display_currency": p.product_id.currency_id,
+					               }'/>
+					          </h4>
+					          <h4 class="hidden oe_not_available bg-warning">Product not available</h4>
+					    
+		                    </div>  
+		                   
+					 
+					 
+					 </div>
+						</div>
+					</div>
+			</t>
+			
+			</div>
+			<div class="view_common">
+				<a class="btn common-btn" href="/wishlist">View Wishlist</a>
+			</div>
+		</div>				
+	</template>
+</odoo>

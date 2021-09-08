@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="collection_report_format" model="report.paperformat">
+        <field name="name">Collection Report</field>
+        <field name="default" eval="True" />
+        <field name="orientation">Landscape</field>
+    </record>
+
+    <report id="collection_report"
+            string="Collection Report"
+            model="wizard.collection.report"
+            name="foodex.collection_report_template"
+            file="foodex.collection_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            />
+    
+    
+    <report id="custom_stock_report_van"
+            string="Stock Report Van"
+            model="stock.report.van"
+            name="foodex.custom_stock_report_van_template"
+            file="foodex.custom_stock_report_van_template"
+            report_type="qweb-pdf"
+            menu="False"
+            />
+
+</odoo>

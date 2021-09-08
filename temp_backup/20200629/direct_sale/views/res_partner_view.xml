@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- RES PARTNER -->
+	<record id="view_partner_form_direct_sale_syn" model="ir.ui.view">
+	    <field name="name">res.partner.form.direct.sale_syn</field>
+	    <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="base.view_partner_form"/>
+	    <field name="arch" type="xml">
+	        <field name="category_id" position="after">
+<!--	            <field name="customer_division_id" options="{'no_quick_create': True}" attrs="{'invisible': [('supplier','=',True)]}"/>
+                    <field name="customer_department_id" options="{'no_quick_create': True}" attrs="{'invisible': [('supplier','=',True)]}"/>-->
+	            <field name="customer_division_id" options="{'no_quick_create': True}"/>
+                    <field name="customer_department_id" options="{'no_quick_create': True}" attrs="{'invisible': [('supplier','=',True)]}"/>                    
+	        </field>                
+	        <field name="user_id" position="after">
+                    <field name="is_salesman" />
+                    <field name="is_collector" />
+	        </field>
+	    </field>
+	</record>
+
+</data>
+</openerp>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+            id="dynamic_product_page_report"
+            model="wizard.product.page.report"
+            string="Dynamic Product Page Label"
+            report_type="qweb-pdf"
+            name="flexiretail.dynamic_prod_page_rpt"
+            file="flexiretail.dynamic_prod_page_rpt"
+            menu="False"
+        />
+
+        <record id="paperformat_dynamic_page_label" model="report.paperformat">
+            <field name="name">Dynamic Page Paper Format</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">80</field>
+            <field name="report_ids" eval="[(6,0,[ref('flexiretail.dynamic_product_page_report')])]"/>
+        </record>
+
+        <report
+            id="dynamic_product_small_label_report"
+            model="wizard.product.small.label.report"
+            string="Dynamic Product Small Label"
+            report_type="qweb-pdf"
+            name="flexiretail.prod_small_lbl_rpt"
+            file="flexiretail.prod_small_lbl_rpt"
+            menu="False"/>
+
+        <record id="paperformat_dynamic_product_small_label" model="report.paperformat">
+            <field name="name">Dynamic Label Paper Format</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">30</field>
+            <field name="page_width">43</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+            <field name="report_ids" eval="[(6,0,[ref('flexiretail.dynamic_product_small_label_report')])]"/>
+        </record>
+
+        <report
+            id="report_pos_sales"
+            string="Z Report"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.pos_sales_report_template"
+            name="flexiretail.pos_sales_report_template"
+            menu="False"/>
+
+        <report
+            id="report_pos_sales_pdf"
+            string="Z Report(pdf)"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.pos_sales_report_pdf_template"
+            name="flexiretail.pos_sales_report_pdf_template"
+            menu="False"/>
+
+        <report
+            id="report_sales_details_pdf"
+            string="Sales Details"
+            model="wizard.sales.details"
+            report_type="qweb-pdf"
+            file="flexiretail.sales_details_pdf_template"
+            name="flexiretail.sales_details_pdf_template"
+            menu="False"
+        />
+
+        <report
+            id="report_sales_details_thermal"
+            string="Sales Details(Thermal)"
+            model="wizard.sales.details"
+            report_type="qweb-pdf"
+            file="flexiretail.sales_details_template"
+            name="flexiretail.sales_details_template"
+            menu="False"
+        />
+
+        <!-- Front -->
+        <report
+            id="report_pos_sales_front"
+            string="Z Report"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.front_sales_report_template"
+            name="flexiretail.front_sales_report_template"
+            menu="False"
+        />
+
+        <report
+            id="report_pos_sales_pdf_front"
+            string="Z Report(pdf)"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.front_sales_report_pdf_template"
+            name="flexiretail.front_sales_report_pdf_template"
+            menu="False"
+        />
+
+        <report
+            id="report_pos_sales_thermal_front_xreport"
+            string="Session Report"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.front_sales_thermal_report_template_xreport"
+            name="flexiretail.front_sales_thermal_report_template_xreport"
+            menu="False"
+        />
+        <report
+            id="report_pos_sales_pdf_front_xreport"
+            string="Session Report(pdf)"
+            model="pos.session"
+            report_type="qweb-pdf"
+            file="flexiretail.front_sales_report_pdf_template_xreport"
+            name="flexiretail.front_sales_report_pdf_template_xreport"
+            menu="False"
+        />
+
+        <record id="paperformat_session_receipt_pdf" model="report.paperformat">
+            <field name="name">Session Receipt PDF</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">80</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+            <field name="report_ids" eval="[(6,0,[ref('flexiretail.report_pos_sales_pdf'),
+                                                ref('flexiretail.report_sales_details_pdf'),
+                                                ref('flexiretail.report_pos_sales_front'),
+                                                ref('flexiretail.report_pos_sales_pdf_front'),
+                                                ref('flexiretail.report_pos_sales_pdf_front_xreport'),
+                                                ref('flexiretail.report_pos_sales_thermal_front_xreport')])]"/>
+        </record>
+
+        <record id="doctor_sale_report_format" model="report.paperformat">
+            <field name="name">Doctor Sale Report</field>
+            <field name="default" eval="True" />
+            <field name="orientation">Landscape</field>
+        </record>
+
+        <report
+            id="report_doctor_sale"
+            string="Doctor Sale"
+            model="wizard.pos.doctor.sale.report"
+            report_type="qweb-pdf"
+            file="flexiretail.report_doctor_sale_template"
+            name="flexiretail.report_doctor_sale_template"
+            menu="False"
+            paperformat="flexiretail.doctor_sale_report_format"
+        />
+    </data>
+</openerp>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="custom_stock_report_van_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h4>
+                            <span>Stock Report Van</span>
+                        </h4>
+                    </center>
+                    <div class="col-xs-12">
+                        <center>
+                            <h5 class="text-center">
+                                <span>From Date: <span t-field="o.date_from"/></span>&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                <span>To Date: <span t-field="o.date_to"/></span>&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                <span>Location: <span t-field="o.location_id"/></span>
+                            </h5>
+                        </center>
+                    </div>
+
+                        <div class="col-xs-14">
+                            <div style="border-bottom: 1px solid black;"></div>
+                        </div>
+                    
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Item Name</th>
+                                <th>Transfers IN</th>
+                                <th>Transfers Out</th>
+                                <th>Sales</th>
+                                <th>Returns</th>
+                                <th>Balance Qty</th>
+                                <th>Cost</th>
+                                <th>Balance Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-set="total_qty" t-value="0"/>
+                        <t t-set="total_cost" t-value="0"/>
+                            <tr t-foreach="o._get_report_lines()" t-as="line">
+                                <td><t t-esc="line['item_code']"/></td>
+                                <td><t t-esc="line['item_name']"/></td>
+                                <td><t t-esc="line['in_qty']"/></td>
+                                <td><t t-esc="line['out_qty']"/></td>
+                                <td><t t-esc="line['sales']"/></td>
+                                <td><t t-esc="line['returns']"/></td>
+                                <td><t t-esc="line['balance_qty']"/></td>
+                                <td><t t-esc="'%.3f'%(line['cost'])"/></td>
+                                <td class="text-right"><t t-esc="'%.3f'%(line['balance_cost'])"/></td>
+                                
+                                <t t-set="total_qty" t-value="total_qty + line['balance_qty']"/>
+                                <t t-set="total_cost" t-value="total_cost + line['balance_cost']"/>
+                            </tr>
+                            
+                                <tr style="padding-top:5px">
+                                    <br/><br/>
+                                    <td style="border-top:2px solid black;">
+                                        <b>Grand Total</b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black"></td>
+                                    
+                                    <td style="border-top:2px solid black"></td>
+                                    <td style="border-top:2px solid black"></td>                                    
+                                    <td style="border-top:2px solid black">
+
+                                        <b><span t-esc="'%.3f'%total_qty"/></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>                                    
+                                    <td style="border-top:2px solid black"></td>
+
+                                    <td style="border-top:2px solid black" class="text-right">
+                                        <b><span t-esc="'%.3f'%total_cost"></span></b>
+                                        <div style="border-bottom:1px solid black">
+                                        </div>
+                                        <div style="border-bottom:1px solid black;margin-top:2px">
+                                        </div>
+                                    </td>
+                                </tr>
+                                                            
+                        </tbody>
+                    </table>
+
+                    
+                </div>
+            </t>
+        </template>
+
+        <template id="custom_stock_report_van_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex.custom_stock_report_van_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

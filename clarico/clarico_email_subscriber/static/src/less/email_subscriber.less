@@ -1,0 +1,76 @@
+/*******************************
+* MODAL AS LEFT SIDEBAR
+*******************************/
+#EmailSubscriberModal{
+	overflow: visible;
+    z-index: 99999;
+    display: block;
+    background: rgba(0,0,0,0.6);
+    
+}
+
+/* ----- MODAL STYLE ----- */
+#EmailSubscriberModal .modal-content {
+	border-radius: 0;
+	border: none;
+	    background-image: url('/clarico_email_subscriber/static/src/img/imgpsh_fullsize.jpg');
+    background-size: cover;
+        height: 300px;
+		
+      
+	hr{
+		color: @theme-color;
+	    width: 69px;
+	    display: block;
+	    margin: 0px auto;
+	    border-top: 3px solid
+	}
+	.popup_subscribe_btn{
+		color: #ffffff;
+    	background-color: @theme-color;
+    	border-color: @theme-color;
+    	border-radius: 0;
+    	&:hover{
+	    	background-color: @theme-color;
+	    	border-color: @theme-color;
+    	}
+    	&:focus{
+	    	background-color: @theme-color;
+	    	border-color: @theme-color;
+    	}
+	}
+}
+
+#EmailSubscriberModal .modal-header {
+	border-bottom-color: #d4d4d4;
+	background-color: @theme-color;
+	color: #fff;
+	button.close{
+		color: #fff;
+	    opacity: 1;
+	    font-size: 28px;	
+	}
+}
+#no_thanks{
+	color: #ffffff;
+	background-color: @theme-color;
+	border-color: @theme-color;
+	border-radius: 0;
+	&:hover{
+    	background-color: @theme-color;
+    	border-color: @theme-color;
+	}
+	&:focus{
+    	background-color: @theme-color;
+    	border-color: @theme-color;
+	}
+}
+  #EmailSubscriberModal .modal-body {
+    padding: 50px;
+    }
+      #EmailSubscriberModal .modal-footer {
+    max-width: 94%;
+    }
+     #EmailSubscriberModal .modal-title {
+      font-family:@m-bold;
+    }

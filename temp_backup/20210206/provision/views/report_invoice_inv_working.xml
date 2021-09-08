@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+            <xpath expr="//t[@t-if='subst is True']" position="replace">
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                        var y = document.getElementsByClassName(x[i]);
+                        for (var j=0; j&lt;y.length; ++j)
+                        y[j].textContent = vars[x[i]];
+                        }
+                        var operations = {
+                        'not-first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "hidden" : "visible";
+                        },
+                        'first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "visible" : "hidden";
+                        },
+                        'last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
+                        },
+                        };
+                        for (var klass in operations) {
+                        var y = document.getElementsByClassName(klass);
+                        for (var j=0; j&lt;y.length; ++j)
+                        operations[klass](y[j]);
+                        }
+                        }
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="invoice_external_layout_header_inv">
+            <div class="header" style="font-size:15px;align:right">
+<!--                <div class="row">
+                    <div class="col-xs-12">
+                        <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                    </div>
+                </div>-->
+<!--                    <center>
+                        <h4>
+                            <strong><span>
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;                                
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;                                
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                CREDIT INVOICE</span>
+                            </strong>
+                        </h4>
+                        <h4 style="border-bottom:1px solid black">
+                        </h4>
+                    </center>-->
+                    <!--<br/>-->
+                    <table class="table">
+                        <table>
+                    <tr style="height:30px;">
+                        <th style="width:15%;border-bottom:1px solid black">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;border-bottom:1px solid black">
+                            <span>&amp;nbsp;</span>
+                        </td>
+                        <th style="width:40%;font-size: 18px;;border-bottom:1px solid black">&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            CREDIT INVOICE</th>
+                        <th style="width:5%;font-size: 18px;;border-bottom:1px solid black">&amp;nbsp;</th>
+                    </tr>                                                    
+                        </table>
+                    <table>
+<!--                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                        </td>
+                        <th style="width:40%;font-size: 20px;">&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            Credit Invoice</th>
+                    </tr>                        -->
+                        
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Customer Name.</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <!--<span>&amp;nbsp;</span>-->
+                            <span t-field="o.partner_id"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Invoice No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <strong>
+                                <span t-field="o.number"/>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Address</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <!--<span>&amp;nbsp;</span>-->
+                            <span t-field="o.partner_shipping_id.street"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.state_id.name"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.country_id.name"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Date</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <strong>
+                                <span t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                                <!--<span t-field="o.date_invoice" t-field-options='{"format": "d MMMM y"}'/>-->
+                            </strong>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Phone</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span t-field="o.partner_id.phone"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Job Order</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span t-field="o.job_number"/>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Contact Person                        
+                        </th>
+                        <!--4-->
+                        <td style="width:60%;font-size: 15px;">
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                            <strong><span>Mobile</span></strong>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;LPO No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span t-field="o.lpo_number"/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Salesman</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span t-field="o.user_id.name"/>
+                            <!--<span>&amp;nbsp;</span>-->
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;DN No</th>
+                        <td style="width:15%;font-size: 15px;">
+                            <span>DN</span><span t-field="o.number"/>
+                        </td>
+                    </tr>                    
+<!--                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                        </td>
+                        <th style="width:5%;">&amp;nbsp;Salesman</th>
+                        <td style="width:25%;font-size: 14px">
+                            <span t-field="o.user_id.name"/>
+                        </td>
+                    </tr>-->
+                    </table>
+                    </table>
+                
+            </div>
+<!--            <div class="header" style="height:45mm;width:100%;">
+                <div style="height:39mm;width:100%;"></div>
+                <table style="width:100%;border-top: 1px none black;">
+                    <tr>
+                        <th style="width:15%">
+                            <div class="not-first-page">Invoice No.</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.number"/>
+                            </div>
+                        </td>
+                        <th colspan="3"
+                            style="font-size:20px;text-align: center;border-top: 0px none black;;border-right: 0px none black;border-left: 0px none black;">
+                            <p/>
+                            <span t-if="o.payment_term_id.name == 'CASH'">
+                                Cash Invoice
+                            </span>
+                            <span t-if="o.payment_term_id.name != 'CASH'">
+                                Credit Invoice
+                            </span>
+                        </th>
+                        <th style="width:15%">
+                            <div class="not-first-page">Date</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>-->
+        </template>
+
+        <template id="invoice_external_layout_footer_inv">
+            <div class="footer">
+                <br/>
+                <t t-set="lines" t-value="len(o.invoice_line_ids_two)"/>
+                <t t-if="lines &lt;= 20">
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-top:1px solid black;border-bottom:1px solid black">
+                        <tr>
+                            <th style=";text-align: left;width:70%" rowspan="3">Remarks:
+                                <br/>
+                            </th>
+                            <td style="padding-top:2px;">
+                                <b>Gross Amount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;font-size: 18px;">
+                                <span t-esc="'%.3f' %(o.amount_untaxed+o.amount_tax)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Discount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;font-size: 18px;">
+                                <span t-esc="'%.3f' %(o.total_discount)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!--change this-->
+                            <td style="padding-top:2px;">
+                                <b>Net Amount</b>
+                            </td>
+                            <td style="padding-top:2px;;text-align: right;font-size: 18px;">
+                                <span t-esc="'%.3f' %(o.amount_total)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr>
+                            <!--<td style="width:50%;padding-top:2px;padding-bottom:2px;" colspan="8">-->
+                            <td colspan="8">
+                                <t t-if="o.get_amount_word()">
+                                    <span>KD</span>
+                                    <span t-esc="o.get_amount_word()[0]"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr style="width:50%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <td style="width:15%;">
+                                Payment Terms
+                            </td>
+                            <td style="width:10%;">
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                            <td style="width:10%;">
+                                Due Date -
+                            </td>
+                            <!--<td style="width:25%;">-->
+                            <td style="width:10%;">
+                                <span t-field="o.date_due" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                            <th class="text-left" style="font-size: 11px;">
+                                All item Received in Good Condition.
+                            </th>
+                        </tr>
+                    </table>
+<!--                    <div class="row">
+                        <br/>
+                        <p>FOR
+                            <span t-field="o.company_id.name"/>
+                        </p>
+                    </div>-->
+                    <!--<br/>-->
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                                <p>Provision General Trading Co W.LL
+                                </p>
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">Receiver Name</th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">Date</th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;"></th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                                Billing Signature
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">
+                                Authorised Signatory
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                Company Seal
+                            </th>
+                        </tr>
+                    </table>
+                    <br/>
+
+                </t>
+                <div class="not-first-page">
+                    <!--customer footer here-->
+                    
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-top:1px solid black;border-bottom:1px solid black">
+                        <tr>
+                            <th style=";text-align: left;width:70%" rowspan="3">Remarks:
+                                <br/>
+                            </th>
+                            <td style="padding-top:2px;">
+                                <b>Gross Amount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;font-size: 18px;">
+<!--                                <span t-esc="o.amount_untaxed+o.amount_tax"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>-->
+                                <span t-esc="'%.3f' %(o.amount_untaxed+o.amount_tax)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Discount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;font-size: 18px;">
+                                <span t-esc="'%.3f' %(o.total_discount)"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!--change this-->
+                            <td style="padding-top:2px;">
+                                <b>Net Amount</b>
+                            </td>
+                            <td style="padding-top:2px;;text-align: right;font-size: 18px;">
+                                <span t-esc="'%.3f' %(o.amount_total)"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr>
+                            <td colspan="8">
+                                <t t-if="o.get_amount_word()">
+                                    <span>KD</span>
+                                    <span t-esc="o.get_amount_word()[0]"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr style="width:50%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <td style="width:15%;">
+                                Payment Terms
+                            </td>
+                            <td style="width:10%;">
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                            <td style="width:10%;">
+                                Due Date -
+                            </td>
+                            <!--<td style="width:25%;">-->
+                            <td style="width:10%;">
+                                <span t-field="o.date_due" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                            <th class="text-left" style="font-size: 11px;">
+                                All item Received in Good Condition.
+                            </th>
+                        </tr>
+                    </table>
+<!--                    <div class="row">
+                        <br/>
+                        <p>FOR
+                            <span t-field="o.company_id.name"/>
+                        </p>
+                    </div>-->
+                    <!--<br/>-->
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                                <p>Provision General Trading Co W.LL
+                                </p>
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">Receiver Name</th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">Date</th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;"></th>
+                        </tr>
+                        <tr>
+                            <th style="width:32%;padding-top:2%;">
+                                Billing Signature
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">
+                                Authorised Signatory
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                Company Seal
+                            </th>
+                        </tr>                        
+                        
+                        
+                        
+<!--                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                <p>Provision General Trading Co W.LL
+                                </p>
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;">Receiver Name</th>
+                        </tr>
+                        <tr>
+                            <th style="width:60%;padding-top:2%;">
+                            </th>
+                            <th style="width:40%;padding-top:2px;height:30px;">Date</th>
+                        </tr>
+                        <tr>
+                            <th style="width:40%;padding-top:2%;">
+                                
+                            </th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            <th style="width:20%;padding-top:2px;height:30px;"></th>
+                            
+                        </tr>
+                        <tr>
+
+                            <th style="width:20%;padding-top:2px;height:30px;">Billing Signature
+                            </th>
+                            
+                            <th style="width:20%;padding-top:2px;height:30px;">Authorised Signatory
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                Company Seal                                
+                            </th>
+                        </tr>-->
+
+                    </table>                    
+
+                    <br/>
+                    <ul class="list-inline text-left">
+                        <li>Page:</li>
+                        <li>
+                            <span class="page"/>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>
+                <!--                <t t-if="printed">-->
+                <div class="not-last-page">
+                    <!--                    <t t-set="printed" t-value="0"/>-->
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                        <li class="text-right">
+                            P.T.O
+                        </li>
+                    </ul>
+                    <!--                    <ul class="list-inline text-right" style="font-size: 20px">-->
+                    <!--                        <ul>-->
+
+                    <!--                        </ul>-->
+                    <!--                    </ul>-->
+                </div>
+            </div>
+        </template>
+
+        <template id="invoice_external_layout_inv">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+                <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <!--<t t-call="report.external_layout_header" />-->
+            <t t-call="provision.invoice_external_layout_header_inv"/>
+            <t t-raw="0"/>
+            <t t-call="provision.invoice_external_layout_footer_inv"/>
+        </template>
+
+        <template id="report_invoice_document_inv">
+            <t t-call="provision.invoice_external_layout_inv">
+                <!--<t t-call="report.external_layout">-->
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page" style="font-size:15px;align:right">
+<!--                    <center>
+                        <h4>
+                            <strong><span>
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;                                
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;                                
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                Credit Invoice</span>
+                            </strong>
+                        </h4>
+                    </center>                    
+                    <br/>
+                    <table class="table">
+                    <table>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Customer Name.</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.partner_id"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Invoice No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <strong>
+                                <span>&amp;nbsp;</span>
+                                <span t-field="o.number"/>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Address</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.partner_shipping_id.street"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.state_id.name"/>
+                            &amp;nbsp;<span t-field="o.partner_shipping_id.country_id.name"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Date</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <strong>
+                                <span>&amp;nbsp;</span>
+                            <span t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </strong>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;Phone</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.partner_id.phone"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Job Order</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.job_number"/>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;LPO No</th>
+                        <td style="width:15%;font-size: 18px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.lpo_number"/>
+                        </td>
+                    </tr>
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;DN No</th>
+                        <td style="width:15%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span>DN</span><span t-field="o.number"/>
+                        </td>
+                    </tr>                    
+                    <tr style="height:20px;">
+                        <th style="width:15%;">&amp;nbsp;</th>
+                        <td style="width:60%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.partner_id.phone"/>
+                        </td>
+                        <th style="width:15%;">&amp;nbsp;Salesman</th>
+                        <td style="width:15%;font-size: 15px;">
+                            <span>&amp;nbsp;</span>
+                            <span t-field="o.user_id.name"/>
+                        </td>
+                    </tr>
+                    </table> -->
+                    
+                    <!--<table style="font-family: sans serif;margin-top:20px;width:100% !important;float:left;font-size: 13px;">-->
+                    <table style="font-family: sans serif;margin-top:5px;width:100% !important;float:left;font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom:1px solid black;border-top:1px solid black;width:100% !important;padding-bottom: 5px !important;">
+                                <td style="width:2% !important;">
+                                    <b>
+                                        Sl.<br/>No.
+                                    </b>
+                                </td>
+                                <td style="width:14% !important;">
+                                    <b>PCode</b>
+                                </td>
+                                <td style="width:50% !important;">
+                                    <b>Product Name</b>
+                                </td>
+                                <!--<td style="float:;width:5% !important;"> -->
+                                <!--    <b>UNIT</b> -->
+                                <!--</td> -->
+                                <td style="text-align:center;width:4% !important;">
+                                    <b>Unit</b>
+                                </td>
+                                <td class="text-right" style="width:4% !important;">
+                                    <b>Qty</b>
+                                </td>
+<!--                                <t t-if="o.location_id.name == 'MAIN STORE' ">
+                                    <td class="text-right" style="width:7% !important;">
+                                        <b>SELLING PRICE</b>
+                                    </td>
+                                </t>-->
+                                <td style=";text-align: right;width:8% !important;">
+                                    <b>Rate</b>
+                                </td>
+                                <td class="text-center" style="width:10% !important;">
+                                    <b>Disc</b>
+                                </td>
+                                <td style=";text-align: right;width:12% !important;">
+                                    <b>Amount</b>
+                                </td>
+                            </tr>
+                        </thead>
+                        <t t-set="sr_no" t-value="1"/>
+                        <tr t-foreach="o.invoice_line_ids" t-as="line" style="width:100% !important;height:30px">
+                            <td style="width:2% !important;">
+                                <span t-esc="sr_no"/>
+                            </td>
+                            <td style="width:15% !important;">
+                                <t t-if="line.product_id">
+<!--                                    <t t-if="line.product_id.default_code">
+                                        <span t-field="line.product_id.default_code"/>
+                                        <br/>
+                                    </t>-->
+                                    <t t-if="line.product_id.barcode">
+                                        <span t-field="line.product_id.barcode"/>
+                                    </t>
+                                </t>
+                            </td>
+                            <td style="width:50% !important;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td style="width:5% !important;text-align:center;">
+                                <span t-field="line.uom_id.name"/>
+                            </td>
+                            <td class="text-right" style="width:5% !important;">
+                                <!--<span t-esc="int(line.quantity)"/>-->
+                                <span t-esc="int(line.quantity)+int(line.free_qty)"/>
+                            </td>
+                            <t t-if="line.invoice_id.location_id.name == 'MAIN STORE' ">
+                                <td class="text-right" style="width:8% !important;">
+                                    <t t-if="line.product_id">
+                                        <span t-field="line.product_id.lst_price"/>
+                                    </t>
+                                </td>
+                            </t>
+                            <td style=";text-align: right;width:10% !important;">
+                                <!--<span t-field="line.price_unit"/>-->
+                                <span t-esc="'{:,.3f}'.format(line.price_unit)" />
+                                <!--                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>-->
+                            </td>
+                            <td class="text-center" style="width:9% !important;">
+                                <span t-esc=" '%.3f' % line.discount_amount"/>
+                            </td>
+                            <td style=";text-align: right;width:12% !important;">
+                                <span t-field="line.price_subtotal"
+                                      t-options="{'widget': 'float', 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                            <t t-set="sr_no" t-value="sr_no+1"/>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_invoice1_inv">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="provision.report_invoice_document_inv"/>
+                </t>
+            </t>
+        </template>
+    </data>
+
+</odoo>

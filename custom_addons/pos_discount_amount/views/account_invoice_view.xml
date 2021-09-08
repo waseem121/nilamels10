@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- to update old record for invoice-->
+    <function model="account.invoice" name="update_old_invoice" eval="[[]]"/>
+
+
+    <record id="view_account_invoice_view_extend_discount_type_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='user_id']" position="after">
+            <field name="discount_type" required="1" attrs="{'readonly': [('state','not in', ['draft'])]}"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_supplier_form_inherit_discount_form" model="ir.ui.view">
+        <field name="name">account.invoice.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/group[2]/field[@name='date_due']" position="after">
+                <field name="discount_type" required="1" attrs="{'readonly': [('state','not in', ['draft'])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

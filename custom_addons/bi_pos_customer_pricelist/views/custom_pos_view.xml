@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+		<!-- Add custom js for bi_pos_customer_pricelist -->	    
+        <template id="assets_for_bi_pos_customer_pricelist" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/bi_pos_customer_pricelist/static/src/js/bi_pos_customer_pricelist.js"/>
+            </xpath>
+        </template>
+        
+    </data>
+</openerp>

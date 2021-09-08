@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<!-- RES PARTNER -->
+	<record id="view_partner_form_debt" model="ir.ui.view">
+	    <field name="name">res.partner.form.debt</field>
+	    <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="account.view_partner_property_form"/>
+	    <field name="arch" type="xml">
+	        <field name="property_payment_term_id" position="after">
+	            <field name="debt"/>
+	        </field>
+			<field name="lang" position="after">
+				<field name="credit_limit"/>
+				<field name="remaining_credit_limit"/>
+			</field>
+	        <page name="accounting" position="after">
+	    		<page name="wallet" String="Wallet">
+	    			<group>
+	    				<field name="remaining_wallet_amount"/>
+	    			</group>
+	    			<group>
+	    				<field name="wallet_lines" nolabel='1'>
+	    					<tree create="true">
+	    						<field name="order_id"/>
+			                    <field name="cashier_id"/>
+			                    <field name="type"/>
+			                    <field name="debit"/>
+			                    <field name="credit"/>
+	    					</tree>
+	    				</field>
+	    			</group>
+	    		</page>
+	    	</page>
+	    </field>
+	</record>
+
+    <record id="acespritech_view_partner_property_form" model="ir.ui.view">
+        <field name="name">acespritech.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="point_of_sale.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="barcode" position="before">
+                <group col="4" colspan="4">
+                    <field name="prefer_ereceipt"/>
+                </group>
+            </field>
+        </field>
+    </record>
+
+	<record id="view_tg_partner_tree" model="ir.ui.view">
+	    <field name="name">res.partner.tree.debt</field>
+	    <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="base.view_partner_tree"/>
+	    <field name="arch" type="xml">
+	        <field name="display_name" position="after">
+	            <field name="debt"/>
+	        </field>
+	    </field>
+	</record>
+
+	<record id="res_partner_kanban_view" model="ir.ui.view">
+	    <field name="name">pos_debt_notebook.res.partner.kanban</field>
+	    <field name="model">res.partner</field>
+	    <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+	    <field name="arch" type="xml">
+	        <field name="mobile" position="after">
+	            <field name="debt"/>
+	        </field>
+	        <xpath expr="//div[@class='oe_kanban_details']/ul" position="inside">
+	            <li t-if="record.debt.raw_value">Debt: <field name="debt"/></li>
+	        </xpath>
+	        <field name="state_id" position="before">
+                <field name="remaining_amount"/>
+            </field>
+            <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                  <span t-if="record.remaining_amount.value>0" class="badge"><i class="fa fa-id-card"/><t t-esc="record.remaining_amount.value"/></span>
+            </xpath>
+	    </field>
+	</record>
+
+
+</data>
+</openerp>

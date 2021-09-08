@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<template id="index" inherit_id="point_of_sale.index">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/flexiretail/static/src/js/pos.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/screens.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/popups.js"></script>
+
+                <script type="text/javascript" src="/flexiretail/static/src/js/jquery.simplePagination.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/lib/js/jquery.timepicker.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/lib/js/jquery.datetimepicker.full.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/lib/js/jquery-barcode.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/lib/js/canvasjs.min.js"></script>
+
+                <link rel="stylesheet" href="/flexiretail/static/src/css/pos.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/reservation.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/list_view.css" id="pos-stylesheet"/>
+                <!-- <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/> -->
+                <link rel="stylesheet" href="/flexiretail/static/src/fonts/font-awesome-4.2.0/css/font-awesome.min.css" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/simple-sidebar.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/jquery.timepicker.css" id="pos-stylesheet" />
+                <!--<link rel="stylesheet" href="/flexiretail/static/src/css/jquery.datetimepicker.css" id="pos-stylesheet" />-->
+                <link rel="stylesheet" href="/flexiretail/static/src/css/datepicker.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/graph_view.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/theme_yellow_green.css" id="pos-stylesheet" />
+                <link rel="stylesheet" href="/flexiretail/static/src/css/pos_mirror_image.css" id="pos-stylesheet" />
+                <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css"/>-->
+                <!--<script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>-->
+        </xpath>
+        </template>
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/flexiretail/static/src/css/message.css" />
+                <link rel="stylesheet" href="/flexiretail/static/src/less/message.less" type="text/less"/>
+
+                <link rel="stylesheet" href="/web/static/src/less/variables.less"/>
+                <link rel="stylesheet" href="/web/static/src/less/utils.less"/>
+                <link rel="stylesheet" href="/web/static/src/less/mimetypes.less"/>
+
+                <link rel="stylesheet" href="/mail/static/src/less/chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/extended_chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/thread.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/composer.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
+            </xpath>
+        </template>
+
+        <template id="assets_backend" name="flexiretail assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/flexiretail/static/src/js/web.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/lib/js/jscolor/jscolor.js"></script>
+                <script type="text/javascript" src="/flexiretail/static/src/js/widget.js"></script>
+                <link rel="stylesheet" href="/flexiretail/static/src/css/widget.css"/>
+            </xpath>
+        </template>
+
+    </data>
+</openerp>

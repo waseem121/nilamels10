@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="itemwise_sale_report_form" model="ir.ui.view">
+            <field name="name">item.sale</field>
+            <field name="model">item.sale</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="partner_ids" widget="many2many_tags"  domain = "[('customer','=',True)]"/>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="categ_ids" widget="many2many_tags"/>
+                        <field name="brand_ids" widget="many2many_tags"/>
+                        <field name="invoice_type"/>
+                        <field name="location_ids" widget="many2many_tags"/>
+                        <field name="salesperson_id"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_itemwise_sale_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_itemwise_sale" model="ir.actions.act_window">
+            <field name="name">Itemwise Sale Report</field>
+            <field name="res_model">item.sale</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="itemwise_sale_report_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_itemwise_sale"
+            id="menu_itemwise_sale" sequence="18"/>
+
+    </data>
+</odoo>

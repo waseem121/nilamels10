@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="account.action_report_trial_balance" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="gts_coa_hierarchy_v10.paperformat_trial_balance"/>
+        </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="aspl_gift_card_product" model="product.product">
+            <field name="name">Gift Card Product</field>
+            <field name="available_in_pos">True</field>
+            <field name="type">service</field>
+            <field name="sale_ok">True</field>
+            <field name="taxes_id"/>
+            <field name="supplier_taxes_id" />
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="inventory_adjustment_print_wizard_view" model="ir.ui.view">
+        <field name="name">Print Inventory</field>
+        <field name="model">wizard.inventory.adjustment.print</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="type"/>
+                </group>
+                <footer>
+                    <button name="print_report1" type="object" string="Print Report"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_inventory_adjustment_print" model="ir.actions.act_window">
+        <field name="name">Invoice</field>
+        <field name="res_model">wizard.inventory.adjustment.print</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <act_window id="action_inventory_adjustment"
+                name="Variant Report"
+                src_model="stock.inventory"
+                res_model="wizard.inventory.adjustment.print"
+                view_mode="form"
+                key2="client_action_multi"
+                target="new"/>
+
+</odoo>

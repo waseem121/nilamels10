@@ -1,0 +1,9 @@
+import res_config
+import product_template
+import requisition_fiscal_year_ept
+import requisition_period_ept
+import forecast_sale_ept
+import forecast_sale_rule_ept
+import forecast_sale_rule_line_ept
+import requisition_log
+import requisition_log_line 

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="front_sales_report_template">
+           <receipt align='center' width='40' value-thousands-separator='' >
+                <t t-foreach="docs" t-as="receipt">
+                    <div size='double-height' style="font-size:20px;" align="center">
+                        Z Report
+                    </div>
+                    <div align="center">
+                        ================
+                    </div>
+                    <line>
+                        <left>
+                            <pre>Report Date</pre>
+                        </left>
+                        <right t-esc="receipt.get_current_date()"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Report Time</pre>
+                        </left>
+                        <right t-esc="receipt.get_current_time()"/>
+                    </line>
+                    <br/>
+                    <line>
+                        <left>
+                            <pre>Register #</pre>
+                        </left>
+                        <right>1</right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Batch #</pre>
+                        </left>
+                        <right t-esc="receipt.name"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Batch Status</pre>
+                        </left>
+                        <right t-esc="receipt.state"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Start Date</pre>
+                        </left>
+                        <right t-esc="receipt.get_session_date(receipt.start_at)"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Start Time</pre>
+                        </left>
+                        <right t-esc="receipt.get_session_time(receipt.start_at)"/>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Cashier</pre>
+                        </left>
+                        <right t-esc="receipt.user_id.name"/>
+                    </line>
+                    <br/>
+                    <line>
+                        <left>
+                            <pre>Opening Total</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.cash_register_balance_start'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Sales</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_sales()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Returns</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_returns()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Tax</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_tax()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <line>
+                        <left>
+                            <pre>Discount Amount</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_discount()'/>
+                            </value>
+                        </right>
+                    </line>
+                    <!--<line>-->
+                        <!--<left>-->
+                            <!--<pre>Coupon Amount</pre>-->
+                        <!--</left>-->
+                        <!--<right>-->
+                            <!--<value>-->
+                                <!--<t t-esc='receipt.get_total_coupon()'/>-->
+                            <!--</value>-->
+                        <!--</right>-->
+                    <!--</line>-->
+<!--                     <line> -->
+<!--                         <left> -->
+<!--                             <pre>Redeem Amount</pre> -->
+<!--                         </left> -->
+<!--                         <right> -->
+<!--                             <value> -->
+<!--                                 <t t-esc='receipt.get_total_redeem()'/> -->
+<!--                             </value> -->
+<!--                         </right> -->
+<!--                     </line> -->
+                    <line>
+                        <left>
+                            <pre>Gross Total</pre>
+                        </left>
+                        <right>
+                            <value>
+                                <t t-esc='receipt.get_total_first()'/>
+                            </value>
+                        </right>
+                    </line>
+<!--                     <t t-if="receipt.get_user()"> -->
+<!--                         <line> -->
+<!--                             <left> -->
+<!--                                 <pre>Gross Profit</pre> -->
+<!--                             </left> -->
+<!--                             <right> -->
+<!--                                 <value> -->
+<!--                                     <t t-esc='receipt.get_gross_total()'/> -->
+<!--                                 </value> -->
+<!--                             </right> -->
+<!--                         </line> -->
+<!--                         <line> -->
+<!--                             <left> -->
+<!--                                 <pre>Net Gross Profit</pre> -->
+<!--                             </left> -->
+<!--                             <right> -->
+<!--                                 <value> -->
+<!--                                     <t t-esc='receipt.get_net_gross_total()'/> -->
+<!--                                 </value> -->
+<!--                             </right> -->
+<!--                         </line> -->
+<!--                     </t> -->
+                    <br/>
+                    <t t-foreach="receipt.get_payments()" t-as="l">
+                        <line>
+                            <left>
+                                <pre><t t-esc="l.get('name')"/></pre>
+                            </left>
+                            <right>
+                                <t t-esc="l.get('sum')"/>
+                            </right>
+                        </line>
+                    </t>
+                    <br/>
+                    <t t-if="receipt.get_product_category()">
+                        <line>
+                            <left>
+                                Department Sales:
+                            </left>
+                        </line>
+                        <br/>
+                        <t t-foreach="receipt.get_product_category()" t-as="l">
+                            <line>
+                                <left>
+                                    <pre><t t-esc="receipt.get_product_name(l.get('pos_categ_id'))"/></pre>
+                                </left>
+                                <right>
+                                    <t t-esc="l.get('price')"/>
+                                </right>
+                            </line>
+                        </t>
+                        <line>
+                            <right>
+                                ===========
+                            </right>
+                        </line>
+                        <line>
+                            <right>
+                                <t t-esc="receipt.get_product_cate_total()"/>
+                            </right>
+                        </line>
+                    </t>
+                </t>
+            </receipt>
+        </template>
+
+    </data>
+</openerp>

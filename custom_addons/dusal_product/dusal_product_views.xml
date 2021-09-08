@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+	<record model="ir.ui.view" id="dusal_product_template_form_view">
+	    <field name="name">dusal.product.template.common.form</field>
+	    <field name="model">product.template</field>
+	    <field name="inherit_id" ref="product.product_template_form_view"/>
+	    <field name="arch" type="xml">
+		<data>
+		    <xpath expr="//div[@name='standard_price_uom']" position="attributes">
+			<attribute name="groups">base.group_sale_manager_dusal</attribute>
+		    </xpath>
+		    <xpath expr="//label[@for='standard_price']" position="attributes">
+			<attribute name="groups">base.group_sale_manager_dusal</attribute>
+		    </xpath>
+        <xpath expr="//field[@name='list_price']|//field[@name='lst_price']" position="attributes">
+      <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+        </xpath>
+		</data>
+	    </field>
+	</record>
+	<record model="ir.ui.view" id="dusal_product_template_tree_view">
+	    <field name="name">dusal.product.template.product.tree</field>
+	    <field name="model">product.template</field>
+	    <field name="inherit_id" ref="product.product_template_tree_view"/>
+	    <field name="arch" type="xml">
+		<data>
+		    <xpath expr="//field[@name='standard_price']" position="attributes">
+			<attribute name="groups">base.group_sale_manager_dusal</attribute>
+		    </xpath>
+        <xpath expr="//field[@name='list_price']" position="attributes">
+			<attribute name="groups">base.group_dusal_show_saleprice</attribute>
+		    </xpath>
+		</data>
+	    </field>
+	</record>
+	<record model="ir.ui.view" id="dusal_product_variant_easy_edit_view">
+	    <field name="name">dusal.product.product.view.form.easy</field>
+	    <field name="model">product.product</field>
+	    <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+	    <field name="arch" type="xml">
+		<data>
+		    <xpath expr="//field[@name='standard_price']" position="attributes">
+			<attribute name="groups">base.group_sale_manager_dusal</attribute>
+		    </xpath>
+
+		</data>
+	    </field>
+	</record>
+  <record id="product_template_kanban_view_dusal" model="ir.ui.view">
+      <field name="name">Product.template.product.kanban.dusal</field>
+      <field name="model">product.template</field>
+      <field name="inherit_id" ref="product.product_template_kanban_view"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//field[@name='lst_price']" position="attributes">
+  			       <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+  		    </xpath>
+          <xpath expr="//kanban/templates/t/div/div/ul/li/field[@name='lst_price']" position="attributes">
+  			       <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+  		    </xpath>
+        </data>
+      </field>
+	</record>
+
+  <record id="product_product_tree_view_dusal" model="ir.ui.view">
+      <field name="name">product.product.tree.dusal</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_product_tree_view"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//field[@name='lst_price']" position="attributes">
+  			       <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+  		    </xpath>
+        </data>
+      </field>
+  </record>
+
+
+
+  <record id="product_kanban_view_dusal" model="ir.ui.view">
+      <field name="name">Product Kanban dusal</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_kanban_view"/>
+      <field name="arch" type="xml">
+        <data>
+          <xpath expr="//field[@name='lst_price']" position="attributes">
+  			       <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+  		    </xpath>
+          <xpath expr="//kanban/templates/t/div/div/ul/li/field[@name='lst_price']" position="attributes">
+               <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+          </xpath>
+        </data>
+
+      </field>
+  </record>
+  <record id="product_variant_easy_edit_view_dusal" model="ir.ui.view">
+      <field name="name">product.product.view.form.easy</field>
+      <field name="model">product.product</field>
+      <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='lst_price']" position="attributes">
+             <attribute name="groups">base.group_dusal_show_saleprice</attribute>
+        </xpath>
+
+      </field>
+  </record>
+
+
+    </data>
+</openerp>

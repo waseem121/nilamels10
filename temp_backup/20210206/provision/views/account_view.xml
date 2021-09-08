@@ -1,0 +1,91 @@
+<odoo>
+  <data>
+      
+    <record id="view_account_form_is_bank" model="ir.ui.view">
+        <field name="name">view.account.form.is_bank</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="deprecated" position="before">
+                <field name="is_bank" attrs="{'invisible': [('internal_type','!=','liquidity')]}"/>
+<!--                <label for="auto_reconcile" attrs="{'invisible': [('internal_type','=','liquidity')]}"/>
+                <div attrs="{'invisible': [('internal_type','=','liquidity')]}">
+                   <field name="auto_reconcile"/>
+                   <button name="action_open_auto_reconcile" class="oe_link" type="object" string=" -> Auto Reconcile" attrs="{'invisible': [('auto_reconcile', '=', False)]}"/>
+                </div>-->
+            </field>
+        </field>
+    </record>
+      
+    <record id="invoice_line_add_field_provision_inherit" model="ir.ui.view">
+        <field name="name">invoice.line.add.field.provision.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="direct_sale.invoice_line_add_field" />
+        <field name="arch" type="xml">
+            <field name="partner_shipping_id" position="after">
+                <field name="x_picking_id"/>
+            </field>
+            <field name="location_id" position="after">
+                <field name="lpo_number"/>
+                <field name="job_number"/>
+            </field>            
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='uom_id']" position="replace">
+                <!--<field name="uom_id" groups="product.group_uom" tabindex="-1" string="UOM"/>-->
+            </xpath>
+            
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='price_unit']" position="replace"></xpath>
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='discount']" position="replace"></xpath>
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='discount_amount']" position="replace"></xpath>
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='lot_ids']" position="replace"></xpath>
+            
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='available_qty']" position="replace"></xpath>
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='forecast_qty']" position="replace"></xpath>
+            
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='quantity']" position="after">
+                <field name="uom_id" groups="product.group_uom" string="UOM" tabindex="-1"/>
+                <field name="price_unit" digits="(10, 3)"/>
+                <!--<field name="price_unit"/>-->
+                <!--<field name="price_unit"/>-->
+                <field name="discount" groups="sale.group_discount_per_so_line" string="Disc.(%)" digits="(10, 3)"/>
+                <field name="discount_amount" groups="sale.group_discount_per_so_line" digits="(10, 3)"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='price_subtotal']" position="after">
+                <field name="price_subtotal_editable" tabindex="-1" digits="(10, 3)"/>
+                <field name="available_qty" tabindex="-1"/>
+                <field name="forecast_qty" tabindex="-1"/>
+                <field name="name" tabindex="-1"/>
+            </xpath>
+            
+        </field>
+    </record>      
+    
+    
+    <record id="view_move_form_data_entry_inherit_provision" model="ir.ui.view">
+        <field name="name">view.move.form.data.entry.inherit.provision</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_powersports.view_move_form_data_entry"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="x_job_no"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='amount_currency']" position="replace">
+            </xpath>
+            <xpath expr="//tree/field[@name='currency_id']" position="replace">
+            </xpath>
+            <xpath expr="//tree/field[@name='exchange_rate']" position="replace">
+            </xpath>
+            <xpath expr="//tree/field[@name='credit']" position="after">
+                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency" />
+                <field name="exchange_rate" digits="(10, 6)"/>
+                <field name="amount_currency" groups="base.group_multi_currency" />
+            </xpath>
+        </field>
+    </record>
+      
+
+  </data>
+</odoo>

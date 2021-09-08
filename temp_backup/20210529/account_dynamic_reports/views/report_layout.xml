@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+            <xpath expr="//t[@t-if='subst is True']" position="replace">
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                        var y = document.getElementsByClassName(x[i]);
+                        for (var j=0; j&lt;y.length; ++j)
+                        y[j].textContent = vars[x[i]];
+                        }
+                        var operations = {
+                        'not-first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "hidden" : "visible";
+                        },
+                        'first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "visible" : "hidden";
+                        },
+                        'last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
+                        },
+                        };
+                        for (var klass in operations) {
+                        var y = document.getElementsByClassName(klass);
+                        for (var j=0; j&lt;y.length; ++j)
+                        operations[klass](y[j]);
+                        }
+                        }
+                    </script>
+                </t>
+            </xpath>
+        </template>    
+
+    	<template id="external_layout_partner_ageing">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+
+            <t t-call="account_dynamic_reports.external_layout_header_partner_ageing" />
+            <t t-raw="0" />
+            <t t-call="account_dynamic_reports.external_layout_footer_partner_ageing" />
+        </template>
+
+        <template id="external_layout_header_partner_ageing">
+            <div class="header">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                    </div>
+                </div>
+            </div>
+
+        </template>
+
+        <template id="external_layout_footer_partner_ageing">
+            <div class="footer">
+                <div>
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                        <li class="text-right">
+                            P.T.O
+                        </li>
+                    </ul>
+                
+                </div>                
+            </div>
+        </template>
+
+</odoo>

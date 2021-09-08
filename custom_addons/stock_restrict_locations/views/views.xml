@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright © Ryan Cole 2017-Present
+	- https://www.ryanc.me/
+	- admin@ryanc.me
+ 
+  Please see the LICENSE file for license details
+-->
+
+<openerp>
+	<data>
+
+
+<record id="view_users_form" model="ir.ui.view">
+	<field name="name">res.users.form.inherit.stock_user_restrictions</field>
+	<field name="model">res.users</field>
+	<field name="inherit_id" ref="base.view_users_form"/>
+	<field name="arch" type="xml">
+		<xpath expr="//page[@name='access_rights']/group[last()]" position="after">
+			<group name="wh_restrictions" string="Warehouse Restrictions">
+				<field name="restrict_wh_locations" />
+				<field name="allowed_warehouse_ids" widget="many2many_tags" attrs="{'invisible': [('restrict_wh_locations', '=', False)]}"/>
+				<field name="allowed_location_ids" domain="[('usage','=','internal')]" widget="many2many_tags" attrs="{'invisible': [('restrict_wh_locations', '=', False)]}"/>
+				<field name="allowed_picking_type_ids" widget="many2many_tags" attrs="{'invisible': [('restrict_wh_locations', '=', False)]}"/>
+				<!-- Invisible helper fields - these will be programmatically filled based on what the user selects in the above fields -->
+				<field name="allowed_warehouse_ids_computed" widget="many2many_tags" invisible="1"/>
+				<field name="allowed_location_ids_computed" widget="many2many_tags" invisible="1"/>
+				<field name="allowed_picking_type_ids_computed" widget="many2many_tags" invisible="1"/>
+			</group>
+		</xpath>
+	</field>
+</record>
+
+
+	</data>
+</openerp>

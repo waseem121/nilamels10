@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sales_cashier_summary_form_view" model="ir.ui.view">
+            <field name="name">sales.cashier.summary</field>
+            <field name="model">sales.cashier.summary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="user_id" options="{'no_create':True,'no_edit':True}" required="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="generate_sales_cashier_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sales_cashier_summary" model="ir.actions.act_window">
+            <field name="name">Cashier Summary Report</field>
+            <field name="res_model">sales.cashier.summary</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sales_cashier_summary_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_sales_cashier_summary"
+            id="menu_sales_cashier_summary" groups="sales_team.group_sale_manager" sequence="15"/>
+
+    </data>
+</odoo>

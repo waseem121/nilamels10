@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_invoice_invoice_readonly,account.invoice,account.model_account_invoice,group_invoice_readonly,1,0,0,0
+access_account_invoice_line_invoice_readonly,account.invoice.line,account.model_account_invoice_line,group_invoice_readonly,1,0,0,0
+access_account_payment_term_invoice_readonly,account.payment.term,account.model_account_payment_term,group_invoice_readonly,1,0,0,0
+access_account_journal_invoice_readonly,account.journal,account.model_account_journal,group_invoice_readonly,1,0,0,0
+access_account_account_readonly,account.account,account.model_account_account,group_invoice_readonly,1,0,0,0
+access_account_invoice_tax_readonly,account.invoice.tax,account.model_account_invoice_tax,group_invoice_readonly,1,0,0,0
+access_account_move_readonly,account.move,account.model_account_move,group_invoice_readonly,1,0,0,0
+access_account_move_readonly,account.move.line,account.model_account_move_line,group_invoice_readonly,1,0,0,0
+access_product_template_invoice_readonly,product.template,product.model_product_template,group_invoice_readonly,1,0,0,0
+access_product_product_invoice_readonly,product.product,product.model_product_product,group_invoice_readonly,1,0,0,0
+access_product_pricelist_invoice_readonly,product.pricelist,product.model_product_pricelist,group_invoice_readonly,1,0,0,0
+access_product_uom_invoice_readonly,product.uom,product.model_product_uom,group_invoice_readonly,1,0,0,0
+access_res_partner_invoice_readonly,res.partner,base.model_res_partner,group_invoice_readonly,1,0,0,0
+access_res_users_invoice_readonly,res.users,base.model_res_users,group_invoice_readonly,1,0,0,0
+access_res_currency_invoice_readonly,res.currency,base.model_res_currency,group_invoice_readonly,1,0,0,0
+access_stock_location_invoice_readonly,stock_location,stock.model_stock_location,group_invoice_readonly,1,0,0,0

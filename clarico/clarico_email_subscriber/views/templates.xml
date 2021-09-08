@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Email Subscriber Template -->
+	<template id="clarico_email_subscriber_popup" name="Popup For Email Subscriber">
+		<div id="EmailSubscriberModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-list-id="1">
+			    <div class="modal-dialog" role="document">
+			        <div class="modal-content">
+						<div class="modal-header">
+           					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&amp;times;</span></button>
+  							<h4 class="modal-title">Subscribe to our Newsletter</h4>
+       					</div>
+       					
+ 						<div class="modal-body">
+		                    <div class="input-group o_not_editable o_popup_animated o_popup_bounce_del500ms o_popup_bounce_small col-md-12" style="margin: 5% 0% 2%;">
+		                        <input type="email" name="email" class="popup_subscribe_email form-control" placeholder="your email..." autofocus="autofocus" style="border-radius:0" />
+		                        <span class="input-group-btn">
+		                            <a href="#" class="btn btn-success popup_subscribe_btn">Subscribe</a>
+		                        </span>
+		                        <div class="alert alert-success hidden col-sm-12" style="padding: 15px;margin: 0">Thanks for your subscription!</div>
+		                    </div>
+						</div>
+						<div class="modal-footer">
+				        	<button id="no_thanks" type="button" class="btn btn-default" data-dismiss="modal">No Thanks</button>
+				      	</div>
+					</div>
+			    </div>
+			</div>
+    </template>
+    
+</odoo>

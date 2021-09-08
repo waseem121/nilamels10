@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sales_analysis_group_view" model="ir.ui.view">
+            <field name="name">sales.analysis.group.view</field>
+            <field name="model">sales.analysis.group</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="category_id" 
+                                options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="date_to"/>
+                            <field name="state"/>
+                        </group>
+                    
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="do_print"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sales_analysis_group" model="ir.actions.act_window">
+            <field name="name">Sales Analysis Group</field>
+            <field name="res_model">sales.analysis.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sales_analysis_group_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_sales_analysis_group"
+            id="menu_sales_analysis_group" sequence="101"/>
+
+    </data>
+</odoo>

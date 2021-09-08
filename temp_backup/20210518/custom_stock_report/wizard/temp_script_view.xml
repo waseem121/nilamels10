@@ -1,0 +1,82 @@
+<odoo>
+    <data>
+        <record id="temp_script_report" model="ir.ui.view">
+            <field name="name">temp.script</field>
+            <field name="model">temp.script</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="state" invisible="1"/>
+                        <field name="name" invisible="1"/>
+<!--                        <group col="4" states="choose">
+                            <field name="date"/>
+                        </group>-->
+                        <group col="4" states="choose">
+                            <field name="date"/>
+                            <field name="product_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            <field name="location_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            <field name="ref"/>
+                        </group>
+                        <div states="get">
+                            <h2>Report Complete</h2>
+                            <p>Here is the Xls File :
+                                <field name="data" readonly="1" filename="name"/>
+                            </p>
+                        </div>
+                    </sheet>
+                    <footer states="choose">
+                        <!--<button type="object" string="Print" class="btn-primary" name="generate_stock_report"/>-->
+<!--                        <button type="object" class="btn-primary" string="Generate XLS"
+                                name="generate_stock_report_xlsx"/>-->
+<!--                        <button type="object" class="btn-primary" string="Temp:Invoice DuplicatePicking"
+                                name="get_invoice_with_duplicate_pickings"/>-->
+<!--                        <button type="object" class="btn-primary" string="Temp:Correct Stock"
+                                name="temp_correct_move_quant_stock"/>-->
+<!--                        <button type="object" class="btn-primary" string="Temp:Export Stock and Quant stock"
+                                name="temp_get_move_and_quant_stock_report"/>                        
+                        <button type="object" class="btn-primary" string="Temp:Export Inv and Picking cost"
+                                name="temp_get_invoice_and_picking_cost"/>-->
+<!--                        <button type="object" class="btn-primary" string="Temp:Export picking and jouranl cost"
+                                name="temp_get_picking_cost_and_journal_cost"/>-->
+                                
+<!--                        <button type="object" class="btn-primary" string="Script:Invoice and Picking Qty diff"
+                                name="script_invoice_and_picking_qty_diff"/>
+                        
+                        <button type="object" class="btn-primary" string="Script:Inventory Adjustment Report"
+                                name="script_inventory_adjustment_report"/>
+                        
+                        <button type="object" class="btn-primary" string="Create Single Quant"
+                                name="script_create_single_quant_entry"/>
+                        
+                        <button type="object" class="btn-primary" string="Create Customer Quant"
+                                name="script_create_customer_location_quants"/>-->
+                        
+                        <button type="object" class="btn-primary" string="Script: Update Account Level"
+                                name="script_update_account_level"/>
+                        
+<!--                        <button type="object" class="btn-primary" string="Create Difference/missing quant entry"
+                                name="script_create_difference_quant_entry"/>-->
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                    <footer states="get">
+                        <button special="cancel" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="temp_script_report_action" model="ir.actions.act_window">
+            <field name="name">Temp Script</field>
+            <field name="res_model">temp.script</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="temp_script_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" 
+                  action="temp_script_report_action" 
+                  id="temp_script_report_menu"
+                  groups="base.group_no_one" sequence="10000"/>
+    </data>
+</odoo>

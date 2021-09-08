@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_template_health_planet">
+        <field name="name">product.template.form.health.planet</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page/group" position="inside">
+                    <group name="custom_fields" colspan="4">
+                        <group>
+                            <field name="division"/>
+                            <field name="potency"/>
+                            <field name="uom_potency"/>
+                        </group>
+                        <group>
+                            <field name="measure_amount"/>
+                            <field name="uom_form"/>
+                            <field name="benefits"/>
+                        </group>
+
+                    </group>
+                </xpath>
+            </field>
+    </record>
+
+
+        <record id="product_division_view" model="ir.ui.view">
+            <field name="name">product.division.form</field>
+            <field name="model">product.division</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_division_list_view" model="ir.ui.view">
+            <field name="name">product.division.list</field>
+            <field name="model">product.division</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_division_action_form" model="ir.actions.act_window">
+            <field name="name">Product Divisions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.division</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_division_list_view"/>
+        </record>
+
+
+    <menuitem
+        action="product_division_action_form" id="menu_product_division_action_form"
+        parent="stock.menu_product_in_config_stock" sequence="100"/>
+
+    <record id="product_benefits_view" model="ir.ui.view">
+            <field name="name">product.benefits.form</field>
+            <field name="model">product.benefits</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_benefits_list_view" model="ir.ui.view">
+            <field name="name">product.benefits.list</field>
+            <field name="model">product.benefits</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="product_benefits_action_form" model="ir.actions.act_window">
+            <field name="name">Product Benefits</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.benefits</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_benefits_list_view"/>
+        </record>
+
+
+    <menuitem
+        action="product_benefits_action_form" id="menu_product_benefits_action_form"
+        parent="stock.menu_product_in_config_stock" sequence="101"/>
+
+</odoo>

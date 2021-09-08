@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="page_design_data_template" model="product.page.label.design">
+            <field name="name">Default Design</field>
+            <field name="report_model">wizard.product.page.report</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="product" t-foreach="f[c]">
+                                                    <t t-if="product != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="product.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="product.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <span t-raw="get_barcode(product.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print price with pricelist -->
+                                                                <!-- 
+                                                                <div align="center" style="color:black;font-size:12px;">
+                                                                    <span t-esc="get_price(product, doc_id.pricelist_id)" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                                                </div> 
+                                                                -->
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="product == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="page_design_data_template_2" model="product.page.label.design">
+            <field name="name">Sale Order Default Design</field>
+            <field name="report_model">sale.order</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="line" t-foreach="f[c]">
+                                                    <t t-if="line != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <!-- get_barcode(barcode_number, type, data)" -->
+                                                                    <span t-raw="get_barcode(line.product_id.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="line == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="page_design_data_template_3" model="product.page.label.design">
+            <field name="name">Account Invoice Default Design</field>
+            <field name="report_model">account.invoice</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="line" t-foreach="f[c]">
+                                                    <t t-if="line != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <!-- get_barcode(barcode_number, type, data)" -->
+                                                                    <span t-raw="get_barcode(line.product_id.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="line == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="page_design_data_template_4" model="product.page.label.design">
+            <field name="name">Purchase Order Default Design</field>
+            <field name="report_model">purchase.order</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="line" t-foreach="f[c]">
+                                                    <t t-if="line != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <!-- get_barcode(barcode_number, type, data)" -->
+                                                                    <span t-raw="get_barcode(line.product_id.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="line == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="page_design_data_template_5" model="product.page.label.design">
+            <field name="name">Stock Picking Default Design</field>
+            <field name="report_model">stock.picking</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="line" t-foreach="f[c]">
+                                                    <t t-if="line != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="line.product_id.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <!-- get_barcode(barcode_number, type, data)" -->
+                                                                    <span t-raw="get_barcode(line.product_id.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="line == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="page_design_data_template_6" model="product.page.label.design">
+            <field name="name">Product Product Default Design</field>
+            <field name="report_model">product.product</field>
+            <field name="page_template_design"><![CDATA[<?xml version="1.0"?>
+                <t t-name="flexiretail.dynamic_prod_page_rpt">
+                    <t t-call="report.html_container">
+                        <t t-foreach="doc_ids" t-as="doc_id">
+                            <div class="page">
+                                <table width="100%" style="margin:0px;padding:0px;table-layout:fixed !important;">
+                                    <span t-as="f" t-foreach="draw_table(data)">
+                                        <span t-as="c" t-foreach="f">
+                                            <tr>
+                                                <span t-as="product" t-foreach="f[c]">
+                                                    <t t-if="product != False">
+                                                        <!-- here label height,width and margin will be set.below draw_style function will set style for td -->
+                                                        <t t-set="style" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style" align="center">
+                                                            <div style="overflow: hidden;">
+                                                                <!-- do your design into this block only -->
+                                                                <!-- product name style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="product.name"/>
+                                                                </div>
+                                                                <!-- product internal code style can be change here -->
+                                                                <div style="color:black;font-size:20px;">
+                                                                    <span t-field="product.default_code"/>
+                                                                </div>
+                                                                <!-- product barcode is created using get_barcode function.you can pass related parameters from barcode tab only -->
+                                                                <div style="color:black;margin-top:15px;font-size:9px;">
+                                                                    <!-- get_barcode(barcode_number, type, data)" -->
+                                                                    <span t-raw="get_barcode(product.barcode, 'EAN13', data)"/>
+                                                                </div>
+                                                                <!-- to print price with pricelist -->
+                                                                <!-- 
+                                                                <div align="center" style="color:black;font-size:12px;">
+                                                                    <span t-esc="get_price(line.product_id, doc_id.pricelist_id)" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                                                                </div> 
+                                                                -->
+                                                                <!-- to print custom logo into label -->
+                                                                <t t-if="data['form']['label_logo']">
+                                                                    <div align="center" style="color:black;font-size:12px;">
+                                                                        <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 50px;max-width: 50px;"/>
+                                                                    </div>
+                                                                </t>
+                                                                <!-- design only above part for label -->
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines , this is for blank td.-->
+                                                    <t t-if="product == False">
+                                                    <t t-set="style_td" t-value="draw_style(data)"/>
+                                                        <td t-att-style="style_td">
+                                                        </td>
+                                                    </t>
+                                                    <!-- Do not remove this lines -->
+                                                </span>
+                                            </tr>
+                                        </span>
+                                    </span>
+                                </table>
+                            </div>
+                        </t>
+                    </t>
+                </t>]]>
+            </field>
+            <field name="format">custom</field>
+            <field name="page_width">210</field>
+            <field name="page_height">297</field>
+            <field name="col_no">4</field>
+            <field name="col_width">52.50</field>
+            <field name="col_height">29.70</field>
+            <field name="orientation">Portrait</field>
+            <field name="dpi">80</field>
+            <field name="from_row">1</field>
+            <field name="from_col">1</field>
+            <field name="margin_top">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+    </data>
+</openerp>

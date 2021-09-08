@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_free_qty_configuration" model="ir.ui.view">
+            <field name="name">view.free.qty.configuration</field>
+            <field name="model">purchase.config.settings</field>
+            <field name="inherit_id"
+                   ref="purchase.view_purchase_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/div" position="before">
+                    <group string="Free qty on Sales/Purchases">
+                        <group>
+                            <field name="group_free_qty"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>

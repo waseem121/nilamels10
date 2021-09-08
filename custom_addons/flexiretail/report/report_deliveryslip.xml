@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="aspl_report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@class='page']/table[@class='table table-condensed mt48'][2]/tbody" position="replace">
+            <tbody>
+                <t t-foreach = "o.pack_operation_ids" t-as="pack_operation">
+                    <tr>
+                        <t t-if = "pack_operation.pack_product_id and pack_operation.pack_product_id.pack_management == 'component_product'">
+                            <tr>
+                                <td>
+                                    <span t-esc="pack_operation.product_id.name"/>
+                                    [<b><span t-esc = 'pack_operation.pack_product_id.name'/></b> ]
+                                    <t t-if="not pack_operation.product_id and pack_operation.package_id">
+                                        <span  t-field="pack_operation.package_id"/>
+                                    </t>
+                                </td>
+                                <t t-if="has_serial_number">
+                                    <td t-if="pack_operation.pack_lot_ids">
+                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
+                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                                <td>
+                                                    <span t-field="packlot.lot_id"/>
+                                                    <t t-if="not packlot.lot_id">
+                                                        <span t-field="packlot.lot_name"/>
+                                                    </t>
+                                                </td>
+                                                <td name="lot_qty">
+                                                    <span t-field="packlot.qty"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td t-if="not pack_operation.pack_lot_ids"/>
+                                </t>
+                                <td class="text-center">
+                                    <span t-if="pack_operation.package_id">:</span>
+                                    <span t-field="pack_operation.package_id"/>
+                                    <span t-field="pack_operation.ordered_qty"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                                <td class="text-right" t-if="pack_operation.state == 'done'">
+                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done">
+                                        <t t-set="backorder" t-value="True"/>
+                                    </t>
+                                    <span t-field="pack_operation.qty_done"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                            </tr>
+                            
+                        </t>
+                        <t t-if = "not pack_operation.pack_product_id and pack_operation.product_id.is_product_pack">
+                            <tr>
+                                <td>
+                                    <strong><span t-esc="pack_operation.product_id.name" style="font-size:15px"/></strong>
+                                    <t t-if="not pack_operation.product_id and pack_operation.package_id">
+                                        <span  t-field="pack_operation.package_id"/>
+                                    </t>
+                                </td>
+                                <t t-if="has_serial_number">
+                                    <td t-if="pack_operation.pack_lot_ids">
+                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
+                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                                <td>
+                                                    <span t-field="packlot.lot_id"/>
+                                                    <t t-if="not packlot.lot_id">
+                                                        <span t-field="packlot.lot_name"/>
+                                                    </t>
+                                                </td>
+                                                <td name="lot_qty">
+                                                    <span t-field="packlot.qty"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td t-if="not pack_operation.pack_lot_ids"/>
+                                </t>
+                                <td class="text-center">
+                                    <span t-if="pack_operation.package_id">:</span>
+                                    <span t-field="pack_operation.package_id"/>
+                                    <span t-field="pack_operation.ordered_qty"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                                <td class="text-right" t-if="pack_operation.state == 'done'">
+                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done">
+                                        <t t-set="backorder" t-value="True"/>
+                                    </t>
+                                    <span t-field="pack_operation.qty_done"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                            </tr>
+                            <t t-foreach="pack_operation.product_id.product_pack_ids" t-as="pack_line">
+                                <t t-set="prod_qty" t-value="0.0" />
+                                <tr>
+                                    <td>
+                                        <ul
+                                            style="list-style-type:disc">
+                                            <li>
+                                                <span t-field="pack_line.product_id.name" />
+                                                <t t-set="produ_qty" t-value="pack_line.quantity * pack_operation.ordered_qty" />
+                                                [ <span t-esc="produ_qty" />
+                                                  <span t-field="pack_operation.product_uom_id"/> ]
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td colspan="3"/>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-if = "not pack_operation.pack_product_id and not pack_operation.product_id.is_product_pack">
+                            <td>
+                                    <span t-field="pack_operation.product_id"/>
+                                    <t t-if="not pack_operation.product_id and pack_operation.package_id">
+                                        <span  t-field="pack_operation.package_id"/>
+                                    </t>
+                                </td>
+                                <t t-if="has_serial_number">
+                                    <td t-if="pack_operation.pack_lot_ids">
+                                        <table class="table table-condensed" t-if="pack_operation.pack_lot_ids">
+                                            <tr t-foreach="pack_operation.pack_lot_ids" t-as="packlot">
+                                                <td>
+                                                    <span t-field="packlot.lot_id"/>
+                                                    <t t-if="not packlot.lot_id">
+                                                        <span t-field="packlot.lot_name"/>
+                                                    </t>
+                                                </td>
+                                                <td name="lot_qty">
+                                                    <span t-field="packlot.qty"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td t-if="not pack_operation.pack_lot_ids"/>
+                                </t>
+                                <td class="text-center">
+                                    <span t-if="pack_operation.package_id">:</span>
+                                    <span t-field="pack_operation.package_id"/>
+                                    <span t-field="pack_operation.ordered_qty"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                                <td class="text-right" t-if="pack_operation.state == 'done'">
+                                    <t t-if="pack_operation.ordered_qty != pack_operation.qty_done">
+                                        <t t-set="backorder" t-value="True"/>
+                                    </t>
+                                    <span t-field="pack_operation.qty_done"/>
+                                    <span t-field="pack_operation.product_uom_id"/>
+                                </td>
+                        </t>
+                    </tr>
+                </t>
+                <br/>
+            </tbody>
+        </xpath>
+    </template>
+</odoo>

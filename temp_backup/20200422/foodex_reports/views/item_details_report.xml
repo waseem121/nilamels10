@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="inte_details_form_view" model="ir.ui.view">
+            <field name="name">item.details.report</field>
+            <field name="model">item.details.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="category_ids" widget="many2many_tags"/>
+                        <field name="brand_ids" widget="many2many_tags"/>
+                        <field name="price_selection"/>
+                        <field name="group_by"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_print_item_details"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_detail_item_report" model="ir.actions.act_window">
+            <field name="name">Item Details Report</field>
+            <field name="res_model">item.details.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="inte_details_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="action_detail_item_report"
+            id="menu_item_detail_report" sequence="55"/>
+
+    </data>
+</odoo>

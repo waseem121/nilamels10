@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <data>
+
+        <record id="aspl_delete_order_res_users_form_view" model="ir.ui.view">
+	        <field name="name">res.users.form.view</field>
+	        <field name="model">res.users</field>
+	        <field name="inherit_id" ref="point_of_sale.res_users_form_view"/>
+	        <field name="arch" type="xml">
+	            <field name="pos_security_pin" position="attributes">
+	               <attribute name="password">True</attribute>
+	            </field>
+	            <field name="pos_security_pin" position="after">
+	                <field name="allow_delete"/>
+	            </field>
+	        </field>
+        </record>
+
+        <record id="delete_pos_wizard" model="ir.ui.view">
+            <field name="name">Pos Order Delete</field>
+            <field name="model">pos.order.delete</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Delete Order">
+                    <group>
+                        <field name="security_pin" password="True"/>
+                    </group>
+                    <footer>
+                        <button name="delete_pos_order" class="oe_highlight" string="Delete Order"
+                                type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Paid/Posted Delete"
+            res_model="pos.order.delete"
+            src_model="pos.order"
+            view_mode="form"
+            multi="True"
+            view_type="form"
+            target="new"
+            id="action_delete_more"/>
+
+       <act_window name="Paid/Posted Delete"
+            res_model="pos.order.delete"
+            src_model="pos.order"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            id="action_delete_single"/>
+
+    </data>
+</odoo>

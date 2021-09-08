@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="order_inherited_form_view" model="ir.ui.view">
+            <field name="name">pos.order.inherited.view</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="before">
+                    <field name="note"/>
+                    <field name="item_discount_share"/>
+                    <field name="item_discount_amount"/>
+                    <field name="discount_amount"/>
+                    <field name="deliver"/>
+                    <field name="is_bag" invisible="1"/>
+	                <field name="is_delivery_product" invisible="1"/>
+	                <field name="serial_nums"/>
+	                <field name="product_mrp"/>
+	                <field name="product_cost_price" invisible="1"/>
+                </field>
+                <field name="price_unit" position="after">
+                	<field name="discount_share_per"/>
+                    
+                </field>
+                <field name="pos_reference" position="after">
+                   <field name="delivery_date"/>
+                   <field name="delivery_time"/>
+                </field>
+                <field name="amount_tax" position="after">
+                    <field name="rounding"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_location_form_aces" model="ir.ui.view">
+            <field name="name">stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+            <field name="comment" position="before">
+                <group string="Cashier">
+                    <field name="cashier_ids" widget="many2many_tags"/>
+                </group>
+            </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ace_view_pos_config_form">
+            <field name="name">pos.config.form.view.inherit</field>
+            <field name="model">pos.config</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_config_form"/>
+            <field name="arch" type="xml">
+                <group name="features" position="after">
+                    <group name="retail" string="Retail Features" col="4">
+                    	<field name="show_pricelist"/>
+                        <field name="enable_pos_serial"/>
+                        <field name="product_exp_days"
+                                attrs="{'invisible': [('enable_pos_serial','=',False)]}"/>
+<!--                         <field name="enable_product_return"/> -->
+<!--                          <field name="bonus_coupon_journal"   -->
+<!--                         attrs="{'invisible': [('enable_product_return','=',False)],  -->
+<!--                                 'required': [('enable_product_return','=',True)]}"/> -->
+                        <field name="display_warehouse_qty"/>
+                        <!--<field name="gift_coupon"/>-->
+                        <!--<field name="gift_coupon_journal" -->
+                        <!--attrs="{'invisible': [('gift_coupon','=',False)], -->
+                                <!--'required': [('gift_coupon','=',True)]}"/>-->
+                        <!--<field name="coupon_product" -->
+                        <!--attrs="{'invisible': [('gift_coupon','=',False)], -->
+                                <!--'required': [('gift_coupon','=',True)]}"/>-->
+                        <field name="cash_put_out_in"/>
+                        <field name="enable_order_note"/>
+                        <field name="enable_product_note"/>
+                        <field name="use_discount_rules"/>
+                        <field name="enable_bag_charges"/>
+                        <field name="enable_ereceipt"/>
+                        <field name="enable_cross_selling"/>
+                        <field name="pos_managers_ids" widget="many2many_tags"/>
+                        <!-- <field name="enable_product_variant"/> -->
+                        <!-- <field name="enable_z_report"/> -->
+                        <field name="enable_print_last_receipt"/>
+<!--                         <field name="enable_clear_order"/> -->
+                        <field name="enable_qty_on_hand" invisible="1"/>
+                        <field name="require_cashier"/>
+                        <field name="debt_journal" />
+                        <field name="debt_dummy_product_id" domain="[('available_in_pos','=', True)]"/>
+                        <field name="enable_create_theme" invisible="1"/>
+                        <field name="enable_customer_display"/>
+                        <field name="enable_chat"/>
+                        <field name="enable_product_sync"/>
+                    </group>
+                    <group col="4">
+                    	<field name="custom_discount"/>
+                    	<field name="discount_print_receipt" attrs="{'invisible':[('custom_discount' ,'!=',True)],'required':[('custom_discount' ,'=',True)]}"/>
+                    	<field name="store_discount_based_on" attrs="{'invisible':[('custom_discount' ,'!=',True)],'required':[('custom_discount' ,'=',True)]}"/>
+<!--                     	<field name="discount_product_id" attrs="{'invisible':[('custom_discount' ,'!=',True)],'required':[('custom_discount' ,'=',True)]}"/> -->
+						<field name="doctor_report"/>
+                        <field name="enable_pos_return"/>
+                    	<field name="scrap_location_id"
+                        attrs="{'invisible':[('enable_pos_return','=',False)],
+                        	'required':[('enable_pos_return','=',True)]}"/>
+                        <field name="enable_bank_charges"/>
+                        <field name="payment_product_id" attrs="{'invisible':[('enable_bank_charges' ,'!=',True)],
+                                    'required':[('enable_bank_charges' ,'=',True)]}"
+                                     domain="[('available_in_pos','=', True)]"/>
+                        <field name="enable_delivery_charges"/>
+                        <field name="delivery_product_id" 
+                        attrs="{'invisible': [('enable_delivery_charges','=',False)], 
+                                'required': [('enable_delivery_charges','=',True)]}"
+                        domain="[('type','=','service'),('available_in_pos','=', True)]"
+                        />
+                        <field name="enable_wallet"/>
+                        <field name="wallet_product" 
+                               attrs="{'invisible': [('enable_wallet','=',False)], 
+                                    'required': [('enable_wallet','=',True)]}"
+                                domain="[('type','=','service'),('available_in_pos','=', True)]"/>
+<!--                        <field name="enable_allow_return_coupon_order" /> -->
+                        <field name="enable_loyalty"/>
+                        <field name="loyalty_journal" 
+                               attrs="{'invisible': [('enable_loyalty','=',False)],'required': [('enable_loyalty','=',True)]}"
+                               context="{'journal_ids': journal_ids, 'pos_journal': True}"
+                               options="{'no_create':True}"/>
+                        <field name="enable_gift_voucher"/>
+                        <field name="gift_voucher_journal_id"
+                            attrs="{'invisible' : [('enable_gift_voucher', '=', False)],'required':[('enable_gift_voucher', '=', True)]}"
+                            context="{'journal_ids': journal_ids, 'pos_journal': True}"
+                            options="{'no_create':True}"/>
+
+                        <field name="enable_gift_card"/>
+                        <field name="gift_card_product_id"  domain="[('available_in_pos','=','True')] " attrs="{'invisible':[('enable_gift_card','=',False)],'required':[('enable_gift_card','=',True)]}" />
+                        <field name="enable_journal_id"
+                            attrs="{'invisible':[('enable_gift_card','=',False)],'required':[('enable_gift_card','=',True)]}"
+                            context="{'journal_ids': journal_ids, 'pos_journal': True}"
+                            options="{'no_create':True}"/>
+                        <field name="manual_card_number" attrs="{'invisible':[('enable_gift_card','=',False)]}"/>
+	                    <field name="default_exp_date" attrs="{'invisible':[('enable_gift_card','=',False)]}"/>
+	                    <field name="msg_before_card_pay" attrs="{'invisible':[('enable_gift_card','=',False)]}"/>
+                        <field name="enable_int_trans_stock"/>
+                        <field name="enable_product_manage"/>
+                        <field name="enable_gift_receipt"/>
+                        <field name="enable_print_valid_days"/>
+                        <field name="default_return_valid_days" attrs="{'invisible' : [('enable_print_valid_days', '=', False)]}"/>
+
+                        <field name="enable_rounding"/>
+                        <field name="rounding_options" attrs="{'invisible':[('enable_rounding','=',False)],
+                              'required':[('enable_rounding','==',True)]}"/>
+                        <field name="rounding_journal_id" attrs="{'invisible':[('enable_rounding','=',False)],
+                              'required':[('enable_rounding','==',True)]}"
+                              context="{'journal_ids': journal_ids, 'pos_journal': True}"
+                              options="{'no_create':True}"/>
+                    </group>
+                    <separator string="Quick Cash Payment" />
+                    <group col="4">
+                        <field name="enable_quick_cash_payment"/>
+                        <field name="payment_buttons" widget="many2many_tags" attrs="{'invisible':[('enable_quick_cash_payment','=',False)],'required':[('enable_quick_cash_payment','=',True)]}"/>
+	                    <field name="validate_on_click" attrs="{'invisible':[('enable_quick_cash_payment','=',False)]}" />
+	                    <field name="cash_method" domain="[('type', '=', 'cash')]" 
+	                    attrs="{'invisible':[('enable_quick_cash_payment','=',False)],'required':[('enable_quick_cash_payment','=',True)]}"
+	                    context="{'journal_ids': journal_ids, 'pos_journal': True}"/>
+                    </group>
+                    <separator string="Reports" />
+                    <group col="4">
+                        <field name="enable_graph_view"/>
+                        <field name="enable_today_sale_report"/>
+                        <field name="print_x_report"/>
+                    </group>
+	                <separator string="Order History" />
+                    <group col="4">
+                         <field name="enable_pos_reorder"/>
+                         <field name="record_per_page" />
+                    </group>
+                    <label for="last_days" class="oe_inline" string="Last" />
+                    <field name="last_days" class="oe_inline" nolabel="1"/>
+                    <label for="last_days" class="oe_inline" string="Days"></label>
+                    
+<!--                     Advertisement Images/Video -->
+                    <group string="Advertisement Images/Video">
+                        <div>
+                            <field name="advertisement_image"/>
+                        </div>
+                    </group>
+                    <group col="4">
+                        <field name="marquee_text"/>
+                        <field name="marque_color" widget="color"/>
+                        <field name="marque_bg_color" widget="color"/>
+                        <field name="marque_font_size"/>
+                        <field name="ac_width"/>
+                        <field name="ac_height"/>
+                        <field name="mute_video_sound"/>
+                    </group>
+                    <separator string="Order Reservation" />
+                    <group col="4">
+                        <field name="enable_order_reservation"/>
+                        <field name="reserve_stock_location_id"
+                                attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}"/>
+                        <field name="cancellation_charges_type"
+                                attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}"/>
+                        <field name="cancellation_charges"
+                                attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}"/>
+                        <field name="cancellation_charges_product_id"
+                                attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}"/>
+                        <field name="prod_for_payment"
+                                attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}"/>
+                        <field name="refund_amount_product_id"
+                               attrs="{'invisible' : [('enable_order_reservation', '=', False)],
+                                'required' : [('enable_order_reservation', '=', True)]}" />
+                        <field name="enable_pos_welcome_mail"
+                               attrs="{'invisible' : [('enable_order_reservation', '=', False)] }" />
+                        <field name="allow_reservation_with_no_amount"
+                               attrs="{'invisible' : [('enable_order_reservation', '=', False)] }" />
+                    </group>
+                    <!--aspl_pos_stock-->
+                    <group string="Stock">
+                        <group>
+	                   		<field name="show_qty"/>
+	                   		<field name="restrict_order"/>
+                   		</group>
+                        <group>
+                            <field name="custom_msg" attrs="{'invisible':[('restrict_order','==',False)]}"/>
+							<field name="prod_qty_limit" attrs="{'invisible':[('restrict_order','==',False)]}"/>
+                        </group>
+                    </group>
+                    <group string="Product Pack">
+                        <field name="enable_pack_products" />
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ace_view_pos_category_form">
+            <field name="name">pos.category.form.view.inherit</field>
+            <field name="model">pos.category</field>
+            <field name="inherit_id" ref="point_of_sale.product_pos_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="sequence" position="after">
+                    <field name="return_valid_days"/>
+                </field>
+            </field>
+        </record>
+
+		<record id="return_view_pos_tree" model="ir.ui.view" >
+            <field name="name">ret.pos.order.tree</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+               <field name="pos_reference" position="after">
+                   <field name="back_order"/>
+
+                </field>
+            </field>
+        </record>
+
+        <record id="return_view_pos_form" model="ir.ui.view" >
+            <field name="name">ret.pos.order.form</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <field name="pos_reference" position="after">
+                   <field name="back_order"/>
+                   <field name="reserved"/>
+                    <field name="partial_pay"/>
+                   <field name="unreserved" invisible="1"/>
+                   <field name="order_status" />
+                </field>
+                <field name="product_id" position="after">
+                    <field name="back_order"/>
+                    <field name="scrap_item" invisible="1"/>
+                </field>
+                <xpath expr="//field[@name='lines']/tree/field[@name='product_id']" position="after">
+                   <field name="prodlot_id"/>
+                </xpath>
+                <field name="amount_tax" position="after">
+            	   <field name="redeem_point_amt"/>
+            	</field>
+            	<field name="partner_id" position="after">
+            		<field name="remaining_points"/>
+                	<field name="points_to_use"/>
+            	</field>
+                <field name="amount_total" position="after">
+                    <field name="amount_due"/>
+                </field>
+                <!--aspl_pos_stock-->
+                <field name="picking_id" position="after">
+                    <field name="picking_ids" widget="many2many_tags" readonly="1"/>
+                </field>
+                <field name="picking_id" position="replace"/>
+                <button name="%(point_of_sale.action_pos_payment)d" position="replace">
+                    <button name="%(point_of_sale.action_pos_payment)d" string="Payment"
+                            class="oe_highlight" attrs="{'invisible': ['|',('reserved', '=', True),('state','!=', 'draft')]}"
+                            type="action" context="{'pos_session_id' : session_id}"/>
+                </button>
+            	<!--<page name="extra" position="inside">-->
+            		<!--<group string="Coupon Information">-->
+                        <!--<field name="applied_coupon_ref" colspan="4" nolabel="1">-->
+                        	<!--<tree>-->
+                        	<!--<field name="name" />-->
+                        	<!--<field name="used_amount" />-->
+                        	<!--</tree>-->
+                        <!--</field>-->
+                     <!--</group>-->
+            	<!--</page>-->
+            </field>
+        </record>
+
+        <!-- <record id="view_production_lot_tree_ace" model="ir.ui.view">
+            <field name="name">stock.production.lot.tree.ace</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+            <field name="arch" type="xml">
+                <tree position="inside">
+                    <field name="qty_remaining"/>
+                </tree>
+            </field>
+        </record> -->
+
+        <record id="view_stock_production_lot_form_inherit" model="ir.ui.view">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form"/>
+            <field name="arch" type="xml">
+                <field name="ref" position="after">
+                    <field name="remaining_qty"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_production_lot_list_inherit" model="ir.ui.view">
+            <field name="name">stock.production.lot.tree</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+            <field name="arch" type="xml">
+                <field name="create_date" position="after">
+                    <field name="remaining_qty"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_pos_advertisement_form">
+            <field name="name">advertisement.images.form.view</field>
+            <field name="model">advertisement.images</field>
+            <field name="arch" type="xml">
+                <form string="Point of Sale advertisement images">
+                    <sheet>
+                        <label  for="file_type" string="File Type"/>
+                        <field name="file_type"/>
+                        <group attrs="{'invisible': [('file_type', '=', 'video')]}">
+                            <div>
+                                <field name="ad_image" widget="image" class="oe_avatar oe_left" attrs="{'invisible': [('image_type','=','url')]}"/>
+                                <label  for="url" string="URL" attrs="{'invisible': [('image_type','=','image')]}"/>
+                                <h1><field name="url" class="oe_avatar oe_left" attrs="{'invisible': [('image_type','=','image')]}" /></h1>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('file_type', '=', 'image')]}">
+                            <div>
+                                <field name="ad_video" filename="ad_video_fname" class="oe_avatar oe_left" attrs="{'invisible': [('video_type','=','url')]}" />
+                                <label  for="ace_video_url" string="URL" attrs="{'invisible': [('video_type','=','video')]}"/>
+                                <h1><field name="ace_video_url" class="oe_avatar oe_left" attrs="{'invisible': [('video_type','=','video')]}" /></h1>
+                                <group>
+                                    <field name="is_youtube_url" attrs="{'invisible': [('video_type','=','video')]}"/>
+                                </group>
+                            </div>
+                        </group>
+                        <group col="2">
+                            <div class="oe_title">
+                                <label  for="image_type" string="Image Source" attrs="{'invisible': [('file_type', '=', 'video')]}"/>
+                                <field name="image_type" attrs="{'invisible': [('file_type', '=', 'video')]}"/>
+                                <label  for="video_type" string="Video Source" attrs="{'invisible': [('file_type', '=', 'image')]}"/>
+                                <field name="video_type" attrs="{'invisible': [('file_type', '=', 'image')]}"/>
+                                <label for="name" string="Name"/>
+                                <field name="name" class="oe_inline"/>
+                            </div>
+                            <div class="oe_title">
+                                <label for="sequence" string="Sequence"/>
+                                <h1><field name="sequence" class="oe_inline"/></h1>
+                                <label for="image_duration" string="Duration"/>
+                                <field name="image_duration"/>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="oe_title">
+                                <label for="description" string="Description"/>
+                                <h1><field name="description" class="oe_inline"/></h1>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="cash_payment_acesh" model="ir.ui.view">
+            <field name="name">cash_payment_amt_form_view</field>
+            <field name="model">quick.cash.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_pos_advertisement_tree">
+            <field name="name">advertisement.images.tree.view</field>
+            <field name="model">advertisement.images</field>
+            <field name="arch" type="xml">
+                <tree string="Point of Sale advertisement images">
+                    <field name="name"/> 
+                    <field name="sequence"/>       
+                    <field name="description" /> 
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_pos_advertisement_pos">
+            <field name="name">Point of Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">advertisement.images</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_pos_advertisement_tree" />
+        </record>
+
+        <record id="view_pos_order_filter_inherit" model="ir.ui.view">
+            <field name="name">pos.order.list.select.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="before">
+                    <filter string="Reserved" domain="[('reserved', '=', True)]" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

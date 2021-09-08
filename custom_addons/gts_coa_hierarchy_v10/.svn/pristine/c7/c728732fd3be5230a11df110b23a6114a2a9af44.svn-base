@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="account_report_trial_balance_view_gts_coa" model="ir.ui.view">
+        <field name="name">account.report.trial.balance.view.gts.coa</field>
+        <field name="model">account.balance.report</field>
+        <field name="inherit_id" ref="account.account_report_balance_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='date_to']" position="after">
+                    <field name="level"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

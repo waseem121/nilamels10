@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <record id="split_lot_qty_form_id" model="ir.ui.view">
+            <field name="name">split lot</field>
+            <field name="model">split.lot.qty</field>
+            <field name="arch" type="xml">
+                <form>
+                <group col="4">
+                    <field name="sale_order_id"/>
+                    <field name="account_invoice_line_id" invisible="context.get('from_invoice')"/>
+                    <field name="order_qty" readonly="1"/>
+                </group>
+                    <field name="split_lot_qty_line_ids">
+                        <tree editable="bottom">
+                            <field name="lot_id" readonly="1"/>
+                            <field name="available_qty" readonly="1"/>
+                            <field name="split_qty"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id="aspl_view_sale_order_form" model="ir.ui.view">
+            <field name="name">aspl.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="replace"/>
+                <field name="team_id" position="replace"/>
+                <field name="partner_id" position="after">
+                    <field name="is_this_direct_sale" invisible="1"/>
+                    <field name="user_id" required="1"/>
+                    <field name="team_id" options="{'no_create': True}"/>
+                </field>
+                <field name="payment_term_id" position="after">
+                    <field name="location_id"  domain="[('usage', '=', 'internal'),('company_id','=',company_id)]"
+                           attrs="{'invisible':[('is_this_direct_sale','=',False)],'required':[('is_this_direct_sale','=',True)],
+                                   'readonly':[('state','=','done')]}" context="{'from_direct_sale_loc':True}"/>
+                </field>
+                <xpath expr="//field[@name='order_line']/form/group/group" position="inside">
+                		<field name="discount_amount" style="width:50%%" groups="sale.group_discount_per_so_line"/>
+       		    </xpath>
+       		     <xpath expr="//field[@name='order_line']/form/group/group[2]" position="inside">
+                		<field name="lot_ids" widget="many2many_tags" context="{'loc_id': parent.location_id,'product_id': product_id,'direct_sale': parent.is_this_direct_sale}" options="{'no_create': True}" invisible="not context.get('default_is_this_direct_sale')"/>
+       		    </xpath>
+                <field name="order_line" position="attributes">
+                    <attribute name="context">{'location_id': location_id,'is_this_direct_sale': is_this_direct_sale}</attribute>
+                </field>
+                <xpath expr="//tree/field[@name='tax_id']" position="after">
+                    <field name="lot_ids" widget="many2many_tags" context="{'loc_id': parent.location_id,'product_id': product_id,'direct_sale': parent.is_this_direct_sale}" options="{'no_create': True}" invisible="not context.get('default_is_this_direct_sale')"/>
+                </xpath>
+                <xpath expr="//tree/field[@name='discount']" position="after">
+                    <field name="discount_amount" invisible="not context.get('default_is_this_direct_sale')" groups="sale.group_discount_per_so_line"/>
+                    <field name="line_discount_share_amount" invisible="1"/>
+                    <field name="discount_share" invisible="1"/>
+                </xpath>
+                <xpath expr="//tree/field[@name='product_uom_qty']" position="after">
+                    <field name="available_qty"  invisible="not context.get('default_is_this_direct_sale')"/>
+                </xpath>
+                <field name="amount_tax" position="after">
+                    <field name="total_discount" attrs="{'invisible':[('is_this_direct_sale','=',False)]}" />
+                </field>
+                <xpath expr="//tree/field[@name='price_subtotal']" position="after">
+                   <button name="split_qty" type="object" string="Split Qty" icon="fa-list"  
+                   			invisible="not context.get('default_is_this_direct_sale')"/>
+                </xpath>
+               <xpath expr="//group[@name='sale_total']" position="before">
+                        <group name="discount" colspan="2" col="2">
+                            <field name="discount_glob" style="width:30%%" 
+                                   attrs="{'invisible':[('is_this_direct_sale','=',False)],'readonly':[('state','=','done')] }"/>
+                            <field name="discount_amount" style="width:30%%" 
+                                   attrs="{'invisible':[('is_this_direct_sale','=',False)] , 'readonly':[('state','=','done')]}"/>
+                        </group>
+                </xpath>
+                <xpath expr="//form/header/button[@name='action_cancel']" position="attributes">
+                    <attribute name="states">draft,sent,sale,done</attribute>
+                </xpath>
+
+                <xpath expr="//tree/field[@name='analytic_tag_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//tree/field[@name='tax_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                 <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                    <attribute name="options">{'no_create': True, 'no_create_edit':True}</attribute>
+                </xpath>
+                <xpath expr="//form/sheet/notebook/page[2]/group" position="after">
+                    <group name="user_info" string="User Info" col="4" groups="sales_team.group_sale_manager">
+                        <field name="create_uid" string="Created User" readonly="1"/>
+                        <field name="create_date" string="Created Datetime" readonly="1"/>
+                        <field name="write_uid" string="Modified User" readonly="1"/>
+                        <field name="write_date" string="Modified Datetime" readonly="1"/>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="domain">[('is_company','=',True)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_direct_sales" model="ir.actions.act_window">
+            <field name="name">Direct Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="context">{'default_is_this_direct_sale':True}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="domain">[('is_this_direct_sale','=',True)]</field>
+        </record>
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="name">Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
+            <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="context">{}</field>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel')),('is_this_direct_sale','=',False)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create a Quotation, the first step of a new sale.
+                </p><p>
+                    Once the quotation is confirmed, it becomes a sales order.
+                    You'll be able to invoice it and collect payments.
+                    From the <i>Sales Orders</i> menu, you can track delivery
+                    orders or services.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Direct Sales" action="action_direct_sales" id="menu_direct_sales_data" parent="sales_team.menu_sales" sequence="12" />
+
+        <record id="stock.stock_picking_action_picking_type" model="ir.actions.act_window">
+            <field name="domain">[('state','!=','cancel')]</field>
+        </record>
+
+        <record id="stock.action_picking_tree_ready" model="ir.actions.act_window">
+            <field name="domain">[('state','!=','cancel')]</field>
+       </record>
+
+        <record id="stock.action_picking_tree_waiting" model="ir.actions.act_window">
+            <field name="domain">[('state','!=','cancel')]</field>
+        </record>
+
+         <record id="stock.action_picking_tree_backorder" model="ir.actions.act_window">
+            <field name="domain">[('state','!=','cancel')]</field>
+         </record>
+
+         <record id="stock.action_picking_tree_late" model="ir.actions.act_window">
+            <field name="domain">[('state','!=','cancel')]</field>
+         </record>
+
+        	</data>
+</odoo>

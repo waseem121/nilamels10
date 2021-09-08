@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="stock_move_report_template_doc">
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 70px;"/>
+                        </div>
+                        <div style="text-align:center">
+                            <h3><b style="border-bottom:2px solid black">Stock Move Report</b></h3>
+                        </div>
+                    </div>
+                    <div style="border:2px solid black;text-align:center">
+                        <b><span t-esc="o.product_id.default_code"></span></b>
+                        <br/>
+                        <b><span t-esc="o.product_id.name"/></b>
+                        <br/>
+                    </div>
+                    <div style="border-bottom:3px solid black;margin-top:10px">
+                    </div>
+                </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Serial.</th>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Picking</th>
+                                <th>Source Location</th>
+                                <th>Destination Location</th>
+                                <th class="text-right">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="count" t-value="1"/>
+                                <t t-if="data">
+                                    <t t-foreach="data" t-as="move">
+                                        <tr>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="count"></span>
+                                                <t t-set="count" t-value="count + 1"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="context_timestamp(datetime.datetime.strptime(move.create_date, '%Y-%m-%d %H:%M:%S')).strftime('%d-%m-%Y')"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <t t-if="move.picking_id">
+                                                    <span t-esc="move.picking_id.origin"/>
+                                                </t>
+                                                <t t-if="not move.picking_id">
+                                                    <span t-esc="move.origin"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <t t-if="move.picking_id">
+                                                    <span t-esc="move.picking_id.name"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="move.location_id.display_name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="move.location_dest_id.display_name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <span t-esc="'%.3f'%move.product_qty"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-if="draft_invoice">
+                                    <t t-foreach="draft_invoice" t-as="invoice">
+                                        <tr>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="count"></span>
+                                                <t t-set="count" t-value="count + 1"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="context_timestamp(datetime.datetime.strptime(invoice.invoice_id.date_invoice, '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="invoice.invoice_id.number"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+<!--                                                <t t-if="move.picking_id">-->
+<!--                                                    <span t-esc="move.picking_id.name"/>-->
+<!--                                                </t>-->
+                                            </td>
+
+                                            <td style="border-bottom:1px solid black">
+                                                <t t-if="invoice.invoice_id.type == 'out_invoice'">
+                                                    <span t-esc="invoice.invoice_id.location_id.display_name"/>
+                                                </t>
+                                                <t t-if="invoice.invoice_id.type == 'out_refund'">
+                                                    <span t-esc="invoice.invoice_id.partner_id.property_stock_customer.display_name"/>
+                                                </t>
+                                                <t t-if="not invoice.invoice_id.type == 'out_invoice' and not invoice.invoice_id.type == 'out_refund'">
+                                                    <span t-esc="invoice.invoice_id.location_id.display_name"/>
+                                                </t>
+                                            </td>
+
+                                            <td style="border-bottom:1px solid black">
+                                                <t t-if="invoice.invoice_id.type == 'out_invoice'">
+                                                    <span t-esc="invoice.invoice_id.partner_id.property_stock_customer.display_name"/>
+                                                </t>
+                                                <t t-if="invoice.invoice_id.type == 'out_refund'">
+                                                    <span t-esc="invoice.invoice_id.location_id.display_name"/>
+                                                </t>
+                                                <t t-if="not invoice.invoice_id.type == 'out_invoice' and not invoice.invoice_id.type == 'out_refund'">
+                                                    <span t-esc="invoice.invoice_id.partner_id.property_stock_customer.display_name"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                 <t t-if="invoice.uom_id.category_id.name == 'Unit' and invoice.uom_id.uom_type == 'bigger'">
+                                                    <span t-esc="'%.3f'%(invoice.quantity * invoice.uom_id.factor_inv)"/>
+                                                </t>
+                                                <t t-else="not invoice.uom_id.category_id.name == 'Unit' and not invoice.uom_id.uom_type == 'bigger'">
+                                                    <span t-esc="'%.3f'%invoice.quantity"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="stock_move_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.stock_move_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_stock_move" model="report.paperformat">
+            <field name="name">Stock Move Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">45</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_stock_move1"
+            string="stock_move_report"
+            model="stock.move.report"
+            name="foodex_reports.stock_move_report_template"
+            file="foodex_reports.stock_move_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="paperformat_stock_move"
+            />
+    </data>
+</openerp>

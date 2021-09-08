@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_saleorder_document_foodex_no_header">
+    <t t-call="foodex_client.external_layout_foodex_no_header">
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />
+        <div class="page">
+            <div class="oe_structure"/>
+            <div class="row">
+                
+                <div style="float:left;">
+                    <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>To,<br/> 
+                    <span>&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+                    <b>
+                        <span t-esc="doc.partner_id and doc.partner_id.name"/>
+                    </b>
+                        <div style="padding:1em;" t-field="doc.partner_invoice_id"
+                            t-options='{"widget": "contact", "fields": ["address", "phone", "fax"], "no_marker": True, "phone_icons": True}'/>
+                </div>
+                <h1 class="text-right" style="color:#110c61;">
+                <span>QUOTATION</span>
+                </h1>
+                <div class="text-right">
+                    <span>Date :</span> 
+                    <b><span t-field="doc.date_order" t-options='{"format": "dd/MM/yyyy"}'/></b>
+                    <br/>
+                    <span>Quote No :</span><b><span t-field="doc.name"/></b>
+                    <br/>
+                </div>
+                <br/>
+
+            </div>
+
+            <!-- Is there a discount on at least one line? -->
+            <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
+
+            <t t-foreach="doc.order_lines_layouted()" t-as="page">
+                <!--<table class="table table-condensed">-->
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sr.No.</th>
+                            <th>Description</th>
+                            <th class="text-right">Quantity</th>
+                            <th class="text-right">Unit</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right" groups="sale.group_show_price_subtotal">Total Price</th>
+                            <th class="text-right price_tax_included" groups="sale.group_show_price_total">Total Price</th>
+                        </tr>
+                   </thead>
+                   <tbody class="sale_tbody">
+                       <t t-set="count" t-value="0"/>
+                       <t t-set="total_discount" t-value="0"/>
+                        <t t-foreach="page" t-as="layout_category">
+
+                            <t t-if="layout_category_size > 1 or page_size > 1" groups="sale.group_sale_layout">
+                                <tr class="active">
+                                    <td colspan="7" style="font-weight: bold; border-bottom: 1px solid black;">&amp;bull;
+                                        <t t-esc="layout_category['name']"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <!-- Lines associated -->
+                            <t t-foreach="layout_category['lines']" t-as="l">
+                                <t t-set="count" t-value="count+1"/>
+                                <tr>
+                                <td class="text-center">
+                                    <span t-esc="count"/>
+                                </td>
+                                    <td><span t-field="l.name"/></td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom_qty"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.product_uom"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'%.3f'%l.price_subtotal"/>
+                                    </td>
+                                </tr>
+                            </t>
+
+                        </t>
+                    </tbody>
+                </table>
+
+                <t t-if="page_index &lt; page_size - 1" groups="sale.group_sale_layout">
+                    <p style="page-break-before:always;"> </p>
+                </t>
+            </t>
+
+            <div class="row" name="total">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+
+                        <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="doc.amount_total"
+                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <p t-field="doc.note" />
+            <p t-if="doc.payment_term_id.note">
+                <span t-field="doc.payment_term_id.note"/>
+            </p>
+            <p id="fiscal_position_remark" t-if="doc.fiscal_position_id and doc.fiscal_position_id.note">
+                <strong>Fiscal Position Remark:</strong>
+                <span t-field="doc.fiscal_position_id.note"/>
+            </p>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<template id="report_saleorder_foodex_no_header">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="foodex_client.report_saleorder_document_foodex_no_header" t-lang="doc.partner_id.lang"/>
+        </t>
+    </t>
+</template>
+</odoo>

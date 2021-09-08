@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_category_property_form_sic_inherit" model="ir.ui.view">
+        <field name="name">product.category.stock.property.form.sic.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="stock_account.view_category_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_stock_valuation_account_id" position="after">
+                <field name="property_inventory_adjustment_scrap_account" domain="[('deprecated', '=', False)]"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_inventory_form_inherit" model="ir.ui.view">
+        <field name="name">stock.inventory.form</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='exhausted']" position="after">
+                <field name="is_scrap_adjustment" invisible="1"/>
+            </xpath>
+            <button name="action_done" position="after">
+                <button name="action_done"
+                        states="confirm" string="Validate Inventory" type="object"
+                        class="oe_highlight" groups="stock.group_stock_manager"
+                        context="{'damage_account':context.get('damage_account'),
+                                            'from_scrap_adjustment':True}"
+                        attrs="{'invisible':['|',('is_scrap_adjustment','=',False)]}"/>
+            </button>
+            <button name="action_done" position="attributes">
+                <attribute name="attrs">{'invisible':['|',('is_scrap_adjustment','=',True)]}</attribute>
+            </button>
+        </field>
+    </record>
+
+    <record id="aspl_view_inventory_filter_inherit" model="ir.ui.view">
+        <field name="name">aspl.stock.inventory.filter.inherit</field>
+        <field name="model">stock.inventory</field>
+        <field name="inherit_id" ref="stock.view_inventory_filter"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <filter name="is_scrap_adjustment" string="Scrap Transaction" domain="[('is_scrap_adjustment','=', True)]" help="is Scrap Transaction"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="aspl_action_inventory_form_view" model="ir.actions.act_window">
+        <field name="name">Scrap Adjustments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.inventory</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="stock.view_inventory_tree"/>
+        <field name="search_view_id" ref="stock.view_inventory_filter"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to start an inventory.
+            </p>
+            <p>
+                Periodical Inventories are used to count the number of products
+                available per location. You can use it once a year when you do
+                the general inventory or whenever you need it, to adapt the
+                current inventory level of a product.
+            </p>
+        </field>
+        <field name="context">{'damage_account':True,
+            'default_is_scrap_adjustment':True,
+            'search_default_is_scrap_adjustment':1}
+        </field>
+    </record>
+
+    <!--Hiding the scrapt transaction as per request-->
+<!--    <menuitem
+            name="Scrap Transaction"
+            id="menu_aspl_stock_transaction"
+            parent="stock.menu_stock_inventory_control"
+            action="aspl_scrap_transaction.aspl_action_inventory_form_view"
+    />-->
+
+</odoo>

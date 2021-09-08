@@ -1,0 +1,16 @@
+<odoo>
+	<data noupdate="0">
+
+        <record model="ir.cron" id="auto_stop_promotion">
+            <field name='name'>[POS] Auto Stop Promotions</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+            <field name="model">pos.promotion</field>
+            <field name="function">auto_stop_promotion</field>
+            <field name="args">()</field>
+        </record>
+
+	</data>
+</odoo>

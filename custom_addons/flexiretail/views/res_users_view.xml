@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="res_users_form_view_inherit" model="ir.ui.view">
+			<field name="name">res.users.form.view</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="point_of_sale.res_users_form_view" />
+			<field name="arch" type="xml">
+				<field name="barcode" position="after">
+					<field name="can_give_discount" />
+<!-- 					<field name="can_change_qty" /> -->
+					<field name="can_change_price" />
+					<field name="user_discount" attrs="{'invisible' : [('can_give_discount' ,'!=', True)]}"/>
+				</field>
+				<field name="pos_security_pin" position="replace">
+					<field name="pos_security_pin" password="True" />
+					<field name="default_pos"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>

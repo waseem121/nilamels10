@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_account_analytic_default_tree_alwani_inherit1" model="ir.ui.view">
+            <field name="name">account.analytic.default.tree.alwani.inherit1</field>
+            <field name="model">account.analytic.default</field>
+            <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree" />
+            <field name="arch" type="xml">
+                <field name="product_id" position="before">
+                    <field name="account_id"/>
+                    <field name="journal_id"/>
+                </field>
+                
+                <field name="user_id" position="replace">
+                    <field name="location_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="view_account_analytic_default_form_alwani_inherit1" model="ir.ui.view">
+            <field name="name">account.analytic.default.form.alwani.inherit1</field>
+            <field name="model">account.analytic.default</field>
+            <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form" />
+            <field name="arch" type="xml">
+                <field name="product_id" position="before">
+                    <field name="account_id"/>
+                    <field name="journal_id"/>
+                </field>
+                
+                <field name="product_id" position="after">
+                    <field name="category_id"/>
+                    <field name="location_id"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
+</odoo>    

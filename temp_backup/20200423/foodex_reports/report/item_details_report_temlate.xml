@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="item_details_report_template_doc">
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 70px;"/>
+                        </div>
+                        <div style="text-align:center">
+                            <h3><b style="border-bottom:2px solid black">Item Details Report</b></h3>
+                        </div>
+                    </div>
+                    <div style="border-bottom:3px solid black;margin-top:10px">
+                    </div>
+                </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Serial.</th>
+                                <th>Product Code</th>
+                                <th>Barcode</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Unit</th>
+                                <th>Sale Unit</th>
+                                <t t-if="price_selection == 'show_price' or price_selection == 'both'">
+                                    <th>Price</th>
+                                </t>
+                                <t t-if="price_selection == 'show_cost' or price_selection == 'both'">
+                                    <th>Cost</th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="count" t-value="1"/>
+                                <t t-if="data">
+                                    <t t-set="cate" t-value="test"/>
+                                    <t t-set="brand" t-value="test"/>
+                                    <t t-foreach="data" t-as="record">
+                                        <t t-if="groupby == 'category'">
+                                            <t t-if="record.categ_id.name != cate">
+                                                <tr>
+                                                <td colspan="9" style="border-bottom:2px solid black;border-top:2px solid black">
+                                                    <b><span t-esc="record.categ_id.name"></span></b>
+                                                </td>
+                                            </tr>
+                                            </t>
+                                            <t t-set="cate" t-value="record.categ_id.name"/>
+                                        </t>
+                                        <t t-if="groupby == 'brand'">
+                                            <t t-if="record.product_brand_id.name != brand">
+                                                <tr>
+                                                <td colspan="9" style="border-bottom:2px solid black;border-top:2px solid black">
+                                                    <b><span t-esc="record.product_brand_id.name"></span></b>
+                                                </td>
+                                            </tr>
+                                            </t>
+                                            <t t-set="brand" t-value="record.product_brand_id.name"/>
+                                        </t>
+                                    <tr>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="count"/>
+                                            <t t-set="count" t-value="count + 1"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.default_code"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.barcode"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.name"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.categ_id.name"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                           <span t-esc="record.uom_id.name"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                           <span t-esc="record.uom_so_id.name"/>
+                                        </td>
+                                        <t t-if="price_selection == 'show_price' or price_selection == 'both'">
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="'%.3f'%record.lst_price"/>
+                                            </td>
+                                        </t>
+                                        <t t-if="price_selection == 'show_cost' or price_selection == 'both'">
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="'%.3f'%record.standard_price"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                    </t>
+                                </t>
+                        </tbody>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="item_details_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.item_details_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_item_details" model="report.paperformat">
+            <field name="name">Item Details Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">45</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">40</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_item_detail"
+            string="item_details_report"
+            model="item.details.report"
+            name="foodex_reports.item_details_report_template"
+            file="foodex_reports.item_details_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="paperformat_item_details"
+            />
+    </data>
+</openerp>

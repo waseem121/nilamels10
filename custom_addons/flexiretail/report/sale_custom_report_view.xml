@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="my_report_saleorder_document" inherit_id="sale.report_saleorder_document">
+            <xpath
+                expr="//div[@class='page']//table[@class='table table-condensed']/tbody"
+                position="replace">
+                <tbody class="sale_tbody">
+                    <t t-foreach="page" t-as="layout_category">
+                        <t t-if="layout_category_size > 1 or page_size > 1"
+                            groups="sale.group_sale_layout">
+                            <tr class="active">
+                                <td colspan="7"
+                                    style="font-weight: bold; border-bottom: 1px solid black;">
+                                    &amp;bull;
+                                    <t t-esc="layout_category['name']" />
+                                </td>
+                            </tr>
+                        </t>
+                        <!-- Lines associated -->
+                        <t t-foreach="layout_category['lines']" t-as="l">
+                            <tr>
+                                <t t-if="l.product_id.is_product_pack">
+                                    <tr>
+                                        <td>
+                                            <strong><span t-field="l.name" style="font-size:20px;"/></strong>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.product_uom_qty" />
+                                            <span t-field="l.product_uom"
+                                                groups="product.group_uom" />
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.price_unit" />
+                                        </td>
+                                        <t t-if="display_discount">
+                                            <td class="text-right"
+                                                groups="sale.group_discount_per_so_line">
+                                                <span t-field="l.discount" />
+                                            </td>
+                                        </t>
+                                        <td class="text-right">
+                                            <span
+                                                t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))" />
+                                        </td>
+                                        <td class="text-right"
+                                            groups="sale.group_show_price_subtotal">
+                                            <span t-field="l.price_subtotal"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}' />
+                                        </td>
+                                        <td class="text-right"
+                                            groups="sale.group_show_price_total">
+                                            <span t-field="l.price_total"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}' />
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="l.product_id.product_pack_ids"
+                                        t-as="pack_line">
+                                        <t t-set="prod_qty" t-value="0.0" />
+                                        <tr>
+                                            <td>
+                                                <ul
+                                                    style="list-style-type:disc">
+                                                    <li>
+                                                        <span
+                                                            t-field="pack_line.product_id.name" />
+                                                    </li>
+                                                </ul>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-set="produ_qty"
+                                                    t-value="pack_line.quantity * l.product_uom_qty" />
+                                                <span t-esc="produ_qty" />
+                                                <span t-field="l.product_uom"
+                                                    groups="product.group_uom" />
+                                            </td>
+                                            <td colspan="5"/>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <t t-if="l.product_id.is_product_pack == False">
+                                    <td><span t-field="l.name"/></td>
+                                        <td class="text-right">
+                                            <span t-field="l.product_uom_qty"/>
+                                            <span t-field="l.product_uom" groups="product.group_uom"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.price_unit"/>
+                                        </td>
+                                        <td t-if="display_discount" class="text-right" groups="sale.group_discount_per_so_line">
+                                            <span t-field="l.discount"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.tax_id))"/>
+                                        </td>
+                                        <td class="text-right" groups="sale.group_show_price_subtotal">
+                                            <span t-field="l.price_subtotal"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                        </td>
+                                        <td class="text-right" groups="sale.group_show_price_total">
+                                            <span t-field="l.price_total"
+                                                t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                     </td>
+                                 </t>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </xpath>
+        </template>
+    </data>
+</odoo>

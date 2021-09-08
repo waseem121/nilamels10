@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        
+    <template id="account.report_generalledger">
+        <t t-call="report.html_container">
+            <t t-if="data['portrait_wo_header']" t-set="data_report_margin_top" t-value="12"/>
+            <t t-if="data['portrait_wo_header']" t-set="data_report_margin_left" t-value="20"/>
+            <t t-if="not data['portrait_wo_header']" t-set="data_report_margin_top" t-value="12"/>
+            <t t-set="data_report_header_spacing" t-value="9"/>
+            <t t-set="data_report_dpi" t-value="110"/>
+
+            <t t-if="data['portrait_wo_header']" t-set="data_report_margin_top" t-value="55"/>
+            <t t-if="data['portrait_wo_header']" t-set="data_report_header_spacing" t-value="45"/>
+            <!--<t t-if="data['portrait_wo_header']" t-set="data_report_margin_bottom" t-value="0"/>-->
+
+            <!--<t t-call="report.internal_layout">-->
+            <t t-call="ledgers_filter_custom.external_layout_custom_generalledger">
+            <!--<t t-call="report.external_layout">-->
+            
+<!--            <div style="margin-top: 10cm">
+            </div>-->
+                <div class="page">
+                    
+                    <h2 t-if="not data['portrait_wo_header']"><span t-esc="res_company.name"/>: General ledger
+                    </h2>
+                    <t t-if="not data['portrait_wo_header']">
+                        <div class="row mt32">
+                            <div class="col-xs-4">
+                                <strong>Journals:</strong>
+                                <p t-esc="', '.join([ lt or '' for lt in print_journal ])"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Display Account</strong>
+                                <p>
+                                    <span t-if="data['display_account'] == 'all'">All accounts'</span>
+                                    <span t-if="data['display_account'] == 'movement'">With movements</span>
+                                    <span t-if="data['display_account'] == 'not_zero'">With balance not equal to zero
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong>Target Moves:</strong>
+                                <p t-if="data['target_move'] == 'all'">All Entries</p>
+                                <p t-if="data['target_move'] == 'posted'">All Posted Entries</p>
+                            </div>
+                        </div>
+                    </t>
+                    <div class="row mb32">
+                        <div class="col-xs-4" t-if="not data['portrait_wo_header']">
+                            <strong>Sorted By:</strong>
+                            <p t-if="data['sortby'] == 'sort_date'">Date</p>
+                            <p t-if="data['sortby'] == 'sort_journal_partner'">Journal and Partner</p>
+                        </div>
+                        <div class="col-xs-4" t-if="not data['portrait_wo_header']">
+                            <t t-if="data['date_from']">
+                                <strong>Date from :</strong>
+                                <span t-esc="datetime.datetime.strptime(data['date_from'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                                <br/>
+                            </t>
+                            <t t-if="data['date_to']">
+                                <strong>Date to :</strong>
+                                <span t-esc="datetime.datetime.strptime(data['date_to'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                            </t>
+                        </div>
+                    </div>
+                    
+                    <t t-foreach="Accounts" t-as="account">
+                        <tr style="font-weight: bold;">
+                            <td colspan="6" t-if="not data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                                <strong><span t-esc="account['code']"/></strong>
+                                <strong><span t-esc="account['name']"/></strong>
+                            </td>
+                            <td colspan="3" t-if="data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                                <strong><span t-esc="account['code']" style="font-size:20px"/></strong>
+                                <strong><span t-esc="account['name']" style="font-size:20px"/></strong>
+                            </td>
+<!--                            <td class="text-right">
+                                <span t-esc="account['debit']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="account['credit']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="account['balance']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td groups="base.group_multi_currency"/>-->
+                        </tr>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="width:0.5cm">Date</th>
+                                    <th>JRNL</th>
+                                    <th t-if="not data['portrait_wo_header']">Partner</th>
+                                    <!--<th t-if="not data['portrait_wo_header']">Ref</th>-->
+                                    <th>Ref</th>
+                                    <th t-if="not data['portrait_wo_header']">Move</th>
+                                    <th>Narration</th>
+                                    <th class="text-right">Debit</th>
+                                    <th class="text-right">Credit</th>
+                                    <th class="text-right">Balance</th>
+                                    <th groups="base.group_multi_currency" t-if="not data['portrait_wo_header']">Currency
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--<t t-foreach="Accounts" t-as="account">-->
+<!--                                    <tr style="font-weight: bold;">
+                                        <td colspan="6" t-if="not data['portrait_wo_header']">
+                                            <span style="color: white;" t-esc="'..'"/>
+                                            <span t-esc="account['code']"/>
+                                            <span t-esc="account['name']"/>
+                                        </td>
+                                        <td colspan="3" t-if="data['portrait_wo_header']">
+                                            <span style="color: white;" t-esc="'..'"/>
+                                            <span t-esc="account['code']"/>
+                                            <span t-esc="account['name']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="account['debit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="account['credit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="account['balance']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td groups="base.group_multi_currency"/>
+                                    </tr>-->
+                                    <tr t-foreach="account['move_lines']" t-as="line">
+                                        <td style="width:0.5cm">
+                                            <span t-if="line['ldate']"
+                                                  t-esc="datetime.datetime.strptime(line['ldate'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                                        </td>
+
+                                        <td t-if="data['portrait_wo_header']">
+                                            <span t-esc="line['move_name']"/>
+                                        </td>
+                                        <td t-if="not data['portrait_wo_header']">
+                                            <span t-esc="line['lcode']"/>
+                                        </td>
+
+                                        <td t-if="not data['portrait_wo_header']">
+                                            <span t-esc="line['partner_name']"/>
+                                        </td>
+<!--                                        <td t-if="not data['portrait_wo_header']">
+                                            <span t-if="line['lref']" t-esc="line['lref']"/>
+                                        </td>-->
+                                        <td>
+                                            <span t-if="line['lref']" t-esc="line['lref']"/>
+                                        </td>
+                                        <td t-if="not data['portrait_wo_header']">
+                                            <span t-esc="line['move_name']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="line['lname']"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['debit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['credit']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-esc="line['balance']"
+                                                  t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                        </td>
+                                        <td class="text-right" groups="base.group_multi_currency"
+                                            t-if="not data['portrait_wo_header']">
+                                            <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>
+                                            <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
+                                        </td>
+                                    </tr>
+                                <!--</t>-->
+                            </tbody>
+                        </table>
+                        <!--<div class="col-xs-14" colspan="6">-->
+                        <div class="col-xs-9 pull-right">
+                            <div style="border-bottom: 1px solid black;"></div>
+                        </div>
+                    <p style="page-break-after:always;"> </p>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="account_report_generalledger_1" inherit_id="account.report_generalledger">
+        <xpath expr="//table[@class='table table-condensed']" position="replace">
+            <table class='table table-condensed'>
+                <thead>
+                    <tr class="text-center">
+                        <th style="width:3.0cm">Date</th>
+                        <th style="width:3.0cm">JRNL</th>
+                        <th t-if="not data['portrait_wo_header']">Partner</th>
+                        <!--<th t-if="not data['portrait_wo_header']">Ref</th>-->
+                        <th>Ref</th>
+                        <th t-if="not data['portrait_wo_header']">Move</th>
+                        <th style="width:10.0cm">Narration</th>
+                        <th class="text-right">Debit</th>
+                        <th class="text-right">Credit</th>
+                        <th class="text-right">Balance</th>
+                        <th groups="base.group_multi_currency" t-if="not data['portrait_wo_header']">Currency
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--<t t-foreach="Accounts" t-as="account">-->
+                        <!--<p style="page-break-after:always;"> </p>-->
+<!--                        <tr style="font-weight: bold;">
+                            <td colspan="6" t-if="not data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                                <span t-esc="account['code']"/>
+                                <span t-esc="account['name']"/>
+                            </td>
+                            <td colspan="3" t-if="data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                                <span t-esc="account['code']"/>
+                                <span t-esc="account['name']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['debit'])" />
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['credit'])" />
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['balance'])" />
+                            </td>
+                            </t>
+                            <td groups="base.group_multi_currency"/>
+                        </tr>-->
+                        <t t-if="ageing">
+                            <t t-if="not data['date_to']">
+                                <t t-set="date1"
+                                   t-value="datetime.datetime.today()- datetime.timedelta(days=1)"/>
+                                <t t-set="date2" t-value="date1 - datetime.timedelta(days=30)"/>
+                                <t t-set="date3" t-value="date2 - datetime.timedelta(days=30)"/>
+                                <t t-set="date4" t-value="date3 - datetime.timedelta(days=30)"/>
+                                <t t-set="date5" t-value="date4 - datetime.timedelta(days=30)"/>
+                                <t t-set="date6" t-value="date5 - datetime.timedelta(days=630)"/>
+                            </t>
+                            <t t-if="data['date_to']">
+                                <t t-set="date1"
+                                   t-value="datetime.datetime.strptime(data['date_to'], '%Y-%m-%d')"/>
+                                <t t-set="date2" t-value="date1 - datetime.timedelta(days=30)"/>
+                                <t t-set="date3" t-value="date2 - datetime.timedelta(days=30)"/>
+                                <t t-set="date4" t-value="date3 - datetime.timedelta(days=30)"/>
+                                <t t-set="date5" t-value="date4 - datetime.timedelta(days=30)"/>
+                                <t t-set="date6" t-value="date5 - datetime.timedelta(days=60)"/>
+                            </t>
+                            <t t-set="tot1" t-value="0.0"/>
+                            <t t-set="tot2" t-value="0.0"/>
+                            <t t-set="tot3" t-value="0.0"/>
+                            <t t-set="tot4" t-value="0.0"/>
+                            <t t-set="tot5" t-value="0.0"/>
+                            <t t-set="tot6" t-value="0.0"/>
+                        </t>
+                        <!--<t t-set="check_date" t-value="datetime.datetime.strptime(line['ldate'], '%Y/%m/%d')"/>-->
+                        <t t-set="zero" t-value="0.0"/>
+                        <tr t-foreach="account['move_lines']" t-as="line">
+                            <t t-set="amount" t-value="line['debit'] - line['credit']"/>
+                            <t t-set="check_date" t-value="datetime.datetime.strptime(line['ldate'], '%Y-%m-%d')"/>
+                            <td style="width:3.0cm">
+                                <span t-if="line['ldate']"
+                                      t-esc="datetime.datetime.strptime(line['ldate'], '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                            </td>
+
+                            <td t-if="data['portrait_wo_header']" style="width:3.5cm">
+                                <!--<span t-esc="line['lcode']"/><span>/</span><span t-esc="line['move_name']"/>-->
+                                <span t-esc="line['move_name']"/>
+                            </td>
+                            <td t-if="not data['portrait_wo_header']">
+                                <span t-esc="line['lcode']"/>
+                            </td>
+                            
+                            <td t-if="not data['portrait_wo_header']">
+                                <span t-esc="line['partner_name']"/>
+                            </td>
+<!--                            <td t-if="not data['portrait_wo_header']">
+                                <span t-if="line['lref']" t-esc="line['lref']"/>
+                            </td>-->
+                            <td>
+                                <span t-if="line['lref']" t-esc="line['lref']"/>
+                            </td>
+                            <td t-if="not data['portrait_wo_header']">
+                                <span t-esc="line['move_name']"/>
+                            </td>
+                            <td style="width:10.0cm">
+                                <span t-esc="line['lname']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(line['debit'])" />
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(line['credit'])" />
+                            </td>
+                            <t t-if="ageing and check_date">
+                                <t t-if="((date1 + datetime.timedelta(days=1)) &gt; check_date)and(date2 &lt; check_date)">
+                                    <t t-set="tot1" t-value="tot1 + amount"/>
+                                </t>
+                                <t t-if="((date2) &gt; check_date)and(date3 &lt; check_date)">
+                                    <t t-set="tot2" t-value="tot2 + amount"/>
+                                </t>
+                                <t t-if="((date3) &gt; check_date)and(date4 &lt; check_date)">
+                                    <t t-set="tot3" t-value="tot3 + amount"/>
+                                </t>
+                                <t t-if="((date4) &gt; check_date)and(date5 &lt; check_date)">
+                                    <t t-set="tot4" t-value="tot4 + amount"/>
+                                </t>
+                                <t t-if="((date5) &gt; check_date)and(date6 &lt; check_date)">
+                                    <t t-set="tot5" t-value="tot5 + amount"/>
+                                </t>
+                                <t t-if="((date6) &gt; check_date)">
+                                    <t t-set="tot6" t-value="tot6 + amount"/>
+                                </t>
+                            </t>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(line['balance'])" />
+<!--                                <span t-esc="line['balance']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>-->
+                            </td>
+                            <td t-if="data['foreign_currency']">
+                                <span t-esc="line['currency_code']"/>
+                            </td>
+                            <td class="text-right" groups="base.group_multi_currency"
+                                t-if="not data['portrait_wo_header']">
+                                <span t-esc="line['amount_currency'] if line['amount_currency'] > 0.00 else ''"/>
+                                <span t-esc="line['currency_code'] if line['amount_currency'] > 0.00 else ''"/>
+                            </td>
+                        </tr>
+                        <!--add totals add bottom-->
+                        <tr style="font-weight: bold;">
+                            <td colspan="6" t-if="not data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                            </td>
+                            <td colspan="2" t-if="data['portrait_wo_header']">
+                                <span style="color: white;" t-esc="'..'"/>
+                            </td>
+                            <td t-if="data['portrait_wo_header']">
+                                <strong><span>Total:</span></strong>
+                            </td>                            
+                            <td/>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['debit'])" />
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['credit'])" />
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="'{:,.3f}'.format(account['balance'])" />
+                            </td>
+                            <!--<td groups="base.group_multi_currency"/>-->
+                        </tr>
+                        <!--amount in words-->
+                        <tr style="font-weight: bold;">
+                            <td/>
+                            <td/>
+                            <!--<td colspan="3" t-if="data['portrait_wo_header']">-->
+                            <td t-if="data['portrait_wo_header']">
+                                <strong><span>Amount Balance:</span></strong>
+                            </td>
+                            <td colspan="4">
+                                <t>
+                                    <span t-esc="account['balance_words']" />
+                                </t>
+                            </td>                            
+                        </tr>                        
+                        
+
+                        
+                        
+                        <t t-if="ageing">
+                            <tr>
+                                <td colspan="10">
+                                    <div>
+                                        <table class='table table-bordered'>
+
+                                            <tr>
+                                                <th colspan="7" class="text-center">Ageing</th>
+                                            </tr>
+                                            <tr>
+                                                <!--<th rowspan="2" colspan="2"/>-->
+                                                <th class="text-center">0-30</th>
+                                                <th class="text-center">30-60</th>
+                                                <th class="text-center">60-90</th>
+                                                <th class="text-center">90-120</th>
+                                                <th class="text-center">120-180</th>
+                                                <th class="text-center">180+</th>
+                                                <th class="text-center">Balance</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right">
+                                                    <span t-esc="tot1"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot2"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot3"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot4"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot5"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot6"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong t-esc="account['balance']"
+                                                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+<!--                        <div class="col-xs-4 pull-right">
+                            <div style="border-bottom: 1px solid black;"></div>
+                        </div>-->
+                    <!--</t>-->
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+
+</odoo>
+

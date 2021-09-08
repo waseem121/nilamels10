@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+<!--    <record id="weekly_account_report_format" model="report.paperformat">
+        <field name="name">Weekly Report</field>
+        <field name="default" eval="True" />
+        <field name="orientation">Landscape</field>
+    </record>    -->
+    
+<!--paperformat="weekly_account_report.weekly_account_report_format"-->
+    <report id="weekly_account_report_temp" 
+            string="Weekly Report"
+            model="weekly.report"
+            name="weekly_account_report.weekly_report_template"
+            file="weekly_account_report.weekly_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            />
+
+</odoo>

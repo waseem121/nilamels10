@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+            
+        <record id="view_users_form_simple_modif_foodex_in" model="ir.ui.view">
+            <field name="name">view.users.form.simple.modif.foodex.in</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <field name="tz" position="after">
+                    <field name="transaction_date"/>
+                </field>
+            </field>
+        </record>
+      
+  </data>
+</odoo>

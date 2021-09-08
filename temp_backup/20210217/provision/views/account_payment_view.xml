@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+        
+	<record id="view_account_payment_form_foodex_inherit" model="ir.ui.view">
+	    <field name="name">view.account.payment.form.foodex.inherit</field>
+	    <field name="model">account.payment</field>
+	    <field name="inherit_id" ref="account.view_account_payment_form"/>
+	    <field name="arch" type="xml">
+<!--	        <label for="amount" position="before">
+                    <field name="invoice_type"/>
+	        </label>-->
+                <field name="state" position="before">
+<!--                    <button name="manual_reconcile" class="oe_highlight" string="Manual Reconcilation" 
+                        type="object"
+                        attrs="{'invisible': [('state','!=','posted')]}"/>-->
+<!--                    <button name="unreconcile_custom" class="oe_highlight" string="UnReconcile" 
+                        type="object"
+                        attrs="{'invisible': [('state','!=','reconciled')]}"/>-->
+                </field>
+                <field name="partner_id" position="replace">
+                    <field name="partner_id" nolabel="1" 
+                           attrs="{'required': [('payment_type', 'in', ('inbound', 'outbound'))], 
+                            'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 
+                            'readonly': [('state', '!=', 'draft')]}" 
+                           context="{'default_is_company': True, 'default_supplier': True, 'default_customer': True}"/>
+                </field>                
+                
+<!--                <field name="amount" position="replace">
+                    <field name="amount" 
+                           attrs="{'readonly': [('state', '!=', 'draft')]}" 
+                           style="text-align:right;"/>
+                </field> -->
+                
+	        <field name="journal_id" position="after">
+                    <field name="journal_type" invisible="1"/>
+                    <field name="account_id" attrs="{'invisible': [('journal_type','!=','bank')]}" 
+                           options="{'no_create': True}"/>
+	        </field>
+                    <xpath expr='//group[2]' position="inside">
+                            <label for="payment_difference"/>
+                            <div>
+                                <field name="payment_difference"/>
+                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                            </div>
+                            <field name="writeoff_account_id" string="Post Difference In"
+                                attrs="{'invisible': [('payment_difference_handling','=','open')], 'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                            
+                            <field name="payment_mode"/>
+                            <field name="cheque_no"/>
+                            <field name="cheque_date"/>
+                            
+                    </xpath>
+                
+            <xpath expr="//group" position='after'>
+                <notebook>
+                    <page string="Reconcile Lines">
+                        <group>
+                            <group>
+                                <field name="manual_reconcilation_lines" nolabel="1">
+                                    <tree string="Reconcile lines" editable="bottom">
+                                        <field name="debit_line_id"/>
+                                        <field name="amount_total" digits="(10, 3)"/>
+                                        <field name="draft_amount" digits="(10, 3)"/>
+                                        <field name="reconciled_amount" digits="(10, 3)"/>
+                                        <field name="balance" digits="(10, 3)"/>
+                                        <field name="amount_to_reconcile" digits="(10, 3)"/>
+                                        <field name="date"/>
+                                    </tree>                        
+                                </field>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+
+                    </page>
+                </notebook>
+                
+            </xpath>
+                
+	    </field>
+	</record>        
+
+</data>
+</openerp>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="partner_overdue_form_view" model="ir.ui.view">
+            <field name="name">partner.overdue.form.view</field>
+            <field name="model">partner.overdue</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="state" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                    <group col="4" states="choose">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="partner_id" domain="[('customer','=',True)]"
+                            options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                    </group>
+                        <div states="get">
+                            <h2>Report Complete</h2>
+                            <p>Here is the Xls File :
+                                <field name="data" readonly="1" filename="name"/>
+                            </p>
+                        </div>
+                    <footer states="choose">
+                        <button type="object" string="Export" class="oe_highlight" name="action_export"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_overdue" model="ir.actions.act_window">
+            <field name="name">Partner Overdue</field>
+            <field name="res_model">partner.overdue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="partner_overdue_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_partner_overdue"
+            id="menu_partner_overdue" sequence="100"/>
+
+    </data>
+</odoo>

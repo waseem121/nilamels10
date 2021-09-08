@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	<!-- Add wishlist into quick view -->
+	<template id="clarico_quick_view_wishlist_quick_view_popup" inherit_id="clarico_quick_view.clarico_quick_view_fetch-record">		
+		<xpath expr="//div[@id='wishlist_icon_div_quick_view']" position="inside">			
+		<a title="Add To Wishlist" href="#a" class="add2wish" t-att-data-id="'%s' % product.id "><i class="fa fa-heart" aria-hidden="true"></i></a>			
+		<a title="In Wishlist" class="in2wish" t-att-data-id="'%s' % product.id "><i class="fa fa-heart"></i></a>	    
+		</xpath>	
+	</template>			             	
+</odoo>

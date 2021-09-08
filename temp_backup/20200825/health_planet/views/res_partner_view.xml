@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+     <record id="res_partner_view_instructor" model="ir.ui.view">
+            <field name="name">res.partner.view.instructor</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <group name="purchase" position="after">
+                    <group name="instructor" string="Business Type">
+                        <field name="is_instructor"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+</odoo>

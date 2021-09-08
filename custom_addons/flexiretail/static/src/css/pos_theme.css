@@ -1,0 +1,49 @@
+.pos .modal-dialog .popup #theme-tabs{
+    font-size: 9px;
+    height: 100%;
+    width:100%;
+    overflow: scroll;
+    width: 825px;
+}
+
+.top_header_bar{
+    border-bottom: 4px solid rgb(110, 200, 155);
+    padding-bottom: 18px;
+    width:100%
+}
+
+.theme-text-field-hide{
+    display:none;
+}
+
+.create_theme{
+    margin-top: 4px;
+    position: fixed;
+}
+
+.color-list-style tr td{
+    margin:13px 22px;
+    font-size:12px;
+}
+.theme_button{
+    display: inline-block;
+    line-height: 38px;
+    min-width: 38px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0px 10px;
+    cursor: pointer;
+}
+.color_input{
+	width: 50px !important;
+	height:32px;
+	min-height:0px !important;
+}
+.popup_input{
+	height: 20% !important;
+	width: 45% !important;
+}
+.popup_screen_background{
+	width: 20% !important;
+    font-size: 14px !important;
+}

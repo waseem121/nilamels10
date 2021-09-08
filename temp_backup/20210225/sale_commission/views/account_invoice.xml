@@ -1,0 +1,44 @@
+<odoo>
+  <data>
+         <record id="invoice_form_commission_inherit" model="ir.ui.view">
+            <field name="name">invoice.form.commission.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">      
+                <field name="comment" position="before">
+                    <div invisible="1">
+                        <label for="discount_account_id" 
+                               groups="sale_commission.group_enable_separate_discount_entry"/>
+                        <field name="discount_account_id"
+                               class="oe_inline" style="margin-left: 50px;"
+                               groups="sale_commission.group_enable_separate_discount_entry"/>
+                    </div>
+                    <div>
+                        <label for="commission" groups="sale_commission.group_enable_commission"/>
+                        <field name="commission"
+                            class="oe_inline" style="margin-left: 33px;" 
+                            groups="sale_commission.group_enable_commission" digits="(10, 3)"/>
+                    </div>
+                    <div>
+                        <label for="commission_account_id" groups="sale_commission.group_enable_commission"/>
+                        <field name="commission_account_id"
+                               class="oe_inline" style="margin-left: 50px;"
+                                groups="sale_commission.group_enable_commission"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+        
+        
+        <record id="salecommission_invoice_line_add_field" model="ir.ui.view">
+            <field name="name">salecommission.invoice.line.add.field</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="direct_sale.invoice_line_add_field"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids_two']/tree/field[@name='price_subtotal']" position="before">
+                    <field name="commission_share" groups="sale_commission.group_enable_commission" invisible="1"/>
+                </xpath>                
+            </field>
+        </record>
+  </data>
+</odoo>

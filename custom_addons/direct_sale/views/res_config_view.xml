@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <record id="view_account_config_settings_direct_sale_inherit" model="ir.ui.view">
+            <field name="name">account settings.direct.sale.inherit</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings" />
+            <field name="arch" type="xml">
+                <field name="group_warning_account" position="after">
+                    <field name="is_discount_posting_setting" />
+                    <field name="discount_posting_account_id_setting" class="oe_inline" attrs="{'invisible': [('is_discount_posting_setting','=',False)], 'required': [('is_discount_posting_setting','=',True)]}"/>
+                </field>
+                <group name="multi_currency" position="after">
+                    <group string="Enable Currency in Invoice">
+                        <group>
+                            <field name="group_enable_currency_in_invoice"/>
+                        </group>
+                    </group>
+                    <group string="Allow Negative Quantity in Invoice,Transfers,Damages">
+                        <group>
+                            <field name="group_allow_negative_qty"/>
+                        </group>
+                    </group>
+
+                    <group string="Days Draft Invoice From">
+                        <group>
+                            <field name="days_draft_invoice_from"/>
+                        </group>
+                    </group>
+                </group>
+
+                    
+            </field>
+        </record>
+        
+    </data>
+</odoo>

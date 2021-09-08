@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_sale_config_inherit_form_weekly">
+            <field name="name">view.sale.config.inherit.form.weekly</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="sale.view_sales_config"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='main']" position="inside">
+                    <separator string="Weekly Report"/>
+                    <group>
+                        <label for="collector_based" string="Collector Based"/>
+                        <div>
+                            <div name="collector_based">
+                                <field name="collector_based" class="oe_inline"/>
+                                <label for="collector_based"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="salesman_based" string="Salesman Based"/>
+                        <div>
+                            <div name="salesman_based">
+                                <field name="salesman_based" class="oe_inline"/>
+                                <label for="salesman_based"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

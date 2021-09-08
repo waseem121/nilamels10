@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="non_moving_product_wizard_ept_view_wizard" model="ir.ui.view">
+			<field name="name">non.moving.product.wizard.ept.view</field>
+			<field name="model">non.moving.product.wizard.ept</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Non Moving Products">
+					<group>
+						<field name="from_date" />
+						<field name="to_date" />
+						<field name="warehouse_ids" widget="many2many_tags" options="{'no_create': True}" />
+
+					</group>
+					<footer>
+						<button name="print_non_moving_product" string="Download Report"
+							class="oe_highlight" type="object" />
+						<button colspan="2" special="cancel" string="Cancel" class="btn-primary" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+
+		<record id="non_moving_product_wizard_ept_action" model="ir.actions.act_window">
+			<field name="name">Non Moving Products</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">non.moving.product.wizard.ept</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_type">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="non_moving_product_wizard_ept_view_wizard" />
+		</record>
+
+		<menuitem id="non_moving_product_wizard_ept_menu" parent="stock.menu_warehouse_report"
+			name="Non Moving Products" sequence="1"
+			action="non_moving_product_wizard_ept_action" />
+
+	</data>
+</odoo>

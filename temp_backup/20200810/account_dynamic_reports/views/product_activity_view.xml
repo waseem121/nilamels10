@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="account_dynamic_reports.product_activity">
+        <t t-call="report.html_container">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <style>
+                        .pims_report_content{
+                            font-size: 14px;
+                            font-family" 'Arial';
+                        }
+
+                        .pims_report_line_table {
+                            width:100%;
+                        }
+
+                        .pims_report_line_main_tr {
+                            font-weight:bold;
+                            font-size: 14px;
+                            font-family" 'Arial';
+                            border-bottom:1px solid grey;
+                        }
+
+                        .pims_report_line_initial_tr {
+                            font-style:italic;
+                        }
+
+                        .pims_report_line_data_tr {
+                            font-style:inherit;
+                        }
+
+                        .pims_report_line_subtotal {
+                            font-weight:bold;
+                            background-color: white;
+                            border:1px solid grey;
+                        }
+                    </style>
+                    <!--<h3><span t-esc="res_company.name"/>: Product Profit Report</h3>-->
+                    <h3>Product Activity Report</h3>
+                    <div>
+                        <div class="row pims_report_content">
+                            <div class="col-xs-3">
+                                <strong>Date From:</strong>
+                                <p t-esc="Filters['date_from']" t-options='{"widget": "date"}'></p>
+                            </div>
+                            <div class="col-xs-3">
+                                <strong>Date To:</strong>
+                                <p t-esc="Filters['date_to']" t-options='{"widget": "date"}'></p>
+                            </div>
+                        </div>
+
+                        <br></br><br></br>
+                        
+<!--                        <t t-set="show_profit_percent_sales" t-value="Filters['show_profit_percent_sales']"/>
+                        <t t-set="show_profit_percent_cost" t-value="Filters['show_profit_percent_cost']"/>
+                        <t t-set="show_profit_percent_net_profit" t-value="Filters['show_profit_percent_net_profit']"/>-->
+                        
+                        <table class="pims_report_line_table pims_report_content">
+                            <thead>
+                                <t>
+                                    <tr class="text-center">
+                                        <th style="text-align:left;">Ref No</th>
+                                        <th style="text-align:left;">Date</th>
+                                        <th style="text-align:left;">Description</th>
+                                        <th style="text-align:left;">Customer</th>
+                                        <th style="text-align:right;padding-bottom:10px;">QtyIn</th>
+                                        <th style="text-align:right;padding-bottom:10px;">QtyOut</th>
+                                        <th style="text-align:right">Price</th>
+                                        <th style="text-align:right">Discount</th>
+                                        <th style="text-align:right">Cost</th>
+                                        <th style="text-align:right">Balance</th>
+<!--                                        <t t-if="show_profit_percent_sales">
+                                            <th style="text-align:right">ProfitPerc Sales</th>
+                                        </t>-->
+                                    </tr>
+                                </t>
+                            </thead>
+                            <t t-foreach="Ledger_data" t-as="line">
+                                <t t-if="line['ref_no'] != 'Total'">
+                                    <tr class="pims_report_line_data_tr">
+                                        <td><t t-esc="line['ref_no']"/></td>
+                                        <td><t t-esc="line['date']"/></td>
+                                        <td><t t-esc="line['desc']"/></td>
+                                        <td style="width:30%;"><span t-esc="line['customer']"/></td>
+                                        <td class="text-right"><t t-esc="line['qty_in']"/></td>
+                                        <td class="text-right"><t t-esc="line['qty_out']"/></td>
+                                        <td class="text-right"><t t-esc="line['price']"/></td>
+                                        <td class="text-right"><t t-esc="line['discount']"/></td>
+                                        <td class="text-right"><t t-esc="line['cost']"/></td>
+                                        <td class="text-right"><t t-esc="line['balance']"/></td>
+<!--                                        <t t-if="show_profit_percent_net_profit">
+                                            <td class="text-right"><t t-esc="line['profit_percent_net_profit']"/></td>
+                                        </t>-->
+                                    </tr>
+                                </t>
+                                <t t-else="">
+                                <tr class="pims_report_line_main_tr">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <span style="color: white;" t-esc="'..'"/>
+                                        <span t-esc="line['name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_qty_in']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_qty_out']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_price']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_discount']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_cost']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="line['total_balance']"/>
+                                    </td>
+                                </tr>                                    
+                                </t>
+                                
+                            </t>
+                        </table>
+                    </div>
+                    <br></br>
+                    <p style="text-align:center"> *** END OF DOCUMENT ***</p>
+                </div>
+           </t>
+        </t>
+    </template>
+
+    <report id="action_print_product_activity"
+        model="product.activity.report"
+        report_type="qweb-pdf"
+        menu="False"
+        string="Product Activity"
+        name="account_dynamic_reports.product_activity"
+        file="account_dynamic_reports.product_activity"
+    />
+</odoo>

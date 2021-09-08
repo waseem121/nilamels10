@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<!-- List / Tree View -->
+		<record id="wishlist_line_tree_view" model="ir.ui.view">
+			<field name="name">wishlist.line.tree.view</field>
+			<field name="model">wishlist.wishlist.line</field>
+			<field name="arch" type="xml">
+				<tree string="Wishlist Line">
+					<field name="id" />
+					<field name="product_id" />
+				</tree>
+			</field>
+
+			<!-- Form View -->
+		</record>
+		<record id="wishlist_form_view" model="ir.ui.view">
+			<field name="name">wishlist.form.view</field>
+			<field name="model">wishlist.wishlist.line</field>
+			<field name="arch" type="xml">
+				<form string="Registration List">
+					<sheet>
+						<label string="Product ID"/>
+						<field name="product_id" />
+						<br/><br/>
+						<label string="Wish ID"/>
+						<field name="wishlist_id"  />
+					</sheet>
+				</form>
+			</field>
+		</record>
+
+		<!-- For Action Window -->
+		<record id="action_wishlist_line" model="ir.actions.act_window">
+			<field name="name">wishlist Line</field>
+			<field name="res_model">wishlist.wishlist.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<!-- Action Menu Item Related To Above Action Window -->
+		<menuitem action="action_wishlist_line" id="action_wishlist_line_menu"
+			parent="sales_team.menu_sales" name="Wishlist Line" sequence="3" />
+
+	</data>
+</odoo>

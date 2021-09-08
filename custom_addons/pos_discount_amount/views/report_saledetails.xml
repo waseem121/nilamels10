@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="report_report_saledetails_inherit" inherit_id="point_of_sale.report_saledetails">
+    <xpath expr="//table[1][@class='table table-condensed']" position="replace">
+        <table class="table table-condensed">
+                <thead><tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price Unit</th>
+                </tr></thead>
+                <tbody>
+                <tr t-foreach='products' t-as='line'>
+                    <td><t t-esc="line['product_name']" /></td>
+                    <td>
+                        <t t-esc="line['quantity']" />
+                        <t t-if='line["uom"] != "Unit(s)"'>
+                            <t t-esc='line["uom"]' /> 
+                        </t>
+                    </td>
+                    <td>
+                        <t t-esc='line["price_unit"]' />
+                    <!--t t-if='line["discount"] != 0'>
+                        Disc: <t t-esc='line["discount"]' />%
+                    </t-->
+                    <t t-if='line["discount"] != 0 and line["dis_type"] == "per"'>
+                        Disc: <t t-esc='line["discount"]' />%
+                    </t>
+                    <t t-if='line["discount"] != 0 and line["dis_type"] == "amount"'>
+                        Disc: <t t-esc='line["discount"]' />
+                    </t>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+    </xpath>
+
+</template>
+
+
+</odoo>

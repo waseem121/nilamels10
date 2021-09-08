@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Extend orderline view in POS screen-->
+
+    <t t-extend="Orderline">
+        <t t-jquery=".info-list" t-operation="replace">
+            <ul class="info-list">
+                <t t-if="line.get_quantity_str() !== '1' || line.selected ">
+                    <li class="info">
+                        <em>
+                            <t t-esc="line.get_quantity_str()" />
+                        </em>
+                        <t t-esc="line.get_unit().name" />
+                        at
+                        <t t-esc="widget.format_currency(line.get_unit_display_price(),'Product Price')" />
+                        /
+                        <t t-esc="line.get_unit().name" />
+                    </li>
+                </t>
+                <t t-if="line.get_discount_str() !== '0'">
+                    <li class="info">
+                    <t t-if ="widget.pos.company.discount_type == 'amount'">
+                        With a 
+                        <em>
+                            <t t-esc="widget.format_currency(line.get_discount_str())" />
+                        </em>
+                        discount
+                    </t>
+                    <t t-if ="widget.pos.company.discount_type == 'per'">
+                        With a
+                        <em>
+                            <t t-esc="line.get_discount_str()" />%
+                        </em>
+                        discount
+                    </t>
+                    </li>
+                </t>
+            </ul>
+            
+        </t>
+    </t>
+    
+<!--Extending POS reciept-->
+
+    <t t-extend="PosTicket">
+        <t t-jquery=".pos-disc-font" t-operation="replace">
+              <div class="pos-disc-font">
+                    <t t-if ="widget.pos.company.discount_type == 'amount'">
+                        With a <t t-esc="widget.format_currency(orderline.get_discount())"/> discount
+                    </t>
+                    <t t-if ="widget.pos.company.discount_type == 'per'">
+                        With a <t t-esc="orderline.get_discount()"/>% discount
+                    </t>
+              </div>  
+       </t> 
+    </t>
+
+
+</templates>

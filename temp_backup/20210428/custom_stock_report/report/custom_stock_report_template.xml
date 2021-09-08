@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="custom_stock_report_paperformat" model="report.paperformat">
+            <field name="name">Stock Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report id="custom_action_stock_report"
+                string="Stock Report"
+                model="stock.report"
+                name="custom_stock_report.custom_stock_report_template"
+                file="custom_stock_report.custom_stock_report_template"
+                report_type="qweb-pdf"
+                paperformat="custom_stock_report.custom_stock_report_paperformat"/>
+
+        <template id="custom_stock_report_template">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <div class="row" style="text-align:center;">
+                        <h3>Stock Report</h3>
+                    </div>
+                    <t t-foreach="doc_ids" t-as="o">
+                        <div class="col-xs-12">
+                            <center>
+                                <h4 class="text-center text-primary">
+                                    <t t-if="o.view_by == 'detail'">Detail Report</t>
+                                    <t t-if="o.view_by == 'summary'">Summary Report</t>
+                                </h4>
+                            </center>
+                        </div>
+                        <div class="row container">
+                        	<div class="row mt32 mb32" id="informations">
+				                <div t-if="o.date_selection == 'upto_date'" class="col-xs-3">
+				                    <p><strong>Date Type Selection : </strong>Upto Date</p>
+				                </div>
+				                <div t-if="o.date_selection == 'on_date'" class="col-xs-3">
+				                    <p><strong>Date Type Selection : </strong>On Date</p>
+				                </div>
+				                <div class="col-xs-3">
+				                    <span t-if="o.date"><strong>Date : </strong><span t-esc="o.date"/></span>
+				                </div>
+                                 <div class="col-xs-3" t-if="o.view_by == 'detail'">
+                                    <span><strong>Stock Lot : </strong>
+                                        <t t-if="o.stock_lot == 'without_lot'">Without Lot</t>
+                                        <t t-if="o.stock_lot == 'with_lot'">With Lot</t>
+                                        <t t-if="o.stock_lot == 'all_lot'">All</t>
+                                    </span>
+                                </div>
+			                </div>
+                        	<table class="table table-condensed" style="width:100%">
+                             	<tr>
+                             		<td style="width:10%;float: left;"><strong>Locations :</strong></td>
+                             		<t t-if="o.location_ids">
+                             		<td style="width:80%;float: left;"><span t-esc="', '.join(map(lambda x: (x.name), o.location_ids))"/></td>
+                             		</t>
+                             		<t t-if="not o.location_ids">
+                             		<td style="width:80%;float: left;"><span>All Locations</span></td>
+                             		</t>
+                             	</tr>
+                             	<tr>
+                             		<td style="width:10%;float: left;"><strong>Brands :</strong></td>
+                             		<t t-if="o.brand_ids">
+                             		<td style="width:80%;float: left;"><span t-esc="', '.join(map(lambda x: (x.name), o.brand_ids))"/></td>
+                             		</t>
+                             		<t t-if="not o.brand_ids">
+                             		<td style="width:80%;float: left;"><span>All Brands</span></td>
+                             		</t>
+                             	</tr>
+                             	<tr>
+                             		<td style="width:10%;float: left; "><strong>Categories :</strong></td>
+                             		<t t-if="o.category_ids">
+                             		<td style="width:80%;float: left;"><span t-esc="', '.join(map(lambda x: (x.name), o.category_ids))"/></td>
+                             		</t>
+                             		<t t-if="not o.category_ids">
+                             		<td style="width:80%;float: left;"><span>All Categories</span></td>
+                             		</t>
+                             	</tr>
+                             	<tr>
+                             		<td style="width:10%;float: left; "><strong>Vendor :</strong></td>
+                             		<t t-if="o.partner_id">
+                             		<td style="width:80%;float: left;"><span t-esc="o.partner_id.name"></span></td>
+                             		</t>
+                             		<t t-if="not o.partner_id">
+                             		<td style="width:80%;float: left;"><span>All Vendors</span></td>
+                             		</t>
+                             	</tr>                                
+                            </table>
+                            <table class="table table-condensed" style="width:100%" t-if="o.view_by == 'detail'">
+<!--                                 <t t-set="final_cost_total" t-value="0"/> -->
+                                <t t-set="final_total_value" t-value="0"/>
+                                <t t-set="final_total_cost" t-value="0"/>
+<!--                                 <t t-set="final_value_total" t-value="0"/> -->
+                                <t t-set="final_qty_total" t-value="0"/>
+                                <t t-set="final_virtual_qty_total" t-value="0"/>
+                                <t t-set="detail_query" t-value="detail_query(o)"/>
+                                <t t-foreach="detail_query" t-as="val1">
+                                	<t t-set="cost_total" t-value="0"/>
+                                    <t t-set="value_total" t-value="0"/>
+                                    <t t-set="qty_total" t-value="0"/>
+                                    <t t-set="virtual_qty_total" t-value="0"/>
+                                    <!--<t t-set="carton_total" t-value="0"/>-->
+                                    <t t-set="total_cost_total" t-value="0"/>
+                                    <t t-set="total_value_total" t-value="0"/>
+                                    <tr>
+                                        <td colspan="6">
+                                            <strong>
+                                                <p t-if="o.group_by == 'category'" class="text-center text-primary">Category : <span t-esc="val1"/></p>
+                                                <p t-if="o.group_by == 'location'" class="text-center text-primary">Location : <span t-esc="val1"/></p>
+	                                            <p t-if="o.group_by == 'brand'" class="text-center text-primary">Brand : <span t-esc="val1"/></p>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+	                                    <th>Item Code</th>
+	                                    <th>Barcode</th>
+	                                    <th>Description</th>
+	                                    <th>Category</th>
+                                        <!--<th t-if="o.stock_lot != 'without_lot'">Serial Number</th>-->
+	                                    <th style="text-align:right;">Qty.</th>
+	                                    <th style="text-align:right;">Forecast Qty.</th>
+	                                    <!--<th style="text-align:right;">Forecast CTN</th>-->
+	                                    <th style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">Cost</th>
+	                                    <th style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">Total Cost</th>
+	                                    <th style="text-align:right;" t-if="o.price_selection in ['show_price', 'both']">Public Price</th>
+	                                    <th style="text-align:right;" t-if="o.price_selection in ['show_price', 'both']">Total Value</th>
+	                                </tr>
+	                                <t t-foreach="detail_query.get(val1)" t-as="val2">
+	                                	<t t-foreach="val2_value" t-as="val2_val">
+		                                	<tr>
+	                                            <td>
+	                                                <span style="margin:15px;">
+	                                                    <t t-esc="val2_val['item_code']"/>
+	                                                </span>
+	                                            </td>
+	                                            <td>
+                                                    <t t-esc="val2_val['barcode']"/>
+                                                </td>
+	                                            <td>
+	                                                <t t-esc="val2_val['description']"/>
+	                                            </td>
+	                                            <td>
+	                                                <t t-esc="val2_val['product_category']"/>
+	                                            </td>
+<!--                                                <td t-if="o.stock_lot != 'without_lot'">
+                                                    <t t-esc="val2_val['serial_number']"/>
+                                                </td>-->
+	                                            <td style="text-align:right;">
+	                                            	<t t-esc="val2_val['qty']"/>
+	                                            	<t t-set="qty_total" t-value="qty_total+val2_val['qty']"/>
+	                                            </td>
+	                                            <td style="text-align:right;">
+	                                            	<t t-esc="val2_val['virtual_available']"/>
+	                                            	<t t-set="virtual_qty_total" t-value="virtual_qty_total+val2_val['virtual_available']"/>
+	                                            </td>
+<!--	                                            <td style="text-align:right;">
+                                                        <t t-esc="val2_val['carton']" t-options='{"widget": "float", "precision": 3}'/>
+	                                            	<t t-set="carton_total" t-value="carton_total+val2_val['carton']"/>
+	                                            </td>-->
+	                                            <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                                        <t t-esc="val2_val['cost']" t-options='{"widget": "float", "precision": 3}'/>
+	                                            </td>
+	                                            <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                                        <t t-esc="val2_val['qty']*val2_val['cost']" t-options='{"widget": "float", "precision": 3}'/>
+	                                            	<t t-set="total_cost_total" t-value="total_cost_total+(val2_val['qty']*val2_val['cost'])"/>
+                                            	</td>
+	                                            <td style="text-align:right;" t-if="o.price_selection in ['show_price', 'both']">
+                                                        <t t-esc="val2_val['value']" t-options='{"widget": "float", "precision": 3}'/>
+	                                            </td>
+	                                            <td style="text-align:right;" t-if="o.price_selection in ['show_price', 'both']">
+                                                        <t t-esc="val2_val['qty']*val2_val['value']" t-options='{"widget": "float", "precision": 3}'/>
+	                                            	<t t-set="total_value_total" t-value="total_value_total+(val2_val['qty']*val2_val['value'])"/>
+                                            	</td>
+	                                        </tr>
+										</t>
+	                                </t>
+	                                <tr>
+	                                    <!--<td/><td/><td/><td t-if="o.stock_lot != 'without_lot'"/>-->
+	                                    <td/><td/><td t-if="o.stock_lot != 'without_lot'"/>
+	                                    <td>
+	                                        <strong>Total</strong>
+	                                    </td>
+	                                    <td style="text-align:right;">
+	                                    	<t t-esc='float("%.3f" % qty_total)'/>
+	                                    </td>
+	                                    <td style="text-align:right;">
+	                                    	<t t-esc='float("%.3f" % virtual_qty_total)'/>
+	                                    </td>
+<!--	                                    <td style="text-align:right;">
+                                                <t t-esc='float("%.3f" % carton_total)'/>
+	                                    </td>-->
+                                        <td/>
+
+	                                    <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                                <t t-esc="total_cost_total" t-options='{"widget": "float", "precision": 3}'/>
+	                                    </td>
+                                        <td/>
+	                                    <td style="text-align:right; border-bottom=1px;" t-if="o.price_selection in ['show_price', 'both']">
+                                                <t t-esc="total_value_total" t-options='{"widget": "float", "precision": 3}'/>
+                                    	</td>
+	                                </tr>
+	                                <t t-set="final_qty_total" t-value="final_qty_total + qty_total"/>
+	                                <t t-set="final_virtual_qty_total" t-value="final_virtual_qty_total + virtual_qty_total"/>
+	                                <t t-set="final_total_cost" t-value="final_total_cost + total_cost_total"/>
+	                                <t t-set="final_total_value" t-value="final_total_value + total_value_total"/>
+                               </t>
+                               <tr>
+                                    <!--<td/>-->
+                                    <td/>
+                                    <td/>
+                                    <td t-if="o.stock_lot != 'without_lot'"/>
+                                    <td>
+                                        <strong>Grand Total</strong>
+                                    </td>
+                                    <td style="text-align:right;">
+                                    	<u><strong t-esc='float("%.3f" % final_qty_total)'/></u>
+                                    </td>
+                                    <td style="text-align:right;">
+                                    	<u><strong t-esc='float("%.3f" % final_virtual_qty_total)'/></u>
+                                    </td>
+                                    <!--<td/>-->
+                                    <td/>
+                                    <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                        <u><strong t-esc="final_total_cost" t-options='{"widget": "float", "precision": 3}'/></u>
+                                    </td>
+                                    <td/>
+                                    <td style="text-align:right;" t-if="o.price_selection in ['show_price', 'both']">
+                                        <u><strong t-esc="final_total_value" t-options='{"widget": "float", "precision": 3}'/></u>
+                                    </td>
+                                </tr>
+                            </table>
+<!-- /////////////////////////////////////////////////////////// -->
+                            <table class="table table-condensed" style="width:100%" t-if="o.view_by == 'summary'">
+                                <t t-set="final_total_value" t-value="0"/>
+                                <t t-set="final_total_cost" t-value="0"/>
+                                <t t-set="final_qty_total" t-value="0"/>
+                                <t t-set="detail_query" t-value="summary_query(o)"/>
+                                <tr>
+                                    <th>Category</th>
+                                    <th style="text-align:right;">Qty.</th>
+                                    <th style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">Value</th>
+                                </tr>
+                                <t t-foreach="detail_query" t-as="val1">
+                                    <t t-set="cost_total" t-value="0"/>
+                                    <t t-set="value_total" t-value="0"/>
+                                    <t t-set="qty_total" t-value="0"/>
+                                    <t t-set="total_cost_total" t-value="0"/>
+                                    <t t-set="total_value_total" t-value="0"/>
+
+                                    <t t-foreach="detail_query.get(val1)" t-as="val2">
+                                        <t t-foreach="val2_value" t-as="val2_val">
+
+                                                    <t t-set="qty_total" t-value="qty_total+val2_val['qty']"/>
+
+                                                    <t t-set="total_cost_total" t-value="total_cost_total+(val2_val['qty']*val2_val['cost'])"/>
+
+                                        </t>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <span t-esc="val1"/>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            <t t-esc='float("%.3f" % qty_total)'/>
+                                        </td>
+                                        <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                            <t t-esc='float("%.3f" % total_cost_total)'/>
+                                        </td>
+
+                                    </tr>
+                                    <t t-set="final_qty_total" t-value="final_qty_total + qty_total"/>
+                                    <t t-set="final_total_cost" t-value="final_total_cost + total_cost_total"/>
+                                </t>
+                               <tr>
+                                    <td>
+                                        <strong>Total</strong>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <u><strong t-esc='float("%.3f" % final_qty_total)'/></u>
+                                    </td>
+                                    <td style="text-align:right;" t-if="o.price_selection in ['show_cost', 'both']">
+                                        <u><strong t-esc='float("%.3f" % final_total_cost)'/></u>
+                                    </td>
+
+                                </tr>
+                                
+                            </table>
+
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

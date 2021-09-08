@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <report
+            id="general_ledger_report_xls"
+            model="account.account"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.general_ledger_xls.xls"
+            file="account_report_xls.general_ledger_xls.xls"
+            attachment_use="False"
+        />
+        <report
+            id="partner_ledger_report_xls"
+            model="account.account"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.partner_ledger_xls.xls"
+            file="account_report_xls.partner_ledger_xls.xls"
+            attachment_use="False"
+        />
+        <report
+            id="trial_balance_report_xls"
+            model="account.account"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.trial_balance_xls.xls"
+            file="account_report_xls.trial_balance_xls.xls"
+            attachment_use="False"
+        />
+        <report
+            id="profit_and_loss_xls"
+            model="account.account"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.profit_and_loss_xls.xls"
+            file="account_report_xls.profit_and_loss_xls.xls"
+            attachment_use="False"
+        />
+        <report
+            id="aged_partner_balance_xls"
+            model="account.account"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.aged_partner_balance_xls.xls"
+            file="account_report_xls.aged_partner_balance_xls.xls"
+            attachment_use="False"
+        />
+        <report
+            id="account_report_print_journal_xls"
+            model="account.journal"
+            string=" "
+            report_type="xlsx"
+            name="account_report_xls.account_report_print_journal_xls.xls"
+            file="account_report_xls.account_report_print_journal_xls.xls"
+            attachment_use="False"
+        />
+        
+    </data>
+</odoo>

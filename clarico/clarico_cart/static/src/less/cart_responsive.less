@@ -1,0 +1,131 @@
+@media (max-width:1000px){
+	.div-full-width{
+		width:100%;
+	}
+}
+@media (max-width:800px){
+	.cart-total-heading{
+		text-align: left;
+	}
+	#cart_total{
+		.left;
+		
+		& div.row{
+			& span:first-child{
+				text-align: left !important;
+			}
+		}
+	}
+	.suggested-product-table{
+		display: block;
+		overflow-x: auto;
+		.pt(10%);
+		
+		& thead{
+			display:block !important;
+		}
+		& tr{
+			float: none !important;
+			display: inline-flex !important;
+		}
+		& td{
+			border-top-style: none !important;
+			border-top-width: 0 !important;
+			min-width: 144px !important;
+			padding:25px 0 0 0 !important;
+		}
+		& td:first-child{
+			display:block !important;
+		}
+		& .thumbnail-img{
+			display:block !important;
+			
+			& img{
+				width:100px !important;
+			}
+		}
+	}
+	#cart_products , .order-detail-table{ 
+		display: block;
+		overflow-x: auto;
+		
+		& thead{
+			display:block !important;
+		}
+	}
+	& .cart-thead-tr , .confirmation-thead-tr{
+		float: none !important;
+		display: inline-flex !important;
+		
+		& th{
+			min-width: 144px;
+		}
+	}
+	& .cart-tbody-tr , .confirmation-tbody-tr{
+		float: none !important;
+		display: inline-flex !important;
+		
+		& td{
+			border-top-style: none !important;
+			border-top-width: 0 !important;
+			min-width: 144px !important;
+			padding:25px 0 0 0 !important;
+		}
+		& td:first-child{
+			display:block !important;
+		}
+		& .thumbnail-img{
+			display:block !important;
+			
+			& img{
+				width:100px !important;
+			}
+		}
+	}
+	.order-table-main-div , .confirmation-bill-ship-div , .payment-table-main-div , #right_column , .address-row-main-div{
+		width:100%;
+		float:none;
+	}
+	.address-main-div{
+		width:100%;
+	}
+}
+@media (max-width:500px){
+	.wizard-main-ul{
+		& li.text-primary{
+			&:after{
+				right:-15px;
+			}
+		}
+	}
+	.order-detail-table tbody{ 
+		& td:nth-child(2){
+			border-top-width:1px !important;
+		}
+	}
+	.payment-information-tbody-tr{
+		& td:first-child{
+			display:block !important;
+		}
+		& td:nth-child(2){
+			border-top-width:1px !important;
+		}
+	}
+	.wizard-main-ul .text-primary{
+		color: @theme-color !important;
+		background: none !important;
+		
+		&:before{
+			display:none;
+		}
+		&:after{
+			display:none;
+		}
+	}
+	.chs_heading{
+		.size(17px) !important;
+	}
+	.address-row-main-div .form-group{
+		width:100%;
+	}
+}

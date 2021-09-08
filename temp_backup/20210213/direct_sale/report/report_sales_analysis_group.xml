@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_sales_analysis_group">
+    <t t-call="report.html_container">
+    <!--<t t-call="report.external_layout">-->
+        <!--<t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />-->
+                <div class="header">
+                    <div>
+                         <div class="text-center">
+                            <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="widht:100%;max-height: 115px;"/>
+                        </div>
+                    </div>
+                </div>
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="text-center">
+                    <h4 style="algin:center'">Sales Analysis Group</h4>
+                </div>
+                
+                <t t-foreach="header_lines" t-as="line">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr style="background-color:#D3D3D3;">
+                                    <th style="width: 3.5cm" name="th_description">
+                                        <t t-esc="line['account_group']"/>
+                                    </th>
+                                    <t t-foreach="line['categ_lines']" t-as="categ">
+                                        <th style="width: 5.3cm">
+                                            <strong>
+                                                <t t-esc="categ"/>
+                                            </strong>
+                                        </th>
+                                    </t>
+                                </tr>
+                            </thead>
+                        </table>
+                </t>
+                
+                        <table class="table table-bordered">
+                            <t t-foreach="final_lines" t-as="line">
+                            <!--<thead>-->
+                                <tr style="text-align:right;">
+                                    <td style="width: 4.4cm">
+                                        <t t-esc="line['account_group']"/>
+                                    </td>
+                                    <t t-set="count" t-value="0"/>
+                                    <t t-foreach="line['categ_lines']" t-as="categ">
+                                        <!--<td style="background-color:#D3D3D3;">-->
+                                        <t t-if="count in (0,3,6)">
+                                            <td style="background-color:#D3D3D3;">
+                                                <t t-if="line['account_group']">
+                                                    <span t-esc="'%.3f'%(categ)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong><t t-esc="categ"/></strong>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td>
+                                                <t t-if="line['account_group']">
+                                                    <span t-esc="'%.3f'%(categ)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <strong><t t-esc="categ"/></strong>
+                                                </t>
+                                            </td>
+                                        </t>
+                                        <t t-set="count" t-value="count + 1"/>
+                                    </t>
+                                </tr>
+                            <!--</thead>-->
+                            </t>
+                        </table>
+                
+            </div>
+
+    <!--</t>-->
+    </t>
+</template>
+
+        <record id="paperformat_sales_analysis_group" model="report.paperformat">
+            <field name="name">Sales Analysis Group</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">210</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">30</field>
+            <field name="margin_bottom">23</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">20</field>
+            <field name="dpi">90</field>
+        </record>
+
+
+    <report 
+        id="report_sales_analysis_group_root"
+        string="Sales Analysis Group"
+        model="sales.analysis.group" 
+        report_type="qweb-pdf"
+        file="direct_sale.report_sales_analysis_group" 
+        name="direct_sale.report_sales_analysis_group"
+        paperformat="paperformat_sales_analysis_group"
+    />
+        
+</odoo>

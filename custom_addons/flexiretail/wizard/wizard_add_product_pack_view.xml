@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="aspl_open_add_pack_form" model="ir.ui.view">
+            <field name="name">aspl.add.product.pack.form</field>
+            <field name="model">wizard.add.product_pack</field>
+            <field name="arch" type="xml">
+                <form string="Add Product Pack">
+                    <group col="4" colspan="3">
+                        <field name="pack_id" domain="[('is_product_pack','=',True)]" />
+                        <field name="quantity" />
+                    </group>
+                    <footer>
+                        <button class="oe_highlight" type="object"
+                            name="add_product_pack" string="Add" />
+                        or
+                        <button class="oe_link" type="object"
+                            special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_add_product_pack" model="ir.actions.act_window">
+            <field name="name">Add Product Pack</field>
+            <field name="res_model">wizard.add.product_pack</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

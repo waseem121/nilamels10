@@ -1,0 +1,65 @@
+<odoo>
+    <data>
+        <record id="custom_stock_report" model="ir.ui.view">
+            <field name="name">stock.report</field>
+            <field name="model">stock.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="state" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <group col="4" states="choose">
+                            <field name="date_selection" required="1"/>
+                            <field name="group_by" required="1"/>
+                            <field name="date"
+                                   attrs="{'invisible':[('date_selection','!=','on_date')],'required':[('date_selection','=','on_date')]}"/>
+                        </group>
+                        <group col="4" states="choose">
+<!--                             <field name="partner_ids" invisible="1" widget="many2many_tags"/> -->
+                            <field name="product_ids" widget="many2many_tags" domain="[('type', '=', 'product')]"/>
+                            <field name="partner_id" domain="[('supplier','=',True)]"/>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <field name="internal_location"/>
+                            <field name="location_ids" widget="many2many_tags" 
+                            	   context="{'physical_loc': internal_location}"/>
+                            <field name="brand_ids" widget="many2many_tags"/>
+                            <field name="view_by" required="1"/>
+                            <field name="price_selection" required="0"/>
+                            <field name="stock_lot"/>
+                            <field name="include_zero"/>
+                        </group>
+                        <div states="get">
+                            <h2>Report Complete</h2>
+                            <p>Here is the Xls File :
+                                <field name="data" readonly="1" filename="name"/>
+                            </p>
+                        </div>
+                    </sheet>
+                    <footer states="choose">
+                        <button type="object" string="Print" class="btn-primary" name="generate_stock_report"/>
+                        <button type="object" string="Temp:get move and quant stock" class="btn-primary" name="temp_get_move_and_quant_stock_report"/>
+                        <!--<button type="object" string="Temp:Delete extra quants" class="btn-primary" name="temp_delete_extra_quants"/>-->
+                        <button type="object" class="btn-primary" string="Generate XLS"
+                                name="generate_stock_report_xlsx"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                    <footer states="get">
+                        <button special="cancel" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_stock_report_action" model="ir.actions.act_window">
+            <field name="name">Stock Report</field>
+            <field name="res_model">stock.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_stock_report"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="custom_stock_report_action" id="custom_stock_report_menu"
+                  sequence="5"/>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+import time
+from odoo import api, models, _
+from odoo.exceptions import UserError
+
+
+class ReportFinancial(models.AbstractModel):
+    _inherit = 'report.account.report_financial'
+
+    def _compute_account_balance(self, accounts):
+        """ compute the balance, debit and credit for the provided accounts
+        """
+        # filter the accounts for selected level
+        level = self._context.get('level',False)
+        # if level:
+        #     accounts = accounts.filtered(lambda a: a.level + 1 >= int(level))
+        
+        mapping = {
+            'balance': "COALESCE(SUM(debit),0) - COALESCE(SUM(credit), 0) as balance",
+            'debit': "COALESCE(SUM(debit), 0) as debit",
+            'credit': "COALESCE(SUM(credit), 0) as credit",
+        }
+
+        res = {}
+        for account in accounts:
+            res[account.id] = dict((fn, 0.0) for fn in mapping.keys())
+        if accounts:
+            tables, where_clause, where_params = self.env['account.move.line']._query_get()
+            tables = tables.replace('"', '') if tables else "account_move_line"
+            wheres = [""]
+            if where_clause.strip():
+                wheres.append(where_clause.strip())
+            filters = " AND ".join(wheres)
+            request = "SELECT account_id as id, " + ', '.join(mapping.values()) + \
+                       " FROM " + tables + \
+                       " WHERE account_id IN %s " \
+                            + filters + \
+                       " GROUP BY account_id"
+            params = (tuple(accounts._ids),) + tuple(where_params)
+            self.env.cr.execute(request, params)
+            print "res: ",res
+            for row in self.env.cr.dictfetchall():
+                res[row['id']] = row
+
+            account = self.env['account.account']
+            for account_id, account_result in res.iteritems():
+                account = account.browse(account_id)
+                if account.type == 'view':
+                    all_child_ids = list(set(account._get_children_and_consol().ids).intersection(accounts.ids))
+                    if all_child_ids:
+                        total_debit = total_credit = total_balance = 0.0
+                        for each_child_id in all_child_ids:
+                            total_debit += account_result[each_child_id].get('debit')
+                            total_credit += account_result[each_child_id].get('credit')
+                            total_balance += account_result[each_child_id].get('balance')
+                        res['debit'] = total_debit
+                        res['credit'] = total_credit
+                        res['balance'] = total_balance
+        return res
+

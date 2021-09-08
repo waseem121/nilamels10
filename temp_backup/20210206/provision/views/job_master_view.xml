@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+        <!--department views-->
+    <record id="view_job_master_search" model="ir.ui.view">
+        <field name="name">view.job.master.search</field>
+        <field name="model">job.master</field>
+        <field name="arch" type="xml">
+            <search string="Job Master">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_job_master_tree" model="ir.ui.view">
+        <field name="name">view.job.master.tree</field>
+        <field name="model">job.master</field>
+        <field name="arch" type="xml">
+            <tree string="Job Master">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_job_master_form" model="ir.ui.view">
+        <field name="name">view.job.master.form</field>
+        <field name="model">job.master</field>
+        <field name="arch" type="xml">
+            <form string="Job Master">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            <field name="salesman_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="ref"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_job_master">
+        <field name="name">Job Master</field>
+        <field name="res_model">job.master</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem
+        name="Job Master"
+        id="menu_job_master"
+        action="action_job_master"
+        parent="sale.prod_config_main"/>
+    
+</data>
+</openerp>

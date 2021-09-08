@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_picking_form_foodex_inherit" model="ir.ui.view">
+        <field name="name">view.picking.form.foodex.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <button name='force_assign' position="replace">
+                <button name="reset_draft" states="confirmed,assigned,partially_available,cancel,done" string="Reset To Draft" type="object"/>
+                <!--<button name="force_assign" states="confirmed,waiting,partially_available" string="Force Availability" type="object" groups="stock.group_stock_manager"/>-->
+            </button>
+            
+            <button name='action_confirm' position="replace">
+            </button>
+            
+            <field name="move_lines" position="before">
+                <field name="max_line_sequence" invisible="1"/>
+            </field>
+            <field name="move_lines" position="attributes">
+                <attribute name="context">{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_sequence': max_line_sequence}</attribute>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

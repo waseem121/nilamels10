@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_split_lot_qty,access_split_lot_qty,model_split_lot_qty,base.group_user,1,1,1,1
+access_split_lot_qty_line,access_split_lot_qty_line,model_split_lot_qty_line,base.group_user,1,1,1,1
+access_sale_analysis_report,access_sale_analysis_report,model_sale_analysis_report,base.group_user,1,1,1,1
+access_customer_division,access_customer_division,model_customer_division,base.group_user,1,1,1,1
+access_customer_department,access_customer_department,model_customer_department,base.group_user,1,1,1,1

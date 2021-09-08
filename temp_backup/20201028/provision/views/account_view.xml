@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+      
+    <record id="invoice_line_add_field_provision_inherit" model="ir.ui.view">
+        <field name="name">invoice.line.add.field.provision.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="direct_sale.invoice_line_add_field" />
+        <field name="arch" type="xml">
+            <field name="partner_shipping_id" position="after">
+                <field name="x_picking_id"/>
+            </field>
+        </field>
+    </record>      
+      
+
+  </data>
+</odoo>

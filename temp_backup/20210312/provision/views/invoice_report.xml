@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <report
+            id="account_invoices_inv"
+            model="account.invoice"
+            string="Invoice and Delivery"
+            report_type="qweb-pdf"
+            name="provision.report_invoice1_inv"
+            file="provision.report_invoice1_inv"
+    />
+        
+    <record id="custom_account_invoice_report_paperformat" model="report.paperformat">
+        <field name="name">A4(custom)</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <!--<field name="margin_top">45</field>-->
+        <!--<field name="margin_top">30</field>-->
+        <!--<field name="margin_top">70</field>-->
+        <field name="margin_top">62</field>
+        <!--<field name="margin_bottom">90</field>-->
+        <field name="margin_bottom">95</field>
+        <field name="margin_left">4</field>
+        <!--<field name="margin_right">3</field>-->
+        <field name="margin_right">1</field>
+        <field name="header_line" eval="False"/>
+        <!--<field name="header_spacing">40</field>-->
+        <field name="header_spacing">32</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6,0,[ref('provision.account_invoices_inv')])]"/>
+    </record>
+    
+    
+    
+    
+    <!--delivery note-->
+    <report
+            id="account_invoices_del"
+            model="account.invoice"
+            string="Delivery Note"
+            report_type="qweb-pdf"
+            name="provision.report_invoice1_del"
+            file="provision.report_invoice1_del"
+    />
+        
+    <record id="custom_account_invoice_report_paperformat_del" model="report.paperformat">
+        <field name="name">A4(custom)</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <!--<field name="margin_top">45</field>-->
+        <!--<field name="margin_top">30</field>-->
+        <!--<field name="margin_top">70</field>-->
+        <!--<field name="margin_top">60</field>-->
+        <field name="margin_top">58</field>
+        <!--<field name="margin_bottom">90</field>-->
+        <field name="margin_bottom">75</field>
+        <field name="margin_left">4</field>
+        <field name="margin_right">3</field>
+        <field name="header_line" eval="False"/>
+        <!--<field name="header_spacing">40</field>-->
+        <!--<field name="header_spacing">30</field>-->
+        <field name="header_spacing">28</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6,0,[ref('provision.account_invoices_del')])]"/>
+    </record>    
+    
+
+
+    
+</odoo>

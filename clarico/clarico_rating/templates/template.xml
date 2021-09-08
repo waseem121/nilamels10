@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="clarico_rating_shop_product_rating_products_item" inherit_id="clarico_shop.clarico_shop_products_item">
+		<xpath expr="//div[@class='product_price']" position="before">
+				<t t-set="rating_stat" t-value="rating_product" />
+					<t t-call="rating.rating_star_card">
+					<t t-set="rating_default_value" t-value="'%.2f' % (rating_stat[product.id].get('avg', 0.0),)" />
+					<t t-set="rating_disabled" t-value="True" />
+				</t>
+		</xpath>
+	</template>
+</odoo>

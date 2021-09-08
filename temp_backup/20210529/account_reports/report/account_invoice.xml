@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+            <xpath expr="//t[@t-if='subst is True']" position="replace">
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                        var y = document.getElementsByClassName(x[i]);
+                        for (var j=0; j&lt;y.length; ++j)
+                        y[j].textContent = vars[x[i]];
+                        }
+                        var operations = {
+                        'not-first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "hidden" : "visible";
+                        },
+                        'first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "visible" : "hidden";
+                        },
+                        'last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
+                        },
+                        };
+                        for (var klass in operations) {
+                        var y = document.getElementsByClassName(klass);
+                        for (var j=0; j&lt;y.length; ++j)
+                        operations[klass](y[j]);
+                        }
+                        }
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+        <template id="invoice_external_layout_header">
+            <div class="header">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <img t-if="user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % user.company_id.header_image_qweb" />
+                    </div>
+                </div>
+            </div>
+            <div class="header" style="height:45mm;width:100%;">
+                <div style="height:39mm;width:100%;"></div>
+                <table style="width:100%;border-top: 1px none black;">
+                    <tr>
+                        <th style="width:15%">
+                            <div class="not-first-page">Invoice No.</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.number"/>
+                            </div>
+                        </td>
+                        <th colspan="3"
+                            style="font-size:20px;text-align: center;border-top: 0px none black;;border-right: 0px none black;border-left: 0px none black;">
+                            <p/>
+                            <span t-if="o.payment_term_id.name == 'CASH'">
+                                Cash Invoice
+                            </span>
+                            <span t-if="o.payment_term_id.name != 'CASH'">
+                                Credit Invoice
+                            </span>
+                        </th>
+                        <th style="width:15%">
+                            <div class="not-first-page">Date</div>
+                        </th>
+                        <td style="width:15%">
+                            <div class="not-first-page">
+                                <p t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+
+        <template id="invoice_external_layout_footer">
+            <div class="footer">
+                <br/>
+                <t t-set="lines" t-value="len(o.invoice_line_ids_two)"/>
+                <t t-if="lines &lt;= 20">
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-top:1px solid black;border-bottom:1px solid black">
+                        <tr>
+                            <th style=";text-align: left;width:70%" rowspan="3">Remarks:
+                                <br/>
+                            </th>
+                            <td style="padding-top:2px;">
+                                <b>GROSS TOTAL</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;">
+                                <span t-esc="o.amount_untaxed+o.amount_tax"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Discount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;">
+                                <span t-field="o.total_discount"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Net Invoice Value</b>
+                            </td>
+                            <td style="padding-top:2px;;text-align: right;">
+                                <span t-field="o.amount_total"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr>
+                            <td style="padding-top:2px;padding-bottom:2px;" colspan="3">
+                                <t t-if="o.get_amount_word()">
+                                    <span t-esc="o.get_amount_word()[0]"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr style="width:60%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <td style="width:15%;">
+                                PAYMENT TERMS
+                            </td>
+                            <td style="width:20%;">
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                            <td style="width:10%;">
+                                DUE DATE -
+                            </td>
+                            <td style="width:15%;">
+                                <span t-field="o.date_due" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                            <th class="text-right" style="font-size: 11px;">
+                                All item Received in Good Condition.
+                            </th>
+                        </tr>
+                    </table>
+<!--                    <div class="row">
+                        <br/>
+                        <p>FOR
+                            <span t-field="o.company_id.name"/>
+                        </p>
+                    </div>-->
+                    <br/>
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:40%;border:1px solid black;padding-top:2%;" rowspan="3">
+                                Signature
+                            </th>
+                            <!--<th style="width:15%;border-top:0px none black" rowspan="3"></th>-->
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Name</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>
+                        <tr>
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Signature</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>
+<!--                        <tr>
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Date</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>-->
+                    </table>
+                    <br/>
+                    <!--<ul class="list-inline text-left">-->
+                    <!--    <li>Page:</li>-->
+                    <!--    <li>-->
+                    <!--        <span class="page"/>-->
+                    <!--    </li>-->
+                    <!--    <li>/</li>-->
+                    <!--    <li>-->
+                    <!--        <span class="topage"/>-->
+                    <!--    </li>-->
+                    <!--</ul>-->
+                </t>
+                <div class="not-first-page">
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-top:1px solid black;border-bottom:1px solid black">
+                        <tr>
+                            <th style=";text-align: left;width:70%" rowspan="3">Remarks:
+                                <br/>
+                            </th>
+                            <td style="padding-top:2px;">
+                                <b>GROSS TOTAL</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;">
+                                <span t-esc="o.amount_untaxed+o.amount_tax"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Discount</b>
+                            </td>
+                            <td style=";text-align: right;padding-top:2px;">
+                                <span t-field="o.total_discount"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-top:2px;">
+                                <b>Net Invoice Value</b>
+                            </td>
+                            <td style="padding-top:2px;;text-align: right;">
+                                <span t-field="o.amount_total"
+                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id, 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <table style="font-family: sans serif;font-size: 13px;width:100% !important;border-bottom:1px solid black">
+                        <tr>
+                            <td style="padding-top:2px;padding-bottom:2px;" colspan="3">
+                                <t t-if="o.get_amount_word()">
+                                    <span t-esc="o.get_amount_word()[0]"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <tr style="width:60%;padding-top:2px;padding-bottom:2px;border-top:1px solid black">
+                            <td style="width:15%;">
+                                PAYMENT TERMS
+                            </td>
+                            <td style="width:20%;">
+                                <span t-field="o.payment_term_id"/>
+                            </td>
+                            <td style="width:10%;">
+                                DUE DATE -
+                            </td>
+                            <td style="width:15%;">
+                                <span t-field="o.date_due" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                            <th class="text-right" style="font-size: 11px;">
+                                All item Received in Good Condition.
+                            </th>
+                        </tr>
+                    </table>
+                    <div class="row">
+                        <br/>
+                        <p>FOR
+                            <span t-field="o.company_id.name"/>
+                        </p>
+                    </div>
+                    <table style="font-size: 13px;width:100% !important;">
+                        <tr>
+                            <th style="width:40%;border:1px solid black;padding-top:2%;" rowspan="3">
+                                Signature
+                            </th>
+                            <th style="width:15%;border-top:0px none black" rowspan="3"></th>
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Name</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>
+                        <tr>
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Signature</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>
+                        <tr>
+                            <th style="width:20%;border:1px solid black;padding-top:2px;height:30px;">Date</th>
+                            <th style="width:25%;border:1px solid black;"></th>
+                        </tr>
+                    </table>
+                    <br/>
+                    <ul class="list-inline text-left">
+                        <li>Page:</li>
+                        <li>
+                            <span class="page"/>
+                        </li>
+                        <li>/</li>
+                        <li>
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>
+                <!--                <t t-if="printed">-->
+                <div class="not-last-page">
+                    <!--                    <t t-set="printed" t-value="0"/>-->
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                        <li class="text-right">
+                            P.T.O
+                        </li>
+                    </ul>
+                    <!--                    <ul class="list-inline text-right" style="font-size: 20px">-->
+                    <!--                        <ul>-->
+
+                    <!--                        </ul>-->
+                    <!--                    </ul>-->
+                </div>
+            </div>
+        </template>
+
+        <template id="invoice_external_layout">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+                <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+            <!--<t t-call="report.external_layout_header" />-->
+            <t t-call="account_reports.invoice_external_layout_header"/>
+            <t t-raw="0"/>
+            <t t-call="account_reports.invoice_external_layout_footer"/>
+        </template>
+
+        <template id="report_invoice_document">
+            <t t-call="account_reports.invoice_external_layout">
+                <!--<t t-call="report.external_layout">-->
+                <t t-set="o" t-value="o.with_context({'lang':o.partner_id.lang})"/>
+                <div class="page" style="font-size:15px;align:right">
+                    <center>
+                        <h4>
+                            <span>Credit Invoice</span>
+                        </h4>
+                    </center>                    
+                    <!--<br/>-->
+                    <!--<table class="table">-->
+                    <table>
+                        <!--                        border: 1px solid black;-->
+                        <!--                        <tr style="height:35px;min-height:35px;">-->
+                        <!--                            <th colspan="2"-->
+                        <!--                                style="border: 0px none black;border-right: 0px none black;border-left: 0px none black;"></th>-->
+                        <!--                            <th colspan="3" rowspan="3"-->
+                        <!--                                style="font-size:20px;text-align: center;border-top: 0px none black;;border-right: 0px none black;border-left: 0px none black;">-->
+                        <!--                                <p/>-->
+                        <!--                                <span t-if="o.payment_term_id.name == 'CASH'">-->
+                        <!--                                    Cash Invoice-->
+                        <!--                                </span>-->
+                        <!--                                <span t-if="o.payment_term_id.name != 'CASH'">-->
+                        <!--                                    Credit Invoice-->
+                        <!--                                </span>-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;                                        <span t-if="o.payment_term_id.name == 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Cash Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    <span t-if="o.payment_term_id.name != 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;                                    Invoice&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;                                        <span t-if="o.payment_term_id.name == 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Cash Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    <span t-if="o.payment_term_id.name != 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;                                    PRO-FORMA&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'out_invoice' and o.state == 'draft'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;<span t-if="o.payment_term_id">Z&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    <span t-if="o.payment_term_id.name == 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Cash Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    <span t-if="o.payment_term_id.name != 'Immediate Payment'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;        Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    </span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'out_invoice' and o.state == 'cancel'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;Credit Invoice&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    Cancelled Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'out_refund'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;                                    Refund&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'in_refund'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;                                    Vendor Refund&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;<span t-if="o.type == 'in_invoice'">&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    &lt;!&ndash;                                    Vendor Bill&ndash;&gt;&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;    Credit Invoice&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--                                &lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--                            </th>-->
+                        <!--                            <th colspan="2"-->
+                        <!--                                style="border: 0px none black;;border-right: 0px none black;border-left: 0px none black;">-->
+                        <!--                            </th>-->
+                        <!--                        </tr>-->
+                        <tr style="height:20px;">
+                            <th style="width:15%;border: 1px solid black;">&amp;nbsp;Invoice No.</th>
+                            <!--<td style="width:15%;border: 1px solid black;">-->
+                            <td colspan="3" style="border: 1px solid black;">
+                                <span>&amp;nbsp;</span><span t-field="o.number"/>
+                            </td>
+                            <!--<th colspan="3" rowspan="2" style="width:40%;border-top: 0px none black;"/>-->
+                            <th style="width:40%;border-top: 0px none black;"/>
+                            <th style="width:15%;border: 1px solid black;">&amp;nbsp;Salesman</th>
+                            <td style="width:15%;border: 1px solid black;">
+                                <!--<p t-field="o.user_id.name"/>-->
+                                <span>&amp;nbsp;</span><span t-field="o.user_id.name"/>
+                            </td>
+                        </tr>
+                        <tr style="height:25px;">
+                            <th style="width:15%;border: 1px solid black;">&amp;nbsp;Customer</th>
+                            <!--<td style="width:15%;border: 1px solid black;">-->
+                            <td colspan="4" style=";border: 1px solid black;">
+                                <!--<p t-field="o.account_id.code"/>-->
+                                <span>&amp;nbsp;</span><span t-field="o.account_id.code"/>&amp;nbsp;<span t-field="o.partner_id"/>
+                            </td>
+                            <!--<th colspan="3" rowspan="2" style="text-align: center;"> SALES INVOICE</th>-->
+                            <th style="width:15%;border: 1px solid black;">&amp;nbsp;Date</th>
+                            <td style="width:15%;border: 1px solid black;">
+                                <span>&amp;nbsp;</span><span t-field="o.date_invoice" t-options='{"format": "dd/MM/yyyy"}'/>
+                            </td>
+                        </tr>
+                        <tr style="height:25px;">
+                            <!--<th rowspan="2" style="vertical-align: center;border: 1px solid black;">Customer.</th>-->
+                            <th style="width:15%;vertical-align: center;border: 1px solid black;">&amp;nbsp;ShipTo.</th>
+                            
+                            <!--<td colspan="6" style=";border: 1px solid black;">-->
+                            <!--<td style="width:15%;;border: 1px solid black;">-->
+<!--                            <td colspan="3" style=";border: 1px solid black;">
+                                <p t-field="o.partner_id"/>
+                            </td>-->
+                    <td t-if="o.partner_id != o.partner_shipping_id" colspan="4" style=";border: 1px solid black;"><span>&amp;nbsp;</span><span t-field="o.partner_shipping_id.name"/> &amp;nbsp;  <span t-field="o.partner_shipping_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>&amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                    </td>
+                    <td t-if="o.partner_id == o.partner_shipping_id" colspan="4" style=";border: 1px solid black;"><span>&amp;nbsp;</span><span t-field="o.partner_shipping_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>&amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                    </td>
+                    <td t-if="not o.partner_shipping_id" colspan="4" style=";border: 1px solid black;"><span>&amp;nbsp;</span><span t-field="o.partner_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_id.city"/>&amp;nbsp;<span t-field="o.partner_id.phone"/>
+                    </td>                            
+                    <th style="width:15%;border: 1px solid black;">&amp;nbsp;LPO</th>
+                            <td colspan="3" style=";border: 1px solid black;">
+                                <span>&amp;nbsp;</span><span t-field="o.name"/>
+                            </td>                    
+<!--                    <th style="width:15%;border: 1px solid black;">ShipTo</th>
+                    <td t-if="o.partner_id != o.partner_shipping_id" colspan="3" style=";border: 1px solid black;"><span t-field="o.partner_shipping_id.name"/> &amp;nbsp;  <span t-field="o.partner_shipping_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>&amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                    </td>
+                    <td t-if="o.partner_id == o.partner_shipping_id" colspan="3" style=";border: 1px solid black;"><span t-field="o.partner_shipping_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>&amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                    </td>
+                    <td t-if="not o.partner_shipping_id" colspan="3" style=";border: 1px solid black;"><span t-field="o.partner_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_id.city"/>&amp;nbsp;<span t-field="o.partner_id.phone"/>
+                    </td>-->
+                        </tr>
+                        <!--                        <tr style="height:25px;max-height:25px !important;">-->
+                        <!--                            <td colspan="6">-->
+                        <!--                                <address t-field="o.partner_id"-->
+                        <!--                                         t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>-->
+                        <!--                            </td>-->
+                        <!--                        </tr>-->
+                        <!--<tr style="height:40px;">-->
+                        <!--    <th style="width:10%">Cust P.O.No.</th>-->
+                        <!--    <td style="width:15%"></td>-->
+                        <!--    <th style="width:15%">Cust P.O Date</th>-->
+                        <!--    <td style="width:15%"></td>-->
+                        <!--    <th style="width:10%">D.N.#</th>-->
+                        <!--    <td colspan="2"></td>-->
+                        <!--</tr>-->
+                    </table>
+                    <table style="font-family: sans serif;margin-top:20px;width:100% !important;float:left;font-size: 13px;">
+                        <thead>
+                            <tr style="border-bottom:1px solid black;border-top:1px solid black;width:100% !important;padding-bottom: 5px !important;">
+                                <td style="width:2% !important;">
+                                    <b>
+                                        SR.<br/>NO.
+                                    </b>
+                                </td>
+                                <td style="width:14% !important;">
+                                    <b>ITEM CODE</b>
+                                </td>
+                                <td style="width:37% !important;">
+                                    <b>DESCRIPTION</b>
+                                </td>
+                                <!--<td style="float:;width:5% !important;"> -->
+                                <!--    <b>UNIT</b> -->
+                                <!--</td> -->
+                                <td style="text-align:center;width:4% !important;">
+                                    <b>UNIT</b>
+                                </td>
+                                <td class="text-right" style="width:4% !important;">
+                                    <b>QTY</b>
+                                </td>
+                                <t t-if="o.location_id.name == 'MAIN STORE' ">
+                                    <td class="text-right" style="width:7% !important;">
+                                        <b>SELLING PRICE</b>
+                                    </td>
+                                </t>
+                                <td style=";text-align: right;width:8% !important;">
+                                    <b>UNIT PRICE</b>
+                                </td>
+                                <!--<td class="text-right" style="width:10% !important;">-->
+                                <!--    <b>DISCOUNT</b>-->
+                                <!--</td>-->
+                                <td style=";text-align: right;width:12% !important;">
+                                    <b>VALUE</b>
+                                </td>
+                            </tr>
+                        </thead>
+                        <t t-set="sr_no" t-value="1"/>
+                        <tr t-foreach="o.invoice_line_ids" t-as="line" style="width:100% !important;height:30px">
+                            <td style="width:2% !important;">
+                                <span t-esc="sr_no"/>
+                            </td>
+                            <td style="width:15% !important;">
+                                <t t-if="line.product_id">
+<!--                                    <t t-if="line.product_id.default_code">
+                                        <span t-field="line.product_id.default_code"/>
+                                        <br/>
+                                    </t>-->
+                                    <t t-if="line.product_id.barcode">
+                                        <span t-field="line.product_id.barcode"/>
+                                    </t>
+                                </t>
+                            </td>
+                            <td style="width:37% !important;">
+                                <span t-field="line.product_id.name"/>
+                            </td>
+                            <td style="width:5% !important;">
+                                <span t-field="line.uom_id.name"/>
+                            </td>
+                            <td class="text-right" style="width:5% !important;">
+                                <!--<span t-esc="int(line.quantity)"/>-->
+                                <span t-esc="int(line.quantity)+int(line.free_qty)"/>
+                            </td>
+                            <t t-if="line.invoice_id.location_id.name == 'MAIN STORE' ">
+                                <td class="text-right" style="width:8% !important;">
+                                    <t t-if="line.product_id">
+                                        <span t-field="line.product_id.lst_price"/>
+                                    </t>
+                                </td>
+                            </t>
+                            <td style=";text-align: right;width:10% !important;">
+                                <!--<span t-field="line.price_unit"/>-->
+                                <span t-esc="'{:,.3f}'.format(line.price_unit)" />
+                                <!--                                      t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>-->
+                            </td>
+                            <!--<td class="text-right" style="width:9% !important;">-->
+                            <!--    &lt;!&ndash; <span t-field="line.discount_amount" /> &ndash;&gt;-->
+                            <!--    <span t-esc=" '%.3f' % line.discount_amount"/>-->
+                            <!--</td>-->
+                            <td style=";text-align: right;width:12% !important;">
+                                <span t-field="line.price_subtotal"
+                                      t-options="{'widget': 'float', 'precision': o.currency_id.decimal_places}"/>
+                            </td>
+                            <t t-set="sr_no" t-value="sr_no+1"/>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_invoice1">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="account_reports.report_invoice_document"/>
+                </t>
+            </t>
+        </template>
+    </data>
+
+</odoo>

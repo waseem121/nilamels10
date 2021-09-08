@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="vendor_sales_report_form_view" model="ir.ui.view">
+            <field name="name">vendor.sales</field>
+            <field name="model">vendor.sales</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="customer_ids" widget="many2many_tags" domain="[('customer','=',True)]"/>
+                        <field name="vendor_id" domain = "[('supplier','=',True)]"/>
+                        <field name="location_id"/>
+                        <field name="salesman_id"/>
+                        <field name="option"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_vendor_sales_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_vender_sale" model="ir.actions.act_window">
+            <field name="name">Vendor wise sales report</field>
+            <field name="res_model">vendor.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="vendor_sales_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_vender_sale"
+            id="menu_vendor_sales" sequence="30"/>
+
+    </data>
+</odoo>

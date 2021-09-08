@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<odoo>
+  <data>
+    <template id="index1" name="POS Index">&lt;!DOCTYPE html&gt;
+      <html>
+      <head>
+        <title>Customer POS</title>
+        <script src="/flexiretail/static/src/js/lib/js/jquery.js"></script>
+        <script type="text/javascript" src="/flexiretail/static/src/js/pos_mirror_image_temp.js"/>
+        <link rel="stylesheet" href="/flexiretail/static/src/css/pos_mirror_image.css"/>
+        <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/> -->
+        <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <style>
+          .carousel-inner > .item > .img,
+          .carousel-inner > .item {
+          width: 100%;
+          margin: auto;
+          height: 498px;
+          }
+          html, body, iframe { height: 545px; }
+        </style>
+      </head>
+      <body style="background:#F0EEEE;">
+        <div class="pos">
+          <div class="pos-topheader" style="height: 80px !important;border-bottom: 2px solid green !important;">
+                <div class="pos-branding">
+                  <img src="/flexiretail/static/src/img/flexiretail.png" class="cust_screen_logo"/>
+                </div>
+                <div class="pos-rightheader">
+                  <div style="float: right; margin: 10px; font-size: 25px; color:green" class="network_state glyphicon glyphicon-asterisk"></div>
+                </div>
+          </div>
+          <div class="pos-content" style="top: 80px !important;">
+            <div class="window">
+              <div class="subwindow">
+                <div class="subwindow-container">
+                  <div class="subwindow-container-fix screens">
+                    <div class="product-screen screen">
+                      <div class="leftpane">
+                      <div class="window">
+                        <div class="subwindow">
+                          <div class="subwindow-container">
+                            <div class="subwindow-container-fix">
+                              <div class="order-container">
+                                <div class="order-scroller touch-scrollable product_list">
+                                  <table class="product_content">
+                                  </table>
+                                  <div class="line">
+                                    <div><b class="total_amount"></b></div>
+                                    <div class="total_tax"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="payment_list subwindow collapsed">
+                        <table class="payment_content">
+                        </table>
+                        </div>
+                      </div>
+                    </div>
+                     <div class="rightpane">
+                      <div class="layout-table">
+                        <div class="content-row">
+                          <!-- <div class="container"> -->
+                            <div class="content-container">
+                            <t t-if="first_img">
+                            <div id="is_mute" t-att-data-value="ac_mute_video"/>
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel" >
+
+                              <div class="carousel-inner" role="listbox">
+                                <div class="item active" t-att-data-interval="first_img['image_duration']" align="center" t-att-style="ac_height_style">
+                                  <t t-if="first_img['file_type']=='image'">
+                                    <img t-att-src="first_img['img_link']" t-att-width="ac_width" t-att-style="ac_height_style"/>
+                                  </t>
+                                  <t t-if="first_img['file_type']=='video'">
+                                    <t t-if="first_img['is_youtube_url']== False">
+                                    <video  controls="1" autoplay="autoplay" class="video_custom" >
+                                        <source t-att-src="first_img['img_link']" type="video/mp4" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                        <source t-att-src="first_img['img_link']" type="video/ogg" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                        <source t-att-src="first_img['img_link']" type="video/webm" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                      </video>
+                                      </t>
+                                    <t t-if="first_img['is_youtube_url']==True">                        
+                                      <div id="my_vid">
+                                          <iframe  t-att-width="ac_width" t-att-height="ac_height"
+                                        t-att-src="first_img['img_link']+'?autoplay=1autoplay=1&amp;loop=1&amp;playlist='+first_img['name_of_url']" class="iframe_video_display">
+                                        </iframe>
+                                      </div>
+
+                                    </t>
+                                    </t>
+                                  <div class="carousel-caption">
+                                  <h3><t t-esc="first_img['name']"/></h3>
+                                  <p><t t-esc="first_img['description']"/></p>
+                                  </div>
+                                </div>
+                                <t t-foreach="image_link" t-as="link">
+                                  <div class="item" t-att-data-interval="link['image_duration']" align="center" t-att-style="ac_height_style">
+                                    <t t-if="link['file_type']=='image'">
+                                      <img t-att-src="link['img_link']"  t-att-width="ac_width"  t-att-style="ac_height_style"/>
+                                    </t>
+                                    <t t-if="link['file_type']=='video'">
+                                      <t t-if="link['is_youtube_url']== False">
+                                        <video  controls="1" autoplay="autoplay" class="video_custom">
+                                          <source t-att-src="link['img_link']" type="video/mp4" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                          <source t-att-src="link['img_link']" type="video/ogg" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                          <source t-att-src="link['img_link']" type="video/webm" t-att-width="ac_width" t-att-height="ac_height"></source>
+                                        </video>
+                                      </t>
+                                    <t t-if="link['is_youtube_url']==True">
+                                      <div id="my_vid">
+                                          <iframe   t-att-width="ac_width" t-att-height="ac_height"
+                                             t-att-src="link['img_link']+'?autoplay=1&amp;loop=1&amp;playlist='+link['name_of_url']" class="iframe_video_display">
+                                           </iframe>
+                                      </div>
+
+                                    </t>
+                                    </t>
+                                  <div class="carousel-caption">
+                                    <h3><t t-esc="link['name']"/></h3>
+                                    <p><t t-esc="link['description']"/></p>
+                                  </div>
+                                  </div>
+                                </t>
+                              </div>
+                            </div>
+                            </t>
+
+                            <marquee t-att-bgcolor="marque_bg_color">
+                             <font  t-att-color="marque_color" t-att-style="marque_font_size"><p class="scroll_msg"><t t-esc="marquee_text"/></p></font>
+                            </marquee>
+                            </div>
+                          </div>
+                          </div>
+                        <!-- </div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </body>
+      </html>
+    </template>
+  </data>
+</odoo>

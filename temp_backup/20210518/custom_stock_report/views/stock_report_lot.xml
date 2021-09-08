@@ -1,0 +1,65 @@
+<odoo>
+    <data>
+        <record id="custom_stock_report_lot" model="ir.ui.view">
+            <field name="name">stock.report.lot</field>
+            <field name="model">stock.report.lot</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="state" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                        <group col="2" states="choose">
+                            <field name="based_on" readonly="1"/>
+<!--                             <field name="based_on_date" -->
+<!--                                    attrs="{'invisible':[('based_on','!=', 'on_date')],'required':[('based_on','=', 'on_date')]}"/> -->
+                        </group>
+                        <group col="4" states="choose">
+                        	<field name="exp_date_from"/>
+                        	<field name="exp_date_to"/>
+                        </group>
+                        <group states="choose"><group>
+                            <field name="group_by" required="1"/>
+                        </group></group>
+                        <group col="4" states="choose">
+                            <!--<field name="partner_ids" widget="many2many_tags"/>-->
+                            <field name="product_ids" widget="many2many_tags" domain="[('type', '=', 'product')]"/>
+                            <field name="category_ids" widget="many2many_tags"/>
+                            <field name="internal_location"/>
+                            <field name="location_ids" widget="many2many_tags"
+                             	   context="{'physical_loc': internal_location}"/>
+                            <field name="brand_ids" widget="many2many_tags"/>
+                        </group>
+
+                        <div states="get">
+                            <h2>Report Complete</h2>
+                            <p>Here is the Xls File :
+                                <field name="data" readonly="1" filename="name"/>
+                            </p>
+                        </div>
+                    </sheet>
+                    <footer states="choose">
+                        <button type="object" string="Print" class="btn-primary" name="generate_stock_report_lot"/>
+                        <button type="object" class="btn-primary" string="Generate XLS"
+                                name="generate_stock_report_lot_xlsx"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                    <footer states="get">
+                        <button special="cancel" string="Close" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="custom_stock_report_lot_action" model="ir.actions.act_window">
+            <field name="name">Stock Report Expiry</field>
+            <field name="res_model">stock.report.lot</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="custom_stock_report_lot_action"
+                  id="custom_stock_report_lot_menu"
+                  sequence="6"/>
+    </data>
+</odoo>

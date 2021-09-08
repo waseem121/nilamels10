@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="report_partnerledger" inherit_id="account.report_partnerledger">
+            <xpath expr="//table[@class='table table-condensed']" position="replace">
+                <!--                <font style="font-size:12px;">-->
+                <table class='table table-condensed'>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>JRNL</th>
+                            <th>Account</th>
+                            <th>Ref</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th t-if="data['form']['amount_currency']">Currency</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="4">
+                                <strong t-esc="o.ref"/>
+                                -
+                                <strong t-esc="o.name"/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_partner(data, o, 'debit')"
+                                        t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_partner(data, o, 'credit')"
+                                        t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right">
+                                <strong t-esc="sum_partner(data, o, 'debit - credit')"
+                                        t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <t t-if="ageing">
+                            <t t-if="not data['form']['date_to']">
+                                <t t-set="date1"
+                                   t-value="datetime.datetime.today()+ datetime.timedelta(days=1)"/>
+                                <t t-set="date2" t-value="date1 - datetime.timedelta(days=30)"/>
+                                <t t-set="date3" t-value="date2 - datetime.timedelta(days=30)"/>
+                                <t t-set="date4" t-value="date3 - datetime.timedelta(days=30)"/>
+                                <t t-set="date5" t-value="date4 - datetime.timedelta(days=30)"/>
+                                <t t-set="date6" t-value="date5 - datetime.timedelta(days=60)"/>
+                            </t>
+                            <t t-if="data['form']['date_to']">
+                                <t t-set="date1"
+                                   t-value="datetime.datetime.strptime(data['form']['date_to'], '%Y-%m-%d')"/>
+                                <t t-set="date2" t-value="date1 - datetime.timedelta(days=30)"/>
+                                <t t-set="date3" t-value="date2 - datetime.timedelta(days=30)"/>
+                                <t t-set="date4" t-value="date3 - datetime.timedelta(days=30)"/>
+                                <t t-set="date5" t-value="date4 - datetime.timedelta(days=30)"/>
+                                <t t-set="date6" t-value="date5 - datetime.timedelta(days=60)"/>
+                            </t>
+                            <t t-set="tot1" t-value="0.0"/>
+                            <t t-set="tot2" t-value="0.0"/>
+                            <t t-set="tot3" t-value="0.0"/>
+                            <t t-set="tot4" t-value="0.0"/>
+                            <t t-set="tot5" t-value="0.0"/>
+                            <t t-set="tot6" t-value="0.0"/>
+                        </t>
+                        <tr t-foreach="lines(data, o)" t-as="line">
+                            <td>
+                                <span t-esc="line['date']"/>
+                                <!--<span t-esc="datetime.datetime.strptime(data['form']['date_from'], '%Y-%m-%d')+ datetime.timedelta(days=30)"/>-->
+                            </td>
+                            <td>
+                                <span t-esc="line['code']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['a_code']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['displayed_name']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="line['debit']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="line['credit']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                            <td class="text-right" t-if="data['form']['amount_currency']">
+                                <t t-if="line['currency_id']">
+                                    <span t-esc="line['amount_currency']"
+                                          t-options="{'widget': 'monetary', 'display_currency': line['currency_id']}"/>
+                                </t>
+                            </td>
+                            <t t-set="check_date" t-value="datetime.datetime.strptime(line['date'], '%m/%d/%Y')"/>
+                            <t t-set="amount" t-value="line['debit'] - line['credit']"/>
+                            <t t-if="ageing and check_date">
+                                <t t-if="((date1 + datetime.timedelta(days=1)) &gt; check_date)and(date2 &lt; check_date)">
+                                    <t t-set="tot1" t-value="tot1 + amount"/>
+                                </t>
+                                <t t-if="((date2) &gt; check_date)and(date3 &lt; check_date)">
+                                    <t t-set="tot2" t-value="tot2 + amount"/>
+                                </t>
+                                <t t-if="((date3) &gt; check_date)and(date4 &lt; check_date)">
+                                    <t t-set="tot3" t-value="tot3 + amount"/>
+                                </t>
+                                <t t-if="((date4) &gt; check_date)and(date5 &lt; check_date)">
+                                    <t t-set="tot4" t-value="tot4 + amount"/>
+                                </t>
+                                <t t-if="((date5) &gt; check_date)and(date6 &lt; check_date)">
+                                    <t t-set="tot5" t-value="tot5 + amount"/>
+                                </t>
+                                <t t-if="((date6) &gt; check_date)">
+                                    <t t-set="tot6" t-value="tot6 + amount"/>
+                                </t>
+                            </t>
+                            <td class="text-right">
+                                <span t-esc="line['progress']"
+                                      t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                            </td>
+                        </tr>
+                        <t t-if="ageing">
+                            <tr>
+                                <td colspan="9">
+                                    <div>
+                                        <table class='table table-bordered '>
+                                            <tr>
+                                                <th colspan="7" class="text-center">Ageing</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center">0-30</th>
+                                                <th class="text-center">30-60</th>
+                                                <th class="text-center">60-90</th>
+                                                <th class="text-center">90-120</th>
+                                                <th class="text-center">120-180</th>
+                                                <th class="text-center">180+</th>
+                                                <th class="text-center">Balance</th>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-right">
+                                                    <span t-esc="tot1"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot2"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot3"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot4"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot5"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <span t-esc="tot6"
+                                                          t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <strong t-esc="sum_partner(data, o, 'debit - credit')"
+                                                            t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </xpath>
+        </template>
+
+
+        <record id="account_report_partner_ledger_view_custom1" model="ir.ui.view">
+            <field name="name">Partner Ledger report1</field>
+            <field name="model">account.report.partner.ledger</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+                <field name="journal_ids" position="after">
+                    <field name="ageing"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="account_report_partner_ledger_view_custom" model="ir.ui.view">
+            <field name="name">Partner Ledger report</field>
+            <field name="model">account.report.partner.ledger</field>
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <group col="4">
+                        <field name="target_move" widget="radio"/>
+                        <field name="result_selection"/>
+                        <newline/>
+                        <field name="reconciled"/>
+                        <newline/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        <field name="ageing"/>
+                    </group>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1"
+                                class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_partner_ledger_menu_custom" model="ir.actions.act_window">
+            <field name="name">Single Partner Ledger</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.report.partner.ledger</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_report_partner_ledger_view_custom"/>
+            <field name="target">new</field>
+        </record>
+
+        <!-- <record id="action_account_partner_ledger_values" model="ir.values">
+            <field name="model_id" ref="account.model_account_account" />
+            <field name="name">Partner Ledger</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_partner_ledger_menu'))" />
+            <field name="key">action</field>
+            <field name="model">account.account</field>
+        </record> -->
+
+        <menuitem
+                id="menu_partner_ledger_custom"
+                name="Single Partner Ledger"
+                parent="account_reports.account_reports_legal_statements_menu"
+                action="action_account_partner_ledger_menu_custom"
+        />
+    </data>
+</odoo>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="clarico_wishlist_wishlist_template">
+		<t t-call="website.layout">
+			<div class="mask_cover"></div>
+			<div class="main-div-W100 wishlist-main">
+				<section><img class="wishlist-cover-img" src="/clarico_cart/static/src/img/cart_cover.jpg"></img></section>
+				<div class="main-div-maxW">
+					
+					<form action="/shop/cart/update" method="post">
+						<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+						<t t-if="object">
+							<div class="clear-all-div">
+								<h2 class="chs_heading">Your Wishlist</h2>
+								<a class="clear-all-wishlist">( Clear Wishlist )</a>
+							</div>
+
+							<div class="wish_product_main_div">
+								<t t-foreach="object" t-as="p">
+									<div t-att-data-id="'%s' % p.product_id.id" class="product">
+										<div t-att-data-id="'%s' % p.product_id.id" class="undo_opacity">
+											<div class="wishlist-img-div">
+												<img class="wishlist-img"
+													t-att-src="'data:image/png;base64,%s' % p.product_id.image_small"></img>
+												<!-- <div itemprop="image" t-field="p.product_id.image_tiny" 
+													t-options='{"widget": "image", "alt-field": "name"}'/> -->
+											</div>
+											<div class="wishlist-product-name-div">
+												<a t-att-href="'/shop/product/%s' %slug(p.product_id)"
+													class="wishlist-product-name" t-field="p.product_id.name"
+													id="productname" />
+												<div class="wishlist_price">
+													<t t-if="(compute_currency(p.product_id.lst_price) - p.product_id.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='with_discount'">
+														<del class="text-danger mr8 strike-through strike-price" style="white-space: nowrap;" t-esc="compute_currency(p.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+													</t>
+													<p>
+														<t t-if="(compute_currency(p.product_id.lst_price) -p.product_id.website_price ) &gt; 0.01  and website.get_current_pricelist().discount_policy=='without_discount'">
+														   
+															<del class="text-danger mr8 wishlist-price-p strike-price" style="white-space: nowrap;" t-esc="compute_currency(p.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" />
+														</t>
+														 <span class="text-danger oe_default_price" style="text-decoration: line-through; white-space: nowrap;"
+														t-esc="compute_currency(p.product_id.website_public_price)" t-options="{'widget': 'monetary', 'display_currency': website.get_current_pricelist().currency_id, 'from_currency': website.currency_id}" t-att-style="'text-decoration: line-through; white-space: nowrap; ' + '' if (compute_currency(p.product_id.lst_price) - p.product_id.website_price) &gt; 0.01 and website.get_current_pricelist().discount_policy == 'without_discount' else 'display: none;'" />
+													  
+														<!-- <span class="p-orignal-price" t-esc="p.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/> -->
+														 <p class="oe_price wishlist-price-p" style="white-space: nowrap;" t-esc="p.product_id.website_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+														<span itemprop="price" style="display:none;" t-esc="p.product_id.website_price" />
+														<span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
+													</p>
+													
+												</div>
+												<div class="wishlist_rating_main_div">
+													<t t-set="rating_stat" t-value="rating_product" />
+													<t t-call="rating.rating_star_card">
+														<t t-set="rating_default_value"
+															t-value="'%.2f' % (rating_stat[p.product_id.id].get('avg', 0.0),)" />
+														<t t-set="rating_disabled" t-value="True" />
+													</t>
+												</div>
+												<div class="product_avail">
+													<div t-if="p.product_id.availability == 'in_stock'"
+														class="in-stock">
+														<div id="available">In Stock</div>
+													</div>
+													<div t-if="p.product_id.availability == 'warning'"
+														class="warning">
+														<!-- <span>Warning</span> -->
+														<div id="available">Warning</div>
+													</div>
+												</div>
+												<div class="wishlist-product-cart-div">
+													<div class="add_cart_div" id="quick_view_wishlist"></div>
+													<!-- <a t-att-data-id="'%s' % p.product_id.id" class="add-to-cart" 
+														href=""> <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to Cart 
+														</a> -->
+													<div class="remove_wish_div">
+														<a t-att-data-id="'%s' % p.product_id.id" class="remove2wish"
+															t-att-data-name="'%s' % p.product_id.name">
+															<i class="fa fa-trash-o" aria-hidden="true"></i>
+															Remove
+														</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										<a class="undo" t-att-data-id="'%s' % p.product_id.id"></a>
+									</div>
+								</t>
+							</div>
+						</t>
+						<t t-if="not object">
+							<div class="empty-wishlist-div">
+								<div class="empty-wishlist-img-div">
+									<img src="/clarico_wishlist/static/src/img/icon_empty_wishlist.jpg"></img>
+								</div>
+								<p class="empty-wishlist-text">Your wishlist is empty!</p>
+							</div>
+						</t>
+					</form>
+				</div>
+			</div>
+		</t>
+	</template>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sales_summary_report_format" model="report.paperformat">
+        <field name="name">Sales Summary Report</field>
+        <field name="default" eval="True" />
+        <field name="orientation">Landscape</field>
+    </record>
+
+    <report id="sales_summary_report" 
+            string="Cashier Summary Report"
+            model="sales.cashier.summary"
+            name="direct_sale.sales_summary_report_template"
+            file="direct_sale.sales_summary_report_template"
+            paperformat="direct_sale.sales_summary_report_format"
+            report_type="qweb-pdf"
+            menu="False"
+            />
+
+    <report id="sales_detail_report"
+            string="Sale Detail Report"
+            model="sales.detail.summary"
+            name="direct_sale.sales_detail_report_template"
+            file="direct_sale.sales_detail_report_template"
+            paperformat="direct_sale.sales_summary_report_format"
+            report_type="qweb-pdf"
+            menu="False"
+            />
+
+</odoo>

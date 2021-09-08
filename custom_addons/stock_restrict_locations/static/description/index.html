@@ -1,0 +1,98 @@
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">Stock User Restrictions</h2>
+        <h3 class="oe_slogan">Restrict warehouses, stock locations, and picking types per-user</h3>
+        <div class="oe_demo oe_picture oe_screenshot">
+            <img src="settings.png">
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">Features &amp; Overview</h2>
+        <div class="oe_span6 text-justify oe_mt32">
+            <span>
+                <span class="fa fa-check fa-2x pull-left"/>
+                <p class="oe_mb32" style="margin-left:48px;-webkit-margin-before: 0;">
+                Fine-grained control over user access rights - restrict users to the locations and picking types that they need
+                </p>
+            </span>
+            <span>
+                <span class="fa fa-check fa-2x pull-left"/>
+                <p class="oe_mb32" style="margin-left:48px;-webkit-margin-before: 0;">
+                Perfect for multi-warehouse operations, or companies that have separate departments and/or managers per location or picking type
+                </p>
+            </span>
+            <span>
+                <span class="fa fa-check fa-2x pull-left"/>
+                <p class="oe_mb32" style="margin-left:48px;-webkit-margin-before: 0;">
+                Easy-to-use interface - simply add your desired locations &amp; picking types, and click save!
+                </p>
+            </span>
+        </div>
+        <div class="oe_span6">
+            <img class="oe_picture oe_screenshot" src="inventory.png">
+        </div>
+
+        <br />
+        <h3 class="oe_slogan oe_span12 oe_mt32" style="width: 100%;display: inline-block;text-align: left;">Overview</h3>
+        <div class="oe_span12 oe_mt16">
+            <p class="oe_mb32">
+                This module adds powerful, fine-grained security access controls for warehouses, stock locations, and picking types, all on a per-user basis. It works well for operations that use the Odoo Inventory module heavily, such as eCommerce or sales operations. Access control is configured on the User's settings page, so no custom XML or Python code is needed.
+            </p>
+        </div>
+
+        <br />
+        <h3 class="oe_slogan oe_span12 oe_mt32" style="width: 100%;display: inline-block;text-align: left;">Setup</h3>
+        <div class="oe_span12 oe_mt16">
+            <p class="oe_mb16">
+                To configure access rules for a User:
+            </p>
+            <ol>
+                <li>Browse to the Access Control page for the desired User (Settings -> Users -> Access Control)</li>
+                <li>Enable <em>Restrict Warehouses/Locations</em></li>
+                <li>Add the desired Warehouses, Locations, and Picking Types</li>
+                <li>Locations are computed heirarchially - allowing <em>WH</em> will also enable <em>WH / Stock</em>, <em>WH / Receipts</em>, etc</li>
+                <li>Ensure that the user has <em>User</em> access on the <em>Inventory</em> application</li>
+                <li>Save the form, and you're good to go!</li>
+            </ol>
+
+            <div class="oe_span12 oe_mb32">
+                <img class="oe_picture oe_screenshot" src="setup_1.png">
+                <img class="oe_picture oe_screenshot" src="setup_2.png">
+                <img class="oe_picture oe_screenshot" src="setup_3.png">
+            </div>
+
+            <p class="oe_mt32 oe_mb_16">
+                Please keep in mind that these access rules apply to ALL stock locations and picking types, including virtual and partner locations. You should test your configuration thoroughly before pushing to a production environment. To ensure that Odoo's double-entry inventory system works correctly, you should enable the following locations for all users:
+            </p>
+            <ul>
+                <li>Virtual Locations</li>
+                <li>Partner Locations</li>
+                <li>Any PoS-related routes (e.g. <em>PoS Orders</em>)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_light">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">Help and Support</h2>
+        <div class="oe_span12 oe_mt32 oe_text_center">
+            <p class="oe_mb32">
+                This module is hosted and maintained on BitBucket. If you have purchased the module and would like access to the source repository, bug tracker, and the latest updates, please email me with your BitBucket/Atlassian account details. 
+            </p>
+
+            <p class="oe_mb32">
+                For assistance with setup &amp; bugfixes, contact me via the link below.
+            </p>
+
+            <a class="oe_button oe_text_center" href="https://www.ryanc.me/contact/#stock_location_restrictions" target="blank" style="color: white;">Get in Touch <i class="fa fa-paper-plane fa-fw" /></a>
+        </div>
+    </div>
+    <div class="oe_span12 oe_mt32 oe_text_center">Icons made by <a href="https://www.flaticon.com/authors/maxim-basinski" title="Maxim Basinski">Maxim Basinski</a> &amp; <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+</section>
+
+<section class="oe_container oe_separator">
+</section>

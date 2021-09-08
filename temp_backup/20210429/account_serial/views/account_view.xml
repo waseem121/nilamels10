@@ -1,0 +1,32 @@
+<odoo>
+  <data>
+      
+	<record id="view_account_form_serial_no" model="ir.ui.view">
+	    <field name="name">view.account.form.serial.no</field>
+	    <field name="model">account.account</field>
+	    <field name="inherit_id" ref="account.view_account_form"/>
+	    <field name="arch" type="xml">
+	        <field name="user_type_id" position="after">
+                    <label for="serial_no"/>
+                    <div>
+                       <field name="serial_no"/>
+                       <button name="action_generate_serial_no" class="oe_link" type="object" string=" -> Generate Serial" />
+                    </div>
+	        </field>
+	    </field>
+	</record>
+        
+	<record id="view_account_list_serial_no" model="ir.ui.view">
+	    <field name="name">view.account.list.serial.no</field>
+	    <field name="model">account.account</field>
+	    <field name="inherit_id" ref="account.view_account_list"/>
+	    <field name="arch" type="xml">
+	        <field name="user_type_id" position="after">
+                    <field name="parent_id"/>
+                    <field name="serial_no"/>
+	        </field>
+	    </field>
+	</record>
+        
+  </data>
+</odoo>

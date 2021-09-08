@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="stockmove_report_form_view" model="ir.ui.view">
+            <field name="name">stock.move.report</field>
+            <field name="model">stock.move.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="location_id"/>
+                        <field name="product_id"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_stockmove_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_stock_move_report" model="ir.actions.act_window">
+            <field name="name">Stock Move Report</field>
+            <field name="res_model">stock.move.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stockmove_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="action_stock_move_report"
+            id="menu_stock_move_report" sequence="55"/>
+
+    </data>
+</odoo>

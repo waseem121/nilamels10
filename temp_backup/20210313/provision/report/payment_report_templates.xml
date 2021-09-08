@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_payment_document">
+    <!--<t t-call="report.external_layout">-->
+        <!--<t t-set="doc" t-value="doc.with_context({'lang':doc.partner_id.lang})" />-->
+            <div class="header">
+                <div>
+                     <div class="text-center">
+                        <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="widht:100%;max-height: 115px;"/>
+                    </div>
+                    <div style="text-align:center">
+                        <h3><b>Cash Receipt</b></h3>
+                    </div>
+                    <!--<br/>-->
+                </div>
+                <div>
+                    <div class="col-xs-6">
+                        <strong>Customer Name:</strong>
+                        <span t-esc="doc.partner_id.name"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Account:</strong>
+                        <span t-esc="doc.partner_id.property_account_receivable_id.code"></span>
+                        <span t-esc="doc.partner_id.property_account_receivable_id.name"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Voucher No:</strong>
+                        <span t-esc="doc.name"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Memo:</strong>
+                        <span t-esc="doc.communication"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Cheque No:</strong>
+                        <span t-esc="doc.cheque_no"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Cheque Date:</strong>
+                        <span t-esc="doc.cheque_date"></span>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Payment Mode</strong>
+                        <span t-esc="doc.payment_mode"></span>
+                    </div>
+                    
+
+                    <div class="col-xs-6">
+                        <strong>Date:</strong>
+                        <span t-esc="context_timestamp(datetime.datetime.strptime(doc.payment_date, '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                    </div>
+                    <div class="col-xs-6">
+                        <strong>Total Amount:</strong>
+                        <span t-esc="'%.3f'%doc.amount"/>
+                    </div>
+                </div>
+                
+            </div>
+        <div class="page">
+            <div class="oe_structure"/>
+            <table class="table table-condensed" style="margin-top:10px">
+                <!--<table border="1" class="table table-condensed" style="border-style:solid">-->
+                <thead>
+                    <tr>
+                        <th style="border: 1px solid black">Sr No</th>
+                        <!--<th style="border: 1px solid black">Account</th>-->
+                        <th style="border: 1px solid black">Amount</th>
+                        <th style="border: 1px solid black">Vtype</th>
+                        <th style="border: 1px solid black">V No</th>
+                        <th style="border: 1px solid black">Narration</th>
+                    </tr>
+               </thead>
+               <tbody>
+               <t t-set="count" t-value="1"/>
+               <t t-set="reconciled_amount" t-value="0"/>
+               
+                <tr t-foreach="doc.manual_reconcilation_lines" t-as="l">
+                        <t t-if="l.amount_to_reconcile">
+                        <t t-set="reconciled_amount" t-value="reconciled_amount + l.amount_to_reconcile"/>
+                        <td style="border: 1px solid black">
+                            <span t-esc="count"/>
+                            <t t-set="count" t-value="count + 1"/>
+                            <!--<span t-field="order_line.name"/>-->
+                            <!--<t t-esc="l.get('defualt_code')"/>-->
+                        </td>
+<!--                        <td style="border: 1px solid black">
+                            <span t-field="l.debit_line_id.account_id.name"/>
+                        </td>-->
+                        <td style="border: 1px solid black">
+                            <span t-esc="'%.3f'%l.amount_to_reconcile"/>
+                        </td>
+                        <td style="border: 1px solid black">
+                            <span t-field="l.debit_line_id.move_id.journal_id.name"/>
+                        </td>
+                        <td style="border: 1px solid black">
+                            <span t-field="l.debit_line_id.move_id.name"/>
+                        </td>
+                        <td style="border: 1px solid black">
+                                <span t-field="l.debit_line_id.name"/>
+                        </td>
+                        </t>
+                    </tr>
+                <!--</t>-->
+                    <tr>
+                        <td>
+                           <b>Total Reconciled Amount:</b>
+                        </td>
+                        <td class="text-left">
+                            <b>
+                                 <span t-esc="'%.3f'%reconciled_amount"/>
+                            </b>
+                        </td>
+                    </tr>
+                    <t t-if="doc.payment_difference">
+                       <tr>
+                           <td>
+                              <b> Payment Difference :</b>
+                           </td>
+                           <td class="text-left">
+                               <b>
+                                    <span t-esc="'%.3f'%doc.payment_difference"/>
+                               </b>
+                           </td>
+                       </tr>   
+                       <tr>
+                           <td>
+                              <b> Payment Difference Account :</b>
+                           </td>
+                           <t t-if="doc.writeoff_account_id">
+                           <td class="text-left">
+                               <b>
+                                    <span t-esc="doc.writeoff_account_id.name"/>
+                               </b>
+                           </td>
+                           </t>
+                       </tr>
+                   </t>
+               </tbody>
+            </table>
+
+        </div>
+    <!--</t>-->
+</template>
+
+
+<template id="report_payment">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <!--<t t-call="multiple_uom_pricelist.report_pricelist_document" t-lang="doc.partner_id.lang"/>-->
+            <t t-call="provision.report_payment_document"/>
+        </t>
+    </t>
+</template>
+</odoo>

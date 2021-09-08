@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+        <template id="minimal_layout" inherit_id="report.minimal_layout">
+            <xpath expr="//t[@t-if='subst is True']" position="replace">
+                <t t-if="subst is True">
+                    <script>
+                        function subst() {
+                        var vars = {};
+                        var x = document.location.search.substring(1).split('&amp;');
+                        for (var i in x) {
+                        var z = x[i].split('=', 2);
+                        vars[z[0]] = unescape(z[1]);
+                        }
+                        var x=['frompage', 'topage', 'page', 'webpage', 'section', 'subsection', 'subsubsection'];
+                        for (var i in x) {
+                        var y = document.getElementsByClassName(x[i]);
+                        for (var j=0; j&lt;y.length; ++j)
+                        y[j].textContent = vars[x[i]];
+                        }
+                        var operations = {
+                        'not-first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "hidden" : "visible";
+                        },
+                        'not-last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "hidden" : "visible";
+                        },
+                        'first-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.frompage) ? "visible" : "hidden";
+                        },
+                        'last-page': function (elt) {
+                        elt.style.visibility = (vars.page === vars.topage) ? "visible" : "hidden";
+                        },
+                        };
+                        for (var klass in operations) {
+                        var y = document.getElementsByClassName(klass);
+                        for (var j=0; j&lt;y.length; ++j)
+                        operations[klass](y[j]);
+                        }
+                        }
+                    </script>
+                </t>
+            </xpath>
+        </template>
+
+    	<template id="external_layout_custom_invoice">
+            <!-- Multicompany -->
+            <t t-if="not o and doc">
+            <t t-set="o" t-value="doc"/>
+            </t>
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+
+            <t t-call="custom_invoice_report.external_layout_header_custom_invoice" />
+            <t t-raw="0" />
+            <t t-call="custom_invoice_report.external_layout_footer_custom_invoice" />
+        </template>
+
+        <template id="external_layout_header_custom_invoice">
+		    <div class="header">
+                        
+            <div style="margin-left: 14.6cm">
+                <span>Salesperson: <span t-field="o.user_id.name"/></span>
+            </div>
+            <div style="margin-top: 0.2cm">
+
+            </div>
+            <table style="border: none; font-size: 16px ;">
+                <tr>
+                    <td style="width: 1.8cm"></td>
+                    <td style="width: 5.4cm" rowspan="2"><strong><span t-field="o.partner_id.name" /></strong></td>
+                    <td style="width: 3cm"></td>
+                     <td style="width: 6.1cm"><strong><span t-field="o.number"/></strong></td>
+                    <td style="width: 5cm" rowspan="4"><strong><span t-field="o.partner_shipping_id.name"/> &amp;nbsp;  <span t-field="o.partner_shipping_id.street"/>
+                        &amp;nbsp;<span t-field="o.partner_shipping_id.city"/>&amp;nbsp;<span t-field="o.partner_shipping_id.phone"/>
+                    </strong></td>
+                </tr>
+                <tr>
+                    <td style="width: 1.8cm"></td>
+                    <td style="width: 3cm;"></td>
+                    <td style="width: 6.1cm; opacity: 0.0;">Hidden text</td>
+                </tr>
+                <tr>
+                    <td style="width: 1.8cm"></td>
+                    <td style="width: 5.4cm"> <strong><span t-field="o.account_id.code"/></strong></td>
+                    <td style="width: 3cm"></td>
+                    <td style="width: 6.1cm"></td>
+                </tr>
+                <tr>
+                    <td style="width: 1.8cm"></td>
+                    <td style="width: 5.4cm"></td>
+                    <td style="width: 3cm"></td>
+                    <td style="width: 6.1cm"><strong><p t-field="o.date_invoice"/></strong></td>
+                </tr>
+
+            </table>                        
+
+		    </div>
+		</template>
+
+        <template id="external_layout_footer_custom_invoice">
+            <div class="footer">
+                
+<!--                <t t-set="lines" t-value="len(o.invoice_line_ids_two)"/>
+                <t t-if="lines &lt;= 20">
+                <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                               <strong> <span t-field="o.amount_untaxed_wo_global_disc" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                               <strong><span t-esc="'{:,.3f}'.format(o.amount_untaxed_wo_global_disc)" /></strong>
+                            </td>
+                        </tr>
+                </table>
+                 <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.total_discount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                <strong><span t-esc="'{:,.3f}'.format(o.total_discount)" /></strong>
+                            </td>
+
+                        </tr>
+                </table>
+                <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                <strong><span t-esc="'{:,.3f}'.format(o.amount_total)" /></strong>
+                            </td>
+                        </tr>
+                </table>
+                </t>
+                -->
+                <!--<div class="not-first-page">-->
+                <div class="last-page">
+                <table style="border: none;">
+                        <tr>
+                            <!--<td style="width: 19.5cm"></td>-->
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                               <strong> <span t-field="o.amount_untaxed_wo_global_disc" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                               <!--<strong><span t-esc="'{:,.3f}'.format(o.amount_untaxed_wo_global_disc)" /></strong>-->
+                            </td>
+                        </tr>
+                </table>
+                 <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.total_discount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                <!--<strong><span t-esc="'{:,.3f}'.format(o.total_discount)" /></strong>-->
+                            </td>
+
+                        </tr>
+                </table>
+                <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                                <!--<strong><span t-esc="'{:,.3f}'.format(o.amount_total)" /></strong>-->
+                            </td>
+                        </tr>
+                </table>                    
+                </div>
+                
+                <!--<div class="not-last-page">-->
+                <div>
+                    <!--                    <t t-set="printed" t-value="0"/>-->
+                    <ul class="list-inline">
+                        <li class="text-left">Page:</li>
+                        <li class="text-left">
+                            <span class="page"/>
+                        </li>
+                        <li class="text-left">/</li>
+                        <li class="text-left">
+                            <span class="topage"/>
+                        </li>
+                        <li class="text-right">
+                            P.T.O
+                        </li>
+                    </ul>
+                
+                </div>
+                
+<!--                <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                               <strong> <span t-field="o.amount_untaxed_wo_global_disc" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                            </td>
+                        </tr>
+                </table>
+                 <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.total_discount" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                            </td>
+
+                        </tr>
+                </table>
+                <div style="margin-top: 0.5cm">
+                </div>
+                 <table style="border: none;">
+                        <tr>
+                            <td style="width: 19.5cm"></td>
+                            <td style="width: 2.8cm;text-align: right">
+                                <strong><span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></strong>
+                            </td>
+                        </tr>
+                </table>-->
+
+            </div>
+        </template>
+
+</odoo>

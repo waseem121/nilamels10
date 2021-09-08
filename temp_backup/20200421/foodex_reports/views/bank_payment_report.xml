@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="bank_payment_report_form_view" model="ir.ui.view">
+            <field name="name">bank.payment.report</field>
+            <field name="model">cash.payment.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="collector_id" domain="[('is_collector','=',True)]"/>
+                        <field name="salesman_id"/>
+                        <field name="journal_id" domain="[('type', 'in', ['cash', 'bank'])]" invisible="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_report_bank_payment"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bankpayment_report" model="ir.actions.act_window">
+            <field name="name">Bank Payment Report</field>
+            <field name="res_model">bank.payment.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="bank_payment_report_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="account.menu_finance_reports" action="action_bankpayment_report"
+            id="menu_bankpayment_report" sequence="56"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="small_design_template" model="product.small.label.design">
+            <field name="name">Default Design</field>
+            <field name="report_model">wizard.product.small.label.report</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="product" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="product.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="product.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(product.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print price with pricelist -->
+                            <!-- 
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-esc="get_price(product, doc_id.pricelist_id)" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                            </div> 
+                            -->
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_type">EAN13</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+            <field name="barcode_field">barcode</field>
+        </record>
+
+        <record id="small_design_template_2" model="product.small.label.design">
+            <field name="name">Sale OrderDefault Design</field>
+            <field name="report_model">sale.order</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="line" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(line.product_id.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="small_design_template_3" model="product.small.label.design">
+            <field name="name">Purchase Order Default Design</field>
+            <field name="report_model">purchase.order</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="line" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(line.product_id.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="small_design_template_4" model="product.small.label.design">
+            <field name="name">Account Invoice Default Design</field>
+            <field name="report_model">account.invoice</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="line" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(line.product_id.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="small_design_template_5" model="product.small.label.design">
+            <field name="name">Stock Picking Default Design</field>
+            <field name="report_model">stock.picking</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="line" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="line.product_id.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(line.product_id.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+        <record id="small_design_template_6" model="product.small.label.design">
+            <field name="name">Product Product Default Design</field>
+            <field name="report_model">product.product</field>
+            <field name="template_label_design"><![CDATA[<?xml version="1.0"?>
+            <t t-name="flexiretail.prod_small_lbl_rpt">
+                <span t-as="product" t-foreach="get_barcode_data(data)">
+                    <t t-foreach="doc_ids" t-as="doc_id">
+                        <div align="center" class="page">
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="product.name"/>
+                            </div>
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-field="product.default_code"/>
+                            </div>
+                            <div style="color:black;margin-top:15px;font-size:9px;">
+                                <!-- get_barcode(barcode_number, type, data)" -->
+                                <span t-raw="get_barcode_string(product.barcode, 'EAN13', data)"/>
+                            </div>
+                            <!-- to print price with pricelist -->
+                            <!-- 
+                            <div align="center" style="color:black;font-size:12px;">
+                                <span t-esc="get_price(line.product_id, doc_id.pricelist_id)" t-options='{"widget": "monetary", "display_currency": product.currency_id}'/>
+                            </div> 
+                            -->
+                            <!-- to print custom company logo -->
+                            <t t-if="data['form']['label_logo']">
+                                <div align="center" style="color:black;font-size:12px;margin-top:10px;">
+                                    <img t-att-src="'data:image/png;base64,'+ data['form']['label_logo']" style="max-height: 30px;max-width: 50px;"/>
+                                </div> 
+                            </t>
+                        </div>
+                    </t>
+                </span>
+            </t>]]>
+            </field>
+            <field name="label_width">43</field>
+            <field name="label_height">30</field>
+            <field name="dpi">80</field>
+            <field name="margin_top">4</field>
+            <field name="margin_left">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_right">1</field>
+            <field name="with_barcode">True</field>
+            <field name="barcode_height">300</field>
+            <field name="barcode_width">1500</field>
+            <field name="humanReadable">True</field>
+            <field name="display_height">40</field>
+            <field name="display_width">200</field>
+        </record>
+
+    </data>
+</openerp>

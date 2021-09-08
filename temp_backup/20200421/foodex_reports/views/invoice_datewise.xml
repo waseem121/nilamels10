@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="invoice_datewise_form_view1" model="ir.ui.view">
+            <field name="name">invoice.datewise</field>
+            <field name="model">invoice.datewise</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                        <field name="state"/>
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        <field name="location_ids" widget="many2many_tags" />
+                        <field name="salesman_id"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_invoice_datewise_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_invoice_datewise" model="ir.actions.act_window">
+            <field name="name">Invoice Report Datewise</field>
+            <field name="res_model">invoice.datewise</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_datewise_form_view1"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="sales_team.menu_sale_report" action="action_invoice_datewise"
+            id="menu_invoice_datewise" sequence="19"/>
+
+    </data>
+</odoo>

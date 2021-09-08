@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="accounting_report_view_profit_loss_gts_coa" model="ir.ui.view">
+        <field name="name">accounting.report.view.profit.loss.gts.coa</field>
+        <field name="model">accounting.report</field>
+        <field name="inherit_id" ref="account.accounting_report_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='date_to']" position="after">
+                    <field name="level"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    
+</odoo>

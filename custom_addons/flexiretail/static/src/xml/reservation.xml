@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ShowReservedOrderList">
+        <div class="control-button show_order_list">
+            <i class="fa fa-list" aria-hidden="true"></i>
+            Booked Orders
+        </div>
+    </t>
+
+     <t t-name="ReservationMode">
+        <div class="control-button js_reservation_mode">
+            Reservation Mode
+        </div>
+    </t>
+
+    <t t-name="ReservedOrderListScreenWidget">
+        <div class="reserved-orderlist-screen list-screen screen">
+            <div class="screen-content" style="max-width: 1275px;">
+                <section class="top-content">
+                    <span class='button back'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                   <span class="date-filter">
+                        <input placeholder="yyyy-mm-dd" type="text" id="datepicker" />
+                    </span>
+                    <span class='button reload'>
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                    </span>
+                    <span class='searchbox'>
+                        <input placeholder='Search orders' style="width: 164px;" />
+                        <span class='search-clear'></span>
+                    </span>
+                    <span class='searchbox'></span>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y order-list-scroll' style="height:auto;max-height: 490px !important;">
+                                    <div>
+                                        <table class='reserved-order-list list_table'>
+                                            <thead>
+                                                <tr style="text-align: center">
+                                                    <th>Order Ref</th>
+                                                    <th>Receipt Ref</th>
+                                                    <th>Customer</th>
+                                                    <th>Order Date</th>
+                                                    <th>Total</th>
+                                                    <t t-if="widget.pos.config and widget.pos.config.enable_order_reservation">
+                                                        <th>Amount due</th>
+                                                    </t>
+                                                    <t t-if="widget.pos.config and widget.pos.config.enable_order_reservation">
+                                                        <th>Pay</th>
+                                                        <th>Cancel</th>
+                                                        <th>Delivery Date</th>
+                                                    </t>
+                                                </tr>
+                                            </thead>
+                                            <tbody  class='reserved-order-list-contents '>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ReservedOrderlistLine">
+        <tr class='order-line' t-att-data-id='order.id' style="text-align: center">
+            <td><t t-esc='order.name'/></td>
+            <td><t t-esc='order.pos_reference' /></td>
+            <td><t t-esc='order.partner_id[1]' /></td>
+            <td><t t-esc='order.date_order or ""' /></td>
+            <td><t t-esc='widget.format_currency(order.amount_total) or ""' /></td>
+            <t t-if="widget.pos.config and widget.pos.config.enable_order_reservation">
+                <td><t t-esc='widget.format_currency(order.amount_due) or ""' /></td>
+            </t>
+            <t t-if="widget.pos.config and widget.pos.config.enable_order_reservation">
+	            <td class="order_history_button">
+	                <t t-if="order.state == 'draft'">
+	                    <span id="pay_due_amt" t-att-data-id='order.id' title="Pay" style="cursor:pointer;font-size: 27px;">
+	                        <i class="fa fa-money" aria-hidden="true"></i>
+	                    </span>
+	                </t>
+	            </td>
+                <td class="order_history_button">
+	                <t t-if="order.state == 'draft' and order.order_status != 'full'">
+	                    <span id="cancel_order" t-att-data-id='order.id' title="Cancel" style="cursor:pointer;font-size: 27px;">
+	                        <i class="fa fa-times" aria-hidden="true"></i>
+	                    </span>
+	                </t>
+	            </td>
+                <td class="order_history_button">
+	                <t t-if="order.state == 'draft'">
+	                    <span id="delivery_date" t-att-data-id='order.id' title="Delivery Date" style="cursor:pointer;font-size: 27px;">
+	                        <i class="fa fa-calendar" aria-hidden="true"></i>
+	                    </span>
+	                </t>
+	            </td>
+	        </t>
+        </tr>
+    </t>
+
+    <!--<t t-extend="XmlReceipt">-->
+        <!--<t t-jquery="div [t-esc='receipt.name']" t-operation="before">-->
+            <!--<t t-if="receipt.delivery_date" >-->
+                <!--<div>Delivery Date: <t t-esc='receipt.delivery_date' /></div>-->
+            <!--</t>-->
+        <!--</t>-->
+        <!--<t t-jquery="div [t-esc='receipt.cashier']" t-operation="after">-->
+            <!--<t t-if="receipt.client">-->
+                <!--<div>Client <t t-esc="receipt.client" /> </div>-->
+            <!--</t>-->
+        <!--</t>-->
+    	<!--<t t-jquery="[t-esc='receipt.name']" t-operation="replace">-->
+    		<!--<t t-esc="receipt.ref ? receipt.ref : receipt.name" />-->
+    	<!--</t>-->
+    	<!--<t t-jquery="[t-esc='receipt.date.localestring']" t-operation="replace">-->
+    		<!--<t t-esc="receipt.date_order ? receipt.date_order : receipt.date.localestring" />-->
+    	<!--</t>-->
+        <!--<t t-jquery="line.total" t-operation="replace">-->
+    	   <!--<t t-if="old_order_id">-->
+                <!--<line class='total' size='double-height'>-->
+                    <!--<left><pre>        TOTAL</pre></left>-->
+                    <!--<right><value><t t-esc='receipt.total_with_tax - receipt.last_paid_amt '/></value></right>-->
+                <!--</line>-->
+                <!--<br/><br/>-->
+    	   <!--</t>-->
+    	   <!--<t t-if="!old_order_id">-->
+                <!--<line class='total' size='double-height'>-->
+	                <!--<left><pre>        TOTAL</pre></left>-->
+	                <!--<right><value><t t-esc='receipt.total_with_tax' /></value></right>-->
+	            <!--</line>-->
+	            <!--<br/><br/>-->
+           <!--</t>-->
+    	<!--</t>-->
+        <!--<t t-jquery="[t-foreach='paymentlines']" t-operation="replace">-->
+    	    <!--<t t-if="receipt.total_paid_amt">-->
+	    	    <!--<line>-->
+	                <!--<left>Total Paid Amount :</left>-->
+	                <!--<right>-->
+	                    <!--<value><t t-esc='receipt.total_paid_amt'/></value>-->
+	                <!--</right>-->
+	            <!--</line><br/>-->
+	        <!--</t>-->
+            <!--<t t-if="receipt.amount_due">-->
+                <!--<line>-->
+                    <!--<left>Amount Due :</left>-->
+                    <!--<right>-->
+                        <!--<value><t t-esc='receipt.amount_due'/></value>-->
+                    <!--</right>-->
+                <!--</line><br/>-->
+            <!--</t>-->
+        <!--</t>-->
+    <!--</t>-->
+
+    <!--<t t-extend="PosTicket">-->
+        <!--<t t-jquery="[t-esc='order.name']" t-operation="replace">-->
+            <!--<t t-esc="order.get_pos_reference() ? order.get_pos_reference() : order.name" />-->
+            <!--<br />-->
+            <!--<t t-if="order.get_delivery_date()">-->
+                <!--Delivery Date: <t t-esc="moment(order.get_delivery_date()).format('L')" />-->
+            <!--</t>-->
+        <!--</t>-->
+        <!--<t t-jquery="[t-esc='moment().format(\'L LT\')']" t-operation="replace">-->
+            <!--<t t-esc="order.get_date_order() ? order.get_date_order() : moment().format('L LT')" />-->
+        <!--</t>-->
+        <!--<t t-jquery="[t-if='receipt.header']" t-operation="before">-->
+           <!--<t t-if="widget.pos.get_client()">-->
+               <!--Client: <t t-esc="widget.pos.get_client().name"/>-->
+           <!--</t>-->
+        <!--</t>-->
+        <!--<t t-jquery="[t-foreach='orderlines']" t-operation="replace">-->
+            <!--<t t-set="last_paid_amt" value="0" />-->
+            <!--<t t-foreach="orderlines" t-as="orderline">-->
+                <!--<t t-if='widget.pos.config and widget.pos.config.enable_order_reservation and-->
+                    <!--orderline.get_product().id == widget.pos.config.prod_for_payment[0]'>-->
+                    <!--<t t-set="last_paid_amt" t-value='orderline.get_display_price()' />-->
+                <!--</t>-->
+                <!--<t t-if='widget.pos.config and-->
+                    <!--(orderline.get_product().id !== widget.pos.config.prod_for_payment[0] and-->
+                    <!--orderline.get_product().id !== widget.pos.config.cancellation_charges_product_id[0] and-->
+                    <!--orderline.get_product().id !== widget.pos.config.refund_amount_product_id[0] )'>-->
+                    <!--<tr>-->
+                        <!--<td>-->
+                            <!--<t t-esc="orderline.get_product().display_name"/>-->
+                             <!--<t t-if="orderline.get_discount() > 0">-->
+                                <!--<div class="pos-disc-font">-->
+                                    <!--With a <t t-esc="orderline.get_discount()"/>% discount-->
+                                <!--</div>-->
+                            <!--</t>-->
+                        <!--</td>-->
+                        <!--<td class="pos-right-align">-->
+                            <!--<t t-esc="orderline.get_quantity_str_with_unit()"/>-->
+                        <!--</td>-->
+                        <!--<td class="pos-right-align">-->
+	                    <!--<t t-esc="widget.format_currency(orderline.get_display_price())"/>-->
+	                <!--</td>-->
+                    <!--</tr>-->
+                <!--</t>-->
+            <!--</t>-->
+        <!--</t>-->
+        <!--<t t-jquery="table.receipt-total tr:first" t-operation="before">-->
+            <!--<t t-if="order.get_amount_paid()">-->
+                <!--<tr>-->
+                    <!--<td>Last Paid Amount:</td>-->
+                    <!--<td class="pos-right-align">-->
+                        <!--<t t-esc="widget.format_currency(-order.get_amount_paid())"/>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</t>-->
+            <!--<t t-if="order.get_cancellation_charges()">-->
+                <!--<tr>-->
+                    <!--<td>Cancellation Charge:</td>-->
+                    <!--<td class="pos-right-align">-->
+                        <!--<t t-esc="widget.format_currency(order.get_cancellation_charges())"/>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</t>-->
+            <!--<t t-if="order.get_refund_amount()">-->
+                <!--<tr>-->
+                    <!--<td>Refund Amount:</td>-->
+                    <!--<td class="pos-right-align">-->
+                        <!--<t t-esc="widget.format_currency(Math.abs(order.get_refund_amount()))"/>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</t>-->
+        <!--</t>-->
+    	<!--<t t-jquery="table.receipt-paymentlines" t-operation="after">-->
+            <!--<table>-->
+                <!--<tr>-->
+                    <!--<td>Amount Due:</td>-->
+                    <!--<td class="pos-right-align">-->
+                        <!--<t t-esc="widget.format_currency(order.get_due())"/>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            <!--</table>-->
+    	<!--</t>-->
+        <!--<t t-jquery="[t-foreach='paymentlines']" t-operation="after">-->
+            <!--<t t-if="order.get_journal()">-->
+               <!--<tr t-foreach="order.get_journal()" t-as="line">-->
+                <!--<td>-->
+                    <!--<t t-esc="line.journal"/>-->
+                <!--</td>-->
+                <!--<td class="pos-right-align">-->
+                    <!--<t t-esc="widget.format_currency(line.amount)"/>-->
+                <!--</td>-->
+            <!--</tr>-->
+           <!--</t>-->
+        <!--</t>-->
+        <!--<t t-jquery="[t-esc='widget.format_currency(order.get_change())']" t-operation="replace">-->
+            <!--<t t-if="order.get_amount_return()">-->
+                <!--<t t-esc="widget.format_currency(order.get_amount_return())"/>-->
+            <!--</t>-->
+            <!--<t t-if="!order.get_amount_return()">-->
+                <!--<t t-esc="widget.format_currency(order.get_change())"/>-->
+            <!--</t>-->
+        <!--</t>-->
+    <!--</t>-->
+
+    <t t-extend="PaymentScreenWidget">
+        <t t-jquery=".button.next" t-operation="before">
+            <t t-if="widget.pos.config and widget.pos.config.enable_order_reservation">
+	            <span class='button' id="partial_pay" style="margin-right: 145px;right: 0px;">
+	                Reserve
+	                <i class='fa fa-angle-double-right'></i>
+	            </span>
+	        </t>
+        </t>
+    </t>
+
+    <t t-name="DeliveryDatePopup">
+         <div class="modal-dialog">
+            <div class="popup delivery-date-popup" style="height:300px;">
+                <p class="title">Delivery Date</p>
+                <div style="margin-top: 20px;">
+                    <input placeholder="yyyy-mm-dd" type="text" id="delivery_datepicker" />
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        <t t-if="widget.new_date">Done</t>
+                        <t t-if="!widget.new_date">Update</t>
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+         </div>
+    </t>
+
+    <t t-name="OrderDetailScreenWidget">
+        <div class="orderdetail-screen list-screen screen">
+            <div class="screen-content">
+                <section class="top-content">
+                    <span class='button back highlight'>
+                        <i class='fa fa-angle-double-left'></i>
+                        Back
+                    </span>
+                    <h1>Payment History</h1>
+                    <t t-if="widget.clicked_order and widget.clicked_order.state == 'draft'">
+                        <span class='button pay highlight'>
+                            <i class="fa fa-money" aria-hidden="true"></i>
+                            Pay
+                        </span>
+                    </t>
+                </section>
+                <section class="full-content">
+                    <div class='window'>
+                        <section class='subwindow'>
+                            <div class='subwindow-container'>
+                                <div class='subwindow-container-fix order-details-contents' style="height:auto;max-height: 490px !important;">
+                                </div>
+                                <div class='subwindow-container-fix touch-scrollable scrollable-y' style="height: 347px;">
+                                    <table class='paymentline-list list_table'>
+                                        <thead>
+                                            <tr>
+                                                <th>Journal</th>
+                                                <th>Date</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class='paymentline-list-contents'>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="PaymentLines">
+        <tr class='payment-line' t-att-data-id='statement.id'>
+            <td><t t-esc='statement.journal_id ? statement.journal_id[1] : ""' /></td>
+            <td><t t-esc='statement.date' /></td>
+            <td><t t-esc='widget.format_currency(statement.amount)' /></td>
+        </tr>
+    </t>
+    <t t-name="OrderDetails">
+            <section class='order-details'>
+            <div class='order-name'><t t-esc='order.name' /></div>
+            <div class='order-details-box clearfix'>
+                <div class='order-details-left'>
+                    <div class='order-detail'>
+                        <span class='label'>Client: </span>
+                        <t t-if='order.partner_id'>
+                            <span class='detail'><t t-esc='order.partner_id[1]' /></span>
+                        </t>
+                        <t t-if='!order.partner_id'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='order-detail'>
+                        <span class='label'>Receipt: </span>
+                        <t t-if='order.pos_reference'>
+                            <span class='detail'><t t-esc='order.pos_reference' /></span>
+                        </t>
+                        <t t-if='!order.pos_reference'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='order-detail'>
+                        <span class='label'>Order Date: </span>
+                        <t t-if='order.date_order'>
+                            <span class='detail'><t t-esc='order.date_order' /></span>
+                        </t>
+                        <t t-if='!order.date_order'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='order-detail'>
+                        <span class='label'>Delivery Date: </span>
+                        <t t-if='order.delivery_date'>
+                            <span class='detail'><t t-esc='order.delivery_date' /></span>
+                        </t>
+                        <t t-if='!order.delivery_date'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                </div>
+                <div class='order-details-right'>
+                    <div class='order-detail'>
+                        <span class='label'>Total: </span>
+                        <t t-if='order.amount_total'>
+                            <span class='detail'><t t-esc='widget.format_currency(order.amount_total)' /></span>
+                        </t>
+                        <t t-if='!order.amount_total'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='order-detail'>
+                        <span class='label'>Due: </span>
+                        <t t-if='order.amount_due'>
+                            <span class='detail'><t t-esc='widget.format_currency(order.amount_due)' /></span>
+                        </t>
+                        <t t-if='!order.amount_due'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div class='order-detail'>
+                        <span class='label'>Status: </span>
+                        <t t-if='order.state'>
+                            <span class='detail'><t t-esc='order.state' /></span>
+                        </t>
+                        <t t-if='!order.state'>
+                            <span class='detail empty'>N/A</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="CancelOrderPopup">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput pos-return-popup">
+                <p class="title">Cancel
+                    <t t-if="widget.order_tobe_cancel">
+                        - <t t-esc="widget.order_tobe_cancel.pos_reference" />
+                    </t></p>
+                <div class="cancel_item_container">
+                    <div class="order_info_mini_cart">
+                        <div class="product_info">
+                            <ul></ul>
+                        </div>
+                        <div class="cancel_order_summary">
+                            <div class="order_total">
+                                <span class="label">Order Total</span>
+                                <span class="value"><t t-esc="widget.order_tobe_cancel ? widget.format_currency(widget.order_tobe_cancel.amount_total) : 0.00" /></span>
+                            </div>
+                            <div class="cancel_order_total">
+                                <span class="label">(-)Cancel Order Total</span>
+                                <span class="value">0.00</span>
+                            </div>
+                            <div class="cancel_charge">
+                                <span class="label">(+)Cancellation Charge</span>
+                                <span class="value" style="border-bottom: thin solid #000;">0.00</span>
+                            </div>
+                            <div class="new_order_total">
+                                <span class="label">(=)New Order Total</span>
+                                <span class="value"></span>
+                            </div>
+                            <div class="amount_paid">
+                                <span class="label">(-)Amount Paid</span>
+                                <span class="value" style="border-bottom: thin solid #000;"><t t-esc="widget.order_tobe_cancel ? widget.format_currency(widget.order_tobe_cancel.amount_paid) : 0.00" /></span>
+                            </div>
+                            <div class="new_amount_due">
+                                <span class="label">(=)New Amount Due</span>
+                                <span class="value"></span>
+                            </div>
+
+                            <div class="refundable_total">
+                                <span class="label">(=)Refund Amount</span>
+                                <span class="value">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac_product_list">
+                        <div class="check_all_items">
+                            <input class="check_all_items_checkbox" type="checkbox" />
+                            <span class='label'>Select all</span>
+                        </div>
+                        <t t-if='widget.lines'>
+                            <div class="products_line">
+                                <t t-foreach='widget.lines' t-as='line'>
+                                    <t t-if="line.product_id[0] != widget.pos.config.cancellation_charges_product_id[0] and
+                                            line.product_id[0] != widget.pos.config.prod_for_payment[0] and
+                                            line.product_id[0] != widget.pos.config.refund_amount_product_id[0] ">
+                                        <t t-set="product" t-value="widget.pos.db.get_product_by_id(line.product_id[0])" />
+                                        <span class='product reserved_product_content' t-att-data-product-id="product.id">
+                                            <div class="product-img">
+                                                <img t-att-src='widget.get_product_image_url(product.id)' />
+                                                <t t-if="!product.to_weight">
+                                                    <span class="price-tag" t-att-data-price="line.price_unit">
+                                                        <t t-esc="widget.format_currency(line.price_unit,'Product Price')" />
+                                                    </span>
+                                                </t>
+                                                <t t-if="product.to_weight">
+                                                    <span class="price-tag">
+                                                        <t t-esc="widget.format_currency(line.price_unit,'Product Price')+'/Kg'" />
+                                                    </span>
+                                                </t>
+                                                <span class="check_box_tag">
+                                                    <input class="ac_selected_product" t-att-data-name="line.id" t-att-data-product="product.id" type="checkbox" />
+                                                </span>
+                                            </div>
+                                            <div class="product-name">
+                                                <t t-esc="product.display_name" /><br />
+                                                <div class="input-group oe_website_spinner" style="margin: auto">
+                                                    <span class="input-group-addon">
+                                                        <a t-attf-href="#" class="mb8 js_qty">
+                                                            <i class="fa fa-minus"></i>
+                                                        </a>
+                                                    </span>
+                                                    <input type="text" class="js_quantity form-control"
+                                                           data-min="1" t-att-data-max="line.qty" t-att-name="line.id" t-att-value="line.qty"/>
+                                                    <span class="input-group-addon">
+                                                        <a t-attf-href="#" class="mb8 float_left js_qty">
+                                                            <i class="fa fa-plus"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </t>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="button confirm">
+                        Validate
+                    </div>
+                    <div class="button cancel">
+                        Cancel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CancelLines">
+        <t t-if="line">
+            <li class="cancel_line" t-att-data-id="line.id">
+                <span class="cancel_product_name"><t t-esc="line.product_name" /></span>
+                <span class="cancel_product_total"><t t-esc="widget.format_currency(line.price)" /></span>
+                <ul class="cancel_operations">
+                    <li class="remove_line"><i class="fa fa-trash-o" aria-hidden="true"></i></li>
+                    <li class="cancel_qty">QTY: <t t-esc="line.qty" /></li>
+                </ul>
+            </li>
+        </t>
+    </t>
+
+    <t t-extend="ClientListScreenWidget">
+        <t t-jquery=".button.next" t-operation="before">
+            <div id="client_list_header_buttons">
+                <span id="show_client_history" class="button client_history_button oe_hidden highlight">
+                    Show History
+                </span>
+                <span id="show_customers" class="button client_history_button oe_hidden highlight">
+                    Show Customers
+                </span>
+            </div>
+        </t>
+        <t t-jquery="table.client-list" t-operation="after">
+            <table id="customer_history" class='client-list oe_hidden'>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Due</th>
+                    </tr>
+                </thead>
+                <tbody id='client_history_contents'>
+                </tbody>
+            </table>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetails">
+        <t t-jquery="div.client-details-left" t-operation="append">
+            <div class='client-detail'>
+                <span class='label'>Credit Limit</span>
+                <t t-if='partner.credit_limit'>
+                    <span class='detail credit_limit'><t t-esc='partner.credit_limit.toFixed(3)'/></span>
+                </t>
+                <t t-if='!partner.credit_limit'>
+                    <span class='detail vat empty'>N/A</span>
+                </t>
+            </div>
+        </t>
+        <t t-jquery="div.client-details-right" t-operation="append">
+            <div class='client-detail'>
+                <span class='label'>Remaining Credit</span>
+                <t t-if='partner.remaining_credit_limit'>
+                    <span class='detail remaining_credit_limit'><t t-esc='partner.remaining_credit_limit.toFixed(3)'/></span>
+                </t>
+                <t t-if='!partner.remaining_credit_limit'>
+                    <span class='detail vat empty'>N/A</span>
+                </t>
+            </div>
+        </t>
+    </t>
+
+    <t t-extend="ClientDetailsEdit">
+        <t t-jquery="div.client-details-left" t-operation="append">
+            <div class='client-detail'>
+                <span class='label'>Credit Limit</span>
+                <input class='detail client-credit-limit'  name='credit_limit'    type='text'    t-att-value='partner.credit_limit || ""'></input>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="ClientHistoryLine">
+        <tr t-att-data-id="order.id">
+            <td><t t-esc="order ? order.name : ''"/></td>
+            <td><t t-esc="order ? order.date_order : ''"/></td>
+            <td><t t-esc="order ? widget.format_currency(order.amount_total) : ''"/></td>
+            <td><t t-esc="order ? widget.format_currency(order.amount_due) : ''"/></td>
+        </tr>
+    </t>
+
+    <t t-name="MaxCreditExceedPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-textinput" style="height: 203px;">
+                <p class="title">Max Credit Exceeded</p>
+                <span align="center" style="font-size:16px;">
+                    Your remaining credit limit is only <t t-esc="widget.format_currency(widget.options.remaining_credit_limit)" />
+                    <br />and you are trying to credit <t t-esc="widget.format_currency(widget.pos.get_order().get_due())" />
+                </span>
+                <div class="footer">
+                    <div class="button cancel">
+                        OK
+                    </div>
+                    <div class="button override_payment" style="width: 130px;">
+                        Override Payment
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

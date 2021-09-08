@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_s_wishlist_wishlist,wishlist.wishlist,model_wishlist_wishlist,sales_team.group_sale_manager,1,1,1,1
+access_s_wishlist_wishlist_line,wishlist.wishlist.line,model_wishlist_wishlist_line,sales_team.group_sale_manager,1,1,1,1
+access_wishlist_wishlist,wishlist.wishlist,model_wishlist_wishlist,,1,1,1,1
+access_wishlist_wishlist_line,wishlist.wishlist.line,model_wishlist_wishlist_line,,1,1,1,1

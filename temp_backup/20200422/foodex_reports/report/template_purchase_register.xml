@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="purchase_register_report_template_doc">
+            <div class="header">
+                <div>
+                     <div class="text-center">
+                        <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="max-height: 75px;"/>
+                    </div>
+                    <div style="text-align:center">
+                        <h3><b style="border-bottom:2px solid black">Purchase Report</b></h3>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px">
+                    <div class="col-md-6" style="text-align:center">
+                        <span style="border-bottom:2px solid black; font-size:15px">
+                        <span><b> From : <span style="margin-left:10px" t-field="o.date_from"/></b></span>
+                        <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-field="o.date_to"/></b></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="border-bottom:3px solid black;margin-top:15px">
+                </div>
+            </div>
+                <div class="page">
+                     <table class="table table-condensed" style="margin-top:30px">
+                        <thead>
+                            <tr>
+                                <th>Srl.</th>
+                                <th>Purchase No</th>
+                                <th>Purchase Date</th>
+                                <th>Supplier Inv_no</th>
+                                <th>Supplier Code</th>
+                                <th>Supplier</th>
+                                <th>Base Currency Total</th>
+                                <th>Total(KWD)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="data">
+                                <t t-set="count" t-value="1"/>
+                                <t t-foreach="data" t-as="record">
+                                    <t t-foreach="record.invoice_ids" t-as="inv">
+                                        <tr style="border-bottom:1px solid black">
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="count"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="record.name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-field="record.date_order"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="inv.reference"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="inv.partner_id.property_account_payable_id.code"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="inv.partner_id.name"/>
+                                            </td>
+                                            <td style="border-bottom:1px solid black">
+                                                <span t-esc="'%.3f'%(inv.amount_total)"
+                                                />
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <span t-esc="'%.3f'%(inv.currency_id.compute(inv.amount_total, request.env['res.currency'].search([('name', '=', 'KWD')])))"/>
+                                            </td>
+                                        </tr>
+                                        <t t-set="count" t-value="count + 1"/>
+                                    </t>
+                                </t>
+                            </t>
+                        </tbody>
+                     </table>
+                    <div style="float:left">
+                        <b>Grand Total</b>
+                        <div style="border-bottom:1px solid black;width:100px" />
+                        <div style="border-bottom:1px solid black;width:100px;margin-top:2px" />
+                    </div>
+                    <div style="float:right">
+                        <t t-if="total">
+                            <b><span t-esc="'%.3f'%total" style="align:left"/></b>
+
+                        </t>
+                        <div style="border-bottom:1px solid black" />
+                        <div style="border-bottom:1px solid black;margin-top:2px" />
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="purchase_register_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.purchase_register_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_purchase_register" model="report.paperformat">
+            <field name="name">Purchase Register</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">50</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">47</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_puchase_register"
+            string="Purchase Register"
+            model="purchase.register"
+            name="foodex_reports.purchase_register_report_template"
+            file="foodex_reports.purchase_register_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="foodex_reports.paperformat_purchase_register"
+            />
+
+    </data>
+</openerp>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="vender_sale_report_template_doc">
+            <div class="header">
+                <div>
+                     <div class="text-center">
+                        <img t-if="request.env.user.company_id.header_image_qweb" t-att-src="'data:image/png;base64,%s' % request.env.user.company_id.header_image_qweb" style="widht:100%;max-height: 115px;"/>
+                    </div>
+                    <div style="text-align:center">
+                        <!--<h3><b style="border-bottom:2px solid black">Vendor wise Sales Report</b></h3>-->
+                        <h3><b>Vendor wise Sales Report</b></h3>
+                    </div>
+                </div>
+                <center>
+                    <div style="text-align:center;border:2px solid black;width:500px;padding:10px;margin-top:15px">
+                        <b class="text-left">
+                            <span>Vendor :</span>
+                        </b>
+                        <b class="text-right">
+                            <span t-esc="o.vendor_id.name"></span>
+                        </b>
+                    </div>
+                </center>
+                <div class="row" style="margin-top:20px">
+                    <div class="col-md-6" style="text-align:center">
+                        <span style="border-bottom:2px solid black; font-size:15px">
+                        <span><b> From : <span style="margin-left:10px" t-field="o.date_from"/></b></span>
+                        <span style="margin-left:35px"><b> To : <span style="margin-left:10px" t-field="o.date_to"/></b></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="border-bottom:3px solid black;margin-top:10px">
+                </div>
+            </div>
+                <div class="page">
+                    <table class="table table-condensed" style="margin-top:30px" 
+                            t-if="o.view_by == 'summary'">
+                        <t t-set="summary_query" t-value="summary_query(o)"/>
+                        <t t-foreach="summary_query" t-as="val1">
+                            <tr>
+                                <td colspan="8">
+                                    <strong>
+                                        <p t-if="o.group_by == 'customer'" class="text-center text-primary">Customer : <span t-esc="val1"/></p>
+                                        <p t-if="o.group_by == 'category'" class="text-center text-primary">Category : <span t-esc="val1"/></p>
+                                        <p t-if="o.group_by == 'product'" class="text-center text-primary">Product : <span t-esc="val1"/></p>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Srl.</th>
+                                <th>Customer Item</th>
+                                <th class="text-right">Qty Sold</th>
+                                <th class="text-right">Free Qty</th>
+                                <th class="text-right">Return Qty</th>
+                                 <t t-if="o.option == 'qty_and_price'">
+                                    <th class="text-right">Sales Price</th>
+                                    <th class="text-right">Discount</th>
+                                    <th class="text-right">Amount</th>
+                                 </t>
+                            </tr>
+                            <t t-foreach="summary_query.get(val1)" t-as="val2_val">
+                                <tr>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['srl']"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['item']"/>
+                                    </td>
+                                    <td class="text-right" style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['qty']"/>
+                                    </td>
+                                    <td class="text-right" style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['free_qty']"/>
+                                    </td>
+                                    <td class="text-right" style="border-bottom:1px solid black">
+                                        <t t-esc="val2_val['return_qty']"/>
+                                    </td>
+
+                                    <td style="border-bottom:1px solid black" class="text-right">
+                                        <!--<t t-esc="val2_val['price_unit']"/>-->
+                                        <span t-esc="'%.3f'%(val2_val['price_unit'])"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black" class="text-right">
+                                        <!--<t t-esc="val2_val['discount']"/>-->
+                                        <span t-esc="'%.3f'%(val2_val['discount'])"/>
+                                    </td>
+                                    <td style="border-bottom:1px solid black" class="text-right">
+                                        <!--<t t-esc="val2_val['subtotal']"/>-->
+                                        <span t-esc="'%.3f'%(val2_val['subtotal'])"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </t>
+                    </table>
+                    
+                    
+                     <table class="table table-condensed" style="margin-top:30px" 
+                                t-if="o.view_by == 'detail'">
+                        <t t-if="data">
+                            <t t-foreach="data" t-as="lines">
+                        <thead>
+                            <tr>
+                                <th>Srl.</th>
+                                <th>Date</th>
+                                <th>Invoice No</th>
+                                <th>Customer</th>
+                                <th>Customer Item</th>
+                                <th class="text-right">Qty Sold</th>
+                                <th class="text-right">Free Qty</th>
+                                 <t t-if="o.option == 'qty_and_price'">
+                                    <th class="text-right">Sales Price</th>
+                                    <th class="text-right">Discount</th>
+                                    <th class="text-right">Amount</th>
+                                 </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total" t-value="0"/>
+                            <!--<t t-if="data">-->
+                                <t t-set="count" t-value="1"/>
+                                <t t-set="qty" t-value="0"/>
+                                <t t-set="free_qty" t-value="0"/>
+                                <t t-foreach="lines" t-as="record">
+                                    <t t-set="qty" t-value="qty + record.quantity"/>
+                                    <t t-set="free_qty" t-value="free_qty + record.free_qty"/>
+                                    <tr>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="count"/>
+                                            <t t-set="count" t-value="count + 1"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black;width:85px">
+                                            <span t-esc="context_timestamp(datetime.datetime.strptime(record.invoice_id.date_invoice, '%Y-%m-%d')).strftime('%d-%m-%Y')"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.invoice_id.number"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.invoice_id.partner_id.name"/>
+                                        </td>
+                                        <td style="border-bottom:1px solid black">
+                                            <span t-esc="record.product_id.display_name"/>
+                                        </td>
+                                        <!--showing free qty if price_unit=0-->
+                                        <!--<td t-if="record.price_unit" class="text-right" style="border-bottom:1px solid black">-->
+                                        <td class="text-right" style="border-bottom:1px solid black">
+                                            <t t-if="record.uom_id.category_id.name == 'Unit' and record.uom_id.uom_type == 'bigger'">
+                                                <span t-esc="'%.3f'%(record.quantity * record.uom_id.factor_inv)"/>
+                                            </t>
+                                            <t t-else="not record.uom_id.category_id.name == 'Unit' and not record.uom_id.uom_type == 'bigger'">
+                                                <span t-esc="'%.3f'%record.quantity"/>
+                                            </t>
+                                        </td>
+<!--                                        <td t-if="not record.price_unit" class="text-right" style="border-bottom:1px solid black">
+                                            <span>0.000</span>
+                                        </td>-->
+                                        
+                                        <td class="text-right" style="border-bottom:1px solid black">
+                                            <span t-esc="'%.3f'%record.free_qty"/>
+                                        </td>
+                                        
+                                        <t t-if="o.option == 'qty_and_price'" class="text-right">
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <t t-if="record.invoice_id.exchange_rate>0">
+                                                    <span t-esc="'%.3f'%(record.price_unit/record.invoice_id.exchange_rate)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-esc="'%.3f'%record.price_unit"/>
+                                                </t>                                                
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <t t-if="record.invoice_id.exchange_rate>0">
+                                                    <span t-esc="'%.3f'%((record.discount_share + record.discount_amount) / record.invoice_id.exchange_rate)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-esc="'%.3f'%(record.discount_share + record.discount_amount)"/>
+                                                </t>
+                                            </td>
+                                            <td style="border-bottom:1px solid black" class="text-right">
+                                                <t t-if="record.invoice_id.exchange_rate">
+                                                    <span t-esc="'%.3f'%((record.price_subtotal - record.discount_share)/ record.invoice_id.exchange_rate)"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-esc="'%.3f'%(record.price_subtotal - record.discount_share)"/>
+                                                </t>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td class="text-right">
+                                            <b>
+                                                <span t-esc="'%.3f'%qty"/>
+                                            </b>
+                                        </td>
+                                        <td class="text-right">
+                                            <b>
+                                                <span t-esc="'%.3f'%free_qty"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+<!--                                 <t t-if="o.option == 'qty_and_price'">
+                                    <tr>
+                                        <td colspan="4">
+                                           <b> Total Sale :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_sale"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td colspan="4">
+                                           <b> Total Refund :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_refund"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="border-bottom:1px solid black;border-top:1px solid black">
+                                           <b> Net Total :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right" style="border-bottom:1px solid black;border-top:1px solid black">
+                                            <b>
+                                                 <span t-esc="'%.3f'%(total_sale - total_refund)"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                 </t>-->
+                            <!--</t>-->
+                        </tbody>
+                        </t>
+                                    <tr>
+                                        <td colspan="4">
+                                           <b> Sold Qty :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_sold_qty"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                           <b> Return Qty :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_return_qty"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                 <t t-if="o.option == 'qty_and_price'">
+                                    <tr>
+                                        <td colspan="4">
+                                           <b> Total Sale :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_sale"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                     <tr>
+                                        <td colspan="4">
+                                           <b> Total Refund :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right">
+                                            <b>
+                                                 <span t-esc="'%.3f'%total_refund"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="border-bottom:1px solid black;border-top:1px solid black">
+                                           <b> Net Total :</b>
+                                        </td>
+                                        <td colspan="5" class="text-right" style="border-bottom:1px solid black;border-top:1px solid black">
+                                            <b>
+                                                 <span t-esc="'%.3f'%(total_sale - total_refund)"/>
+                                            </b>
+                                        </td>
+                                    </tr>
+                                 </t>
+                        </t>
+                     </table>
+                </div>
+                <div class="footer">
+                    <div class="text-center" style="border-top: 1px solid black;">
+                        <ul class="list-inline" style="float:right;">
+                            <li><b>Page:</b></li>
+                            <li><b><span class="page"/></b></li>
+                            <li><b>/</b></li>
+                            <li><b><span class="topage"/></b></li>
+                        </ul>
+                        <ul class="list-inline" style="float:left;">
+                            <li><b>Print Date:</b></li>
+                            <li><b><span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y')"/></b></li>
+                        </ul>
+                    </div>
+                </div>
+        </template>
+
+        <template id="vendor_sale_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="foodex_reports.vender_sale_report_template_doc" />
+                </t>
+            </t>
+        </template>
+
+        <record id="paperformat_vendor_sale_report" model="report.paperformat">
+            <field name="name">Vendor Sales Report</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">70</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">66</field>
+            <field name="dpi">90</field>
+        </record>
+
+         <report id="report_vendor_wise_sale_report"
+            string="vendor_sale_report"
+            model="vendor.sales"
+            name="foodex_reports.vendor_sale_report_template"
+            file="foodex_reports.vendor_sale_report_template"
+            report_type="qweb-pdf"
+            menu="False"
+            paperformat="foodex_reports.paperformat_vendor_sale_report"
+            />
+    </data>
+</openerp>

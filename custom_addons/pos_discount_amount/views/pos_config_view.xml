@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_pos_config_inherit_view_discount_form" model="ir.ui.view">
+        <field name="name">pos.config.form</field>
+        <field name="model">pos.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.view_sale_config_settings_form_pos"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='module_pos_discount']" position="after">
+                <field name="discount_type" widget="radio"/>
+                <field name="company_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

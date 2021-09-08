@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_category_property_form_sic_inherit" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.sic.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock_account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_stock_valuation_account_id" position="after">
+                    <field name="property_inventory_adjustment_account_categ" domain="[('deprecated', '=', False)]"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>

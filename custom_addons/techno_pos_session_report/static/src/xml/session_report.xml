@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SessionReportPrintButton">
+        <div class='control-button'>
+            <i class='fa fa-calculator' /> Session Report
+        </div>
+    </t>
+</templates>

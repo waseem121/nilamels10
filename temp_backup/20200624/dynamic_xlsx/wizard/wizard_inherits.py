@@ -1,0 +1,73 @@
+# -*- coding: utf-8 -*-
+
+from odoo import api, models, fields
+import re
+
+from datetime import datetime, timedelta, date
+import calendar
+from dateutil.relativedelta import relativedelta
+
+
+class InsFinancialReport(models.TransientModel):
+    _inherit = "ins.financial.report"
+    _description = "Financial Reports"
+
+    def action_xlsx(self):
+        ''' Button function for Xlsx '''
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'dynamic_xlsx.ins_financial_report_xlsx',
+                'datas': {},
+                'context': {}
+                }
+
+
+class InsGeneralLedger(models.TransientModel):
+    _inherit = "ins.general.ledger"
+    _description = "General Ledger Reports"
+
+    def action_xlsx(self):
+        ''' Button function for Xlsx '''
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'dynamic_xlsx.ins_general_ledger_xlsx',
+                'datas': {},
+                'context': {}
+                }
+
+
+class InsPartnerLedger(models.TransientModel):
+    _inherit = "ins.partner.ledger"
+    _description = "Partner Ledger Reports"
+
+    def action_xlsx(self):
+        ''' Button function for Xlsx '''
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'dynamic_xlsx.ins_partner_ledger_xlsx',
+                'datas': {},
+                'context': {}
+                }
+
+
+class InsPartnerAgeing(models.TransientModel):
+    _inherit = "ins.partner.ageing"
+    _description = "Partner Ageing Reports"
+
+    def action_xlsx(self):
+        ''' Button function for Xlsx '''
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'dynamic_xlsx.ins_partner_ageing_xlsx',
+                'datas': {},
+                'context': {}
+                }
+
+
+class InsTrialBalance(models.TransientModel):
+    _inherit = "ins.trial.balance"
+    _description = "Trial Balance Reports"
+
+    def action_xlsx(self):
+        ''' Button function for Xlsx '''
+        return {'type': 'ir.actions.report.xml',
+                'report_name': 'dynamic_xlsx.ins_trial_balance_xlsx',
+                'datas': {},
+                'context': {}
+                }

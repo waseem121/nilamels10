@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="pending_transfer_form_view" model="ir.ui.view">
+            <field name="name">pending.transfer</field>
+            <field name="model">pending.transfer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group col="4">
+                        <field name="date_from" required="1"/>
+                        <field name="date_to" required="1"/>
+                    </group>
+                    <footer>
+                        <button type="object" string="Print" class="oe_highlight" name="action_pending_transfer_report"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pending_transfer" model="ir.actions.act_window">
+            <field name="name">Pending Transfer</field>
+            <field name="res_model">pending.transfer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pending_transfer_form_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem parent="stock.menu_warehouse_report" action="action_pending_transfer"
+            id="menu_pending_transfer" sequence="25"/>
+
+    </data>
+</odoo>

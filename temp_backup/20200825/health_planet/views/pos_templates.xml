@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/health_planet/static/src/js/models.js"></script>
+                <script type="text/javascript" src="/health_planet/static/src/js/popup.js"></script>
+                 <script type="text/javascript" src="/health_planet/static/src/js/screens.js"></script>
+            </xpath>
+            <xpath expr="//link[@id='pos-stylesheet']" position="after">
+              <link rel="stylesheet" href="/health_planet/static/src/css/pos.css" />
+          </xpath>
+
+        </template>
+
+    </data>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+	<record id="signup_img" model="ir.ui.view">
+	 <field name="name">base.config.settings.inherit.signup</field>
+	 	<field name="model">base.config.settings</field>
+	 	<field name="inherit_id" ref="base_setup.view_general_configuration"/>
+		  <field name="arch" type="xml">
+		 	<xpath expr="//field[@name='module_auth_oauth']/.." position="before">	
+		 	<div attrs="{'invisible':[('auth_signup_uninvited','=',False)]}" groups="base.group_no_one">
+             <strong>Sign Up Image </strong>
+              <field name="signup_bg_image_id" string="Signup background-image" class="oe_inline"  attrs="{'required': [('auth_signup_uninvited', '=', True)]}"
+                            domain="[('id','=',False)]"/> 
+     		  </div>
+		  </xpath>
+		  </field>
+	</record>
+</data>
+</odoo>

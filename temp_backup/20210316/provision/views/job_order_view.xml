@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    
+    <record id="view_job_order_search" model="ir.ui.view">
+        <field name="name">view.job.order.search</field>
+        <field name="model">job.order</field>
+        <field name="arch" type="xml">
+            <search string="Job Order">
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="partner_id"/>
+                <field name="salesman_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="view_job_order_tree" model="ir.ui.view">
+        <field name="name">view.job.order.tree</field>
+        <field name="model">job.order</field>
+        <field name="arch" type="xml">
+            <tree string="Job Order">
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="salesman_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_job_order_form" model="ir.ui.view">
+        <field name="name">view.job.order.form</field>
+        <field name="model">job.order</field>
+        <field name="arch" type="xml">
+            <form string="Job Order">
+                <header>
+                    <button name="action_start" states="open" type="object" string="Start" class="btn-primary"/>
+                    <button name="action_complete" states="started,invoiced" type="object" string="Complete" class="btn-primary"/>
+                    <button name="action_cancel" states="open,started" type="object" string="Cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,started,invoiced,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="partner_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            <field name="salesman_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                            <field name="currency_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="ref"/>
+                            <field name="date"/>
+                            <field name="amount" digits="(10, 3)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Job Lines">
+                            <field name="job_lines" mode="tree,kanban"
+                                   attrs="{'readonly': [('state', 'in', ('completed','cancel','invoiced'))]}">
+                                <form string="Job Lines">
+                                    <group>
+                                        <group>
+                                            <field name="product_id"/>
+                                            <!--<field name="name"/>-->
+                                        </group>
+                                        <group>
+                                        </group>
+                                    </group>
+                                    
+                                </form>
+                                <tree string="Job Order Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                                    <field name="name"/>
+                                    <field name="qty"/>
+                                    <field name="uom_id" options="{'no_create_edit': True,'no_create': True, 'no_quick_create': True}"/>
+                                    <field name="price_unit" digits="(10, 3)"/>
+                                    <field name="price_subtotal" digits="(10, 3)"/>
+                                    <!--<field name="name" force_save="1" invisible="1"/>-->
+                                </tree>
+                            
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_job_order">
+        <field name="name">Job Order</field>
+        <field name="res_model">job.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem
+        name="Job Order"
+        id="menu_job_order"
+        action="action_job_order"
+        parent="sales_team.menu_sales"/>
+    
+</data>
+</openerp>

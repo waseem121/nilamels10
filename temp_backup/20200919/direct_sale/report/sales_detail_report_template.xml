@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <template id="sales_detail_report_template_document">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <center>
+                        <h2>
+                            <span>Invoice Detail Report</span>
+                        </h2>
+                    </center>
+                    <t t-set="invoice_line" t-value="get_invoice(o)" />
+                    <t t-if="invoice_line">
+                        <t t-value="invoice_line.filtered(lambda l:l.invoice_id.type == 'out_invoice')" t-set="cust_invoice_line" />
+                        <t t-value="invoice_line.filtered(lambda l:l.invoice_id.type == 'out_refund')" t-set="refund_invoice_line" />
+                        <t t-set="sum_gross_sale" t-value="0.00" />
+                        <t t-set="sum_refund_gross_sale" t-value="0.00" />
+                        <t t-if="cust_invoice_line">
+                            <span style="font-weight:bold;font-size:18px;">Sales</span>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>TRN Date</th>
+                                        <th>TRN No</th>
+                                        <th>Item Code</th>
+                                        <th>Brand</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th>Gross Sale</th>
+                                        <th groups="base.group_sale_manager_dusal">Cost Of Sale</th>
+                                        <th>Discount</th>
+                                        <th groups="base.group_sale_manager_dusal">Net Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="cust_invoice_line" t-as="l">
+                                        <tr>
+                                            <td>
+                                                <span t-field="l.invoice_id.date_invoice" t-options='{"format": "dd/MM/yyyy"}' />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.invoice_id.number" />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.product_id.default_code" />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.product_id.product_brand_id.name" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' %l.quantity" />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.uom_id.name" />
+                                            </td>
+                                            <td>
+                                                <span t-esc=" '%.3f' % (l.quantity * l.price_unit)" />
+                                                <span t-set="sum_gross_sale" t-value="sum_gross_sale + (l.quantity * l.price_unit)" />
+                                            </td>
+                                            <td groups="base.group_sale_manager_dusal">
+                                                <span t-field="l.cost_price" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % l.discount_amount" />
+                                            </td>
+                                            <td groups="base.group_sale_manager_dusal">
+                                                <span t-esc="'%.3f' % l.price_subtotal" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td colspan="3"></td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice_line.mapped('quantity'))" />
+                                        </td>
+                                        <td />
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum_gross_sale" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice_line.mapped('cost_price'))" />
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % sum(cust_invoice_line.mapped('discount_amount'))" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(cust_invoice_line.mapped('price_subtotal'))" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="refund_invoice_line">
+                            <span style="font-weight:bold;font-size:18px;">Sales Return</span>
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>TRN Date</th>
+                                        <th>TRN No</th>
+                                        <!-- <th>Reference</th> -->
+                                        <th>Item Code</th>
+                                        <th>Brand</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th>Gross Sale</th>
+                                        <th groups="base.group_sale_manager_dusal">Cost Of Sale</th>
+                                        <th>Discount</th>
+                                        <th groups="base.group_sale_manager_dusal">Net Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="refund_invoice_line" t-as="l">
+                                        <tr>
+                                            <td>
+                                                <span t-field="l.invoice_id.date_invoice" t-options='{"format": "dd/MM/yyyy"}' />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.invoice_id.number" />
+                                            </td>
+                                            <!-- <td> -->
+                                            <!-- <span t-field="l.invoice_id.name" /> -->
+                                            <!-- </td> -->
+                                            <td>
+                                                <span t-field="l.product_id.default_code" />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.product_id.product_brand_id.name" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % l.quantity" />
+                                            </td>
+                                            <td>
+                                                <span t-field="l.uom_id.name" />
+                                            </td>
+                                            <td>
+                                                <span t-esc=" '%.3f' % (l.quantity * l.price_unit)" />
+                                                <span t-set="sum_refund_gross_sale" t-value="sum_refund_gross_sale + (l.quantity * l.price_unit)" />
+                                            </td>
+                                            <td groups="base.group_sale_manager_dusal">
+                                                <span t-field="l.cost_price" />
+                                            </td>
+                                            <td>
+                                                <span t-esc="'%.3f' % l.discount_amount" />
+                                            </td>
+                                            <td groups="base.group_sale_manager_dusal">
+                                                <span t-esc="'%.3f' % l.price_subtotal" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td colspan="3"></td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(refund_invoice_line.mapped('quantity'))" />
+                                        </td>
+                                        <td />
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum_refund_gross_sale" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % sum(refund_invoice_line.mapped('cost_price'))" />
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % sum(refund_invoice_line.mapped('discount_amount'))" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % sum(refund_invoice_line.mapped('price_subtotal'))" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                        <t t-if="cust_invoice_line or refund_invoice_line">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <th></th>
+                                    <th>Qty</th>
+                                    <th>Gross Sale</th>
+                                    <th groups="base.group_sale_manager_dusal">Cost Of Sale</th>
+                                    <th>Discount</th>
+                                    <th groups="base.group_sale_manager_dusal">Net Sales</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % (sum(cust_invoice_line.mapped('quantity')) - sum(refund_invoice_line.mapped('quantity')))" />
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;" t-esc=" '%.3f' % (sum_gross_sale - sum_refund_gross_sale)" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % (sum(cust_invoice_line.mapped('cost_price')) - sum(refund_invoice_line.mapped('cost_price')))" />
+                                        </td>
+                                        <td>
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % (sum(cust_invoice_line.mapped('discount_amount')) - sum(refund_invoice_line.mapped('discount_amount')))" />
+                                        </td>
+                                        <td groups="base.group_sale_manager_dusal">
+                                            <span style="font-weight:bold;"
+                                                t-esc=" '%.3f' % (sum(cust_invoice_line.mapped('price_subtotal')) - sum(refund_invoice_line.mapped('price_subtotal')))" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </t>
+
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="sales_detail_report_template">
+            <t t-call="report.html_container">
+                <t t-foreach="doc_ids" t-as="o">
+                    <t t-call="direct_sale.sales_detail_report_template_document" />
+                </t>
+            </t>
+        </template>
+
+    </data>
+</openerp>

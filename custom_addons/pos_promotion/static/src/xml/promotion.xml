@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="Orderline">
+        <t t-jquery=".info-list" t-operation="after">
+            <div t-if="line.reason">
+                <i class="fa fa-gift promotion"><t t-esc="line.reason"/></i>
+            </div>
+        </t>
+        <t t-jquery=".product-name" t-operation="replace">
+            <t t-if="line.promotion">
+                <span class="product-name promotion">
+                    <t t-esc="line.get_product().display_name"/>
+                </span>
+            </t>
+            <t t-if="!line.promotion">
+                <span class="product-name">
+                    <t t-esc="line.get_product().display_name"/>
+                </span>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="PromotionButton">
+        <div class='control-button'>
+            <i class="fa fa-check"/>Checking Promotion
+        </div>
+    </t>
+
+    <t t-name="CleanPromotionButton">
+        <div class='control-button'>
+            <i class="fa fa-close"/>Clear Promotion
+        </div>
+    </t>
+
+    <t t-extend="PosTicket">
+        <t t-jquery=".receipt-orderlines" t-operation="replace">
+            <table class='receipt-orderlines'>
+                <colgroup>
+                    <col width='50%' />
+                    <col width='25%' />
+                    <col width='25%' />
+                </colgroup>
+                <tr t-foreach="orderlines" t-as="orderline">
+                    <t t-if="orderline.promotion === false">
+                        <td>
+                            <t t-esc="orderline.get_product().display_name"/>
+                             <t t-if="orderline.get_discount() > 0">
+                                <div class="pos-disc-font">
+                                    With a <t t-esc="orderline.get_discount()"/>% discount
+                                </div>
+                            </t>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+                        </td>
+                    </t>
+                </tr>
+                <tr t-foreach="orderlines" t-as="orderline">
+                    <t t-if="orderline.promotion === true">
+                        <td>
+                            <t t-esc="orderline.reason"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="orderline.get_quantity_str_with_unit()"/>
+                        </td>
+                        <td class="pos-right-align">
+                            <t t-esc="widget.format_currency(orderline.get_display_price())"/>
+                        </td>
+                    </t>
+                </tr>
+
+            </table>
+        </t>
+    </t>
+
+</templates>

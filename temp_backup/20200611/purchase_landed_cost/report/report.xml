@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <record id="landed_cost_report_format" model="report.paperformat">
+            <field name="name">Landed Cost Format</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">297</field>
+            <field name="page_width">290</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">1</field>
+            <field name="margin_bottom">1</field>
+            <field name="margin_left">1</field>
+            <field name="margin_right">1</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report
+            id="landed_cost_report"
+            model="purchase.cost.distribution"
+            string="Receipt"
+            report_type="qweb-pdf"
+            name="purchase_landed_cost.landed_cost_report_template"
+            file="purchase_landed_cost.landed_cost_report_template"
+            paperformat="purchase_landed_cost.landed_cost_report_format"
+        />
+
+    </data>
+</odoo>

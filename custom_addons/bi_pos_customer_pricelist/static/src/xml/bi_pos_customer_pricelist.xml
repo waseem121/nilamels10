@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <templates id="pos_bi_pos_customer_pricelist" inherit_id="point_of_sale.template" xml:space="preserve">
+
+
+	<!-- ClientDetailsWidget -->
+	  	 <t t-extend="ClientDetails">
+		    <t t-jquery=".client-details-right" t-operation="append">
+		        <div class="client-detail">
+		            <span class='label'>Pricelist</span>
+		            <t t-if='partner.property_product_pricelist'>
+		            	<span> <t t-esc='partner.property_product_pricelist[1]'/></span>
+		            </t>
+		            
+		            <t t-if='!partner.property_product_pricelist'>
+                    	<span class='detail vat empty'>N/A</span>
+                    </t>
+		        </div>
+		       
+		    </t>
+	   	 </t>
+	   	 
+	<!-- ClientLineWidget -->	 
+		<t t-name="ClientLine">
+		    <tr class='client-line' t-att-data-id='partner.id'>
+		        <td><t t-esc='partner.name' /></td>
+		        <td><t t-esc='partner.address' /></td>
+		        <td><t t-esc='partner.phone or partner.mobile or ""' /></td>
+		        <td>
+				   <t t-if='partner.property_product_pricelist'>					
+						<t t-esc='partner.property_product_pricelist[1]' />
+				   </t>
+				    <t t-if='!partner.property_product_pricelist'>
+                    	<span class='detail vat empty'>N/A</span>
+                    </t>
+				</td>
+		    </tr>
+		</t>
+
+	<!-- ClientDetailsEditWidget -->
+		<t t-extend="ClientDetailsEdit">
+			<t t-jquery=".client-details-left" t-operation="append">
+		        <div class='client-detail'>
+		            <span class='label'>Pricelist</span>
+		            <select class='detail client-pricelist' name='property_product_pricelist' id ='entered_pricelist'>
+		                <option value=''>None</option>
+		                <t t-foreach='widget.pos.pricelists' t-as='pricelist'>
+		                    <option t-att-value='pricelist.id' t-att-selected="partner.property_product_pricelist ? ((pricelist.id === partner.property_product_pricelist[0]) ? true : undefined) : undefined">
+		                        <t t-esc='pricelist.name'/>
+		                    </option>
+		                </t>
+		            </select>
+		        </div>
+		    </t>
+		</t>
+				
+    
+	 <!-- ClientListScreenWidget --> 
+    	<t t-extend="ClientListScreenWidget">
+		    <t t-jquery="tr" t-operation="append">
+		    	<th>Pricelist</th>
+		    </t>
+        </t>
+        
+ 
+    
+  	</templates>
+  	
+  	

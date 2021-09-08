@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_form_picking_type_change" model="ir.ui.view">
+        <field name="name">purchase.order.form.picking.type.change</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <field name="picking_type_id" position="replace">
+            </field>
+            <field name="origin" position="after">
+                <field name="picking_type_id" domain="[('code','=','incoming')]" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
+            </field>
+        </field>
+    </record>
+    
+</odoo>

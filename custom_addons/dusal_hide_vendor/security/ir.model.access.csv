@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_product_dusal_show_vendor,product.product showvendor,model_product_product,base.group_dusal_show_vendor,1,0,0,0

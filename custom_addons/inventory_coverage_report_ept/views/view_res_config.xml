@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="res_config_settings_view_inventory_report_ept"
+		model="ir.ui.view">
+		<field name="name">stock.config.settings.view.form.inherit.inventory.report
+		</field>
+		<field name="model">stock.config.settings</field>
+		<field name="priority" eval="40" />
+		<field name="inherit_id" ref="stock.view_stock_config_settings" />
+		<field name="arch" type="xml">
+			<xpath expr="//group['Extra Features']" position="after">
+				<group string="Inventory Coverage Report" name="coverage_report">
+					<field name="use_forecasted_sales_for_requisition" />
+					<label for="id" string="Mapped Warehouses" attrs="{'invisible':[('use_forecasted_sales_for_requisition','=',False)]}"/>
+					<div attrs="{'invisible':[('use_forecasted_sales_for_requisition','=',False)]}">
+						<div>	
+							<field name="auto_forecast_use_warehouse"/>
+							<label for="auto_forecast_use_warehouse"/>
+						</div>
+					</div>
+					<label for="id" string="Past Sales Days" attrs="{'invisible':[('use_forecasted_sales_for_requisition','=',True)]}"/>
+					<div attrs="{'invisible':[('use_forecasted_sales_for_requisition','=',True)]}">
+						<div>
+							<label for="requisition_sales_past_days"/>
+							<field name="requisition_sales_past_days" class="oe_inline"/>
+						</div>
+					</div>
+					<field name="default_requisition_backup_stock_days"  class="oe_inline"/>
+					<label for="id" string="Use Out of Stock Ratio"/>
+					<div>
+						<div>
+							<field name="use_out_stock_percent"/><br/>
+							<div attrs="{'invisible': [('use_out_stock_percent','=',False)]}">
+								<field name="out_stock_percent" class="oe_inline"/>	%
+							</div>
+						</div>
+					</div>
+					 
+				</group>
+			</xpath>
+		</field>
+	</record>
+</odoo>

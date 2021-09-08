@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_report_pos_order_payment_pivot" model="ir.ui.view">
+            <field name="name">report.pos.order.payment.pivot</field>
+            <field name="model">report.pos.order.payment</field>
+            <field name="arch" type="xml">
+                <pivot string="Summary">
+                    <field name="pos_config_id" type="row"/>
+                    <field name="balance_end_real" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+
+        <record id="view_report_pos_order_payment_graph" model="ir.ui.view">
+            <field name="name">report.pos.order.payment.graph</field>
+            <field name="model">report.pos.order.payment</field>
+            <field name="arch" type="xml">
+                <graph string="Point of Sale Payment Analysis" type="pivot">
+                    <field name="pos_config_id" type="row"/>
+                    <!--<field name="date" interval="month" type="col"/>-->
+                    <field name="balance_end_real" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_report_pos_order_payment_search" model="ir.ui.view">
+            <field name="name">report.pos.order.payment.search</field>
+            <field name="model">report.pos.order.payment</field>
+            <field name="arch" type="xml">
+                <search string="Point of Sale Payment Analysis">
+                    <field name="date"/>
+                    <field name="pos_config_id"/>
+                    <field name="statement_name"/>
+                    <separator/>
+                    <filter string="Year" name="year"
+                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
+                            help="POS ordered created during current year"/>
+                    <separator/>
+                    <group expand="1" string="Group By">
+                        <filter string="Payment Method" name="Journal" context="{'group_by':'journal_id'}"/>
+                        <separator/>
+                        <filter string="Order Month" context="{'group_by':'date:month'}" help="Month of order date"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_report_pos_order_payment" model="ir.actions.act_window">
+            <field name="name">POS Payment Analysis</field>
+            <field name="res_model">report.pos.order.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="search_view_id" ref="view_report_pos_order_payment_search"/>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+        </record>
+
+        <menuitem action="action_report_pos_order_payment" id="menu_report_pos_order_payment"
+                  parent="point_of_sale.menu_point_rep" sequence="5"/>
+    </data>
+</openerp>
